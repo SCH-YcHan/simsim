@@ -164,7 +164,7 @@ function renderRace(selected, raceDuration) {
       let acc = 0;
       const stepDuration = duration / steps;
       const pauses = [];
-      let dehydrationCount = 0;
+      let lastDehydrated = false;
       let elapsed = 0;
       const keyframes = [];
 
@@ -184,19 +184,16 @@ function renderRace(selected, raceDuration) {
         const stepDistance = (finishX - startX) * (progress - prevProgress);
         const stepPercent = stepDistance / Math.max(1, finishX - startX);
         if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
-          const isConsecutive = dehydrationCount >= 1;
-          dehydrationCount += 1;
+          const isConsecutive = lastDehydrated;
           const pauseDuration = isConsecutive ? 4 : 2;
           pauses.push({
             start: elapsed,
             duration: pauseDuration,
             consecutive: isConsecutive,
           });
-          if (isConsecutive) {
-            dehydrationCount = 0;
-          }
+          lastDehydrated = isConsecutive ? false : true;
         } else {
-          dehydrationCount = 0;
+          lastDehydrated = false;
         }
       });
 
@@ -272,7 +269,7 @@ function renderRace(selected, raceDuration) {
         }
         if (!boostTriggered) {
           boostTriggered = true;
-          const lastMeta = getCurrentLastMeta();
+          const lastMeta = getCurrentLastMetaByPosition();
           if (lastMeta && !lastMeta.finished) {
             lastMeta.boosted = true;
             lastMeta.currentRate = 2;
@@ -284,12 +281,7 @@ function renderRace(selected, raceDuration) {
             lastMeta.pauseTimers.forEach((t) => clearTimeout(t));
             lastMeta.pauseTimers = [];
 
-            const currentTime = lastMeta.animation.currentTime ?? 0;
-            const localTime = Math.max(0, currentTime - lastMeta.delayMs);
-            const t = Math.min(1, localTime / lastMeta.totalDurationMs);
-            const currentStep = Math.floor(t * steps);
-            const remainingSteps = Math.max(0, steps - currentStep - 1);
-            for (let i = 1; i <= remainingSteps; i += 1) {
+            for (let i = 1; i <= steps; i += 1) {
               const timer = setTimeout(() => {
                 if (lastMeta.finished || !lastMeta.boosted) return;
                 lastMeta.currentRate = Math.min(lastMeta.currentRate * 2, 8);
@@ -311,31 +303,14 @@ function renderRace(selected, raceDuration) {
     }
   });
 
-  function getCurrentLastMeta() {
+  function getCurrentLastMetaByPosition() {
     let last = null;
     runnerMeta.forEach((meta) => {
       if (meta.finished) return;
-      const currentTime = meta.animation.currentTime ?? 0;
-      const localTime = Math.max(0, currentTime - meta.delayMs);
-      const t = Math.min(1, localTime / meta.totalDurationMs);
-      let progress = t;
-      const frames = meta.frames;
-      if (frames && frames.length) {
-        const nextIndex = frames.findIndex((f) => f.t >= t);
-        if (nextIndex <= 0) {
-          progress = frames[0].p;
-        } else if (nextIndex === -1) {
-          progress = frames[frames.length - 1].p;
-        } else {
-          const prev = frames[nextIndex - 1];
-          const next = frames[nextIndex];
-          const span = Math.max(0.0001, next.t - prev.t);
-          const ratio = (t - prev.t) / span;
-          progress = prev.p + (next.p - prev.p) * ratio;
-        }
-      }
-      if (!last || progress < last.progress) {
-        last = { meta, progress };
+      const rect = meta.runner.getBoundingClientRect();
+      const pos = rect.left;
+      if (!last || pos < last.pos) {
+        last = { meta, pos };
       }
     });
     return last?.meta ?? null;
