@@ -155,7 +155,7 @@ resetButton.addEventListener("click", () => {
 catalog.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
-  const button = target.closest(".item__name");
+  const button = target.closest(".app-card__name");
   if (!button) return;
   const link = button.dataset.link;
   if (!link || link === "#") return;
