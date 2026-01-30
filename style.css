@@ -571,6 +571,21 @@ body {
   line-height: 1;
 }
 
+.race-sweat {
+  position: absolute;
+  right: -18px;
+  top: -8px;
+  font-size: 16px;
+  opacity: 0;
+  transform: translateY(4px) scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.race-sweat--show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 .race-name {
   display: none;
 }

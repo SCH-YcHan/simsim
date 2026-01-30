@@ -110,8 +110,8 @@ function renderRace(selected, raceDuration) {
 
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
-    const baseDuration = 20;
-    const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
+      const baseDuration = 20;
+      const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
@@ -119,6 +119,7 @@ function renderRace(selected, raceDuration) {
           <span class="race-rank" aria-hidden="true">?</span>
           <span class="race-emoji">${animal.emoji}</span>
           <span class="race-name">${animal.name}</span>
+          <span class="race-sweat" aria-hidden="true">💦</span>
         </span>
       </div>
     `;
@@ -144,33 +145,73 @@ function renderRace(selected, raceDuration) {
       runner.style.opacity = "1";
       const steps = 20;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.5);
-      const blockSize = 5;
+      const blockSize = 4;
+      const blockMultipliers = [];
       for (let i = 0; i < steps; i += blockSize) {
         const multiplier = Math.random() < 0.5 ? 0.5 : 2;
+        blockMultipliers.push(multiplier);
         for (let j = i; j < Math.min(i + blockSize, steps); j += 1) {
           weights[j] *= multiplier;
         }
       }
       const total = weights.reduce((sum, w) => sum + w, 0);
       let acc = 0;
-      const keyframes = weights.map((w, idx) => {
+      const stepDuration = duration / steps;
+      const pauses = [];
+      let elapsed = 0;
+      const keyframes = [];
+
+      weights.forEach((w, idx) => {
         acc += w / total;
         const progress = Math.min(acc, 1);
-        return {
-          offset: (idx + 1) / steps,
+        elapsed += stepDuration;
+        keyframes.push({
+          offset: elapsed,
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
-        };
+        });
+
+        const isBlockEnd = (idx + 1) % blockSize === 0;
+        if (isBlockEnd) {
+          const blockIndex = Math.floor(idx / blockSize);
+          if (blockMultipliers[blockIndex] === 2) {
+            const pauseStart = elapsed;
+            elapsed += 2;
+            keyframes.push({
+              offset: elapsed,
+              transform: `translate(${(finishX - startX) * progress}px, -50%)`,
+            });
+            pauses.push({ start: pauseStart, end: elapsed });
+          }
+        }
       });
 
+      const totalDuration = elapsed;
+      const normalizedFrames = [
+        { offset: 0, transform: "translate(0, -50%)" },
+        ...keyframes.map((frame) => ({
+          ...frame,
+          offset: frame.offset / totalDuration,
+        })),
+      ];
+
       const animation = runner.animate(
-        [{ offset: 0, transform: "translate(0, -50%)" }, ...keyframes],
+        normalizedFrames,
         {
-          duration: duration * 1000,
+          duration: totalDuration * 1000,
           delay: delay * 1000,
           easing: "linear",
           fill: "forwards",
         }
       );
+
+      const sweat = runner.querySelector(".race-sweat");
+      pauses.forEach((pause) => {
+        if (!sweat) return;
+        const showAt = (delay + pause.start) * 1000;
+        const hideAt = (delay + pause.end) * 1000;
+        setTimeout(() => sweat.classList.add("race-sweat--show"), showAt);
+        setTimeout(() => sweat.classList.remove("race-sweat--show"), hideAt);
+      });
 
       animation.onfinish = () => {
         finishCount += 1;
