@@ -228,7 +228,7 @@ function renderRace(selected, raceDuration) {
 
       const meta = runnerMeta.get(animal.id);
       meta.prevX = startX;
-      meta.prevTime = performance.now();
+      meta.prevTime = performance.now() + delay * 1000 + 300;
       meta.consecutiveFlag = false;
       meta.dehydratedLastTick = false;
 
@@ -265,8 +265,13 @@ function renderRace(selected, raceDuration) {
               if (sweat) sweat.classList.remove("race-sweat--show");
               meta.animation.playbackRate = meta.currentRate;
             }, pauseDuration * 1000);
-            meta.consecutiveFlag = isConsecutive;
-            meta.dehydratedLastTick = true;
+            if (isConsecutive) {
+              meta.consecutiveFlag = true;
+              meta.dehydratedLastTick = false;
+            } else {
+              meta.consecutiveFlag = false;
+              meta.dehydratedLastTick = true;
+            }
           } else {
             meta.dehydratedLastTick = false;
             meta.consecutiveFlag = false;
