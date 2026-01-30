@@ -379,41 +379,6 @@ body {
   box-shadow: 0 12px 28px rgba(29, 26, 23, 0.08);
 }
 
-.race-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.race-count {
-  display: grid;
-  gap: 6px;
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.race-stepper {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(29, 26, 23, 0.08);
-  color: var(--ink);
-  font-weight: 600;
-}
-
-.stepper-btn {
-  border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  font-weight: 700;
-}
 
 .race-status {
   font-weight: 600;

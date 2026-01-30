@@ -29,23 +29,14 @@
       <div class="race-panel">
         <div class="race-panel__header">
           <h2>참가 동물 선택</h2>
-          <p>참가 수를 정하고 동물을 골라주세요.</p>
+          <p>동물을 선택하면 자동으로 참가 수가 정해집니다.</p>
         </div>
-        <div class="race-controls">
-          <div class="race-count">
-            <span>참가 수</span>
-            <div class="race-stepper">
-              <button type="button" class="stepper-btn" id="countDown">-</button>
-              <span id="countValue">4</span>
-              <button type="button" class="stepper-btn" id="countUp">+</button>
-            </div>
-            <small>2 ~ 10명</small>
-          </div>
-          <div class="race-status" id="raceStatus">선택 0 / 4</div>
-        </div>
+        <div class="race-status" id="raceStatus">선택 0</div>
         <div class="race-animals" id="animalGrid"></div>
       </div>
+    </section>
 
+    <section class="race-section race-section--track">
       <div class="race-panel">
         <div class="race-panel__header">
           <h2>경주장</h2>
@@ -55,19 +46,6 @@
           <div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>
         </div>
         <div class="race-countdown" id="raceCountdown" aria-live="polite"></div>
-      </div>
-
-      <div class="race-panel">
-        <div class="race-panel__header">
-          <h2>게임 방법</h2>
-          <p>초간단 복불복 레이스</p>
-        </div>
-        <ol class="race-steps">
-          <li>참가 수를 정하고 동물을 선택합니다.</li>
-          <li>경주 시작 버튼을 누르면 10초 동안 달립니다.</li>
-          <li>완주 후 순위를 확인하세요!</li>
-        </ol>
-        <div class="race-tip">친구·동료와 벌칙, 커피 내기에 딱!</div>
       </div>
     </section>
   </div>
