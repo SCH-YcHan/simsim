@@ -336,6 +336,18 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+.race-in-progress .race-section--revamp {
+  grid-template-columns: 1fr;
+}
+
+.race-in-progress .race-section--revamp .race-panel:not(:nth-child(2)) {
+  display: none;
+}
+
+.race-in-progress .race-track {
+  min-height: 420px;
+}
+
 .race-panel {
   background: var(--card);
   border: 1px solid var(--line);

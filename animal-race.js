@@ -20,6 +20,7 @@ const countDown = document.querySelector("#countDown");
 const countUp = document.querySelector("#countUp");
 const raceStatus = document.querySelector("#raceStatus");
 const raceTimer = document.querySelector("#raceTimer");
+const racePage = document.querySelector("#racePage");
 
 let selectedIds = new Set();
 let targetCount = 4;
@@ -98,14 +99,26 @@ function flashMessage(message) {
 
 function renderRace(selected, raceDuration) {
   raceTrack.innerHTML = "";
-  const shuffled = [...selected].sort(() => Math.random() - 0.5);
 
-  shuffled.forEach((animal, index) => {
+  const displayOrder = [...selected].sort(() => Math.random() - 0.5);
+  const finishOrder = [...selected].sort(() => Math.random() - 0.5);
+
+  const rankMap = new Map();
+  finishOrder.forEach((animal, index) => {
+    rankMap.set(animal.id, index + 1);
+  });
+
+  displayOrder.forEach((animal) => {
     const lane = document.createElement("div");
     lane.className = "race-lane";
 
-    const duration = Number((raceDuration - 1.5 + Math.random() * 1.4).toFixed(2));
-    const delay = Number((Math.random() * 0.3).toFixed(2));
+    const rank = rankMap.get(animal.id);
+    const spread = Math.min(0.6, (raceDuration - 4) / (selected.length || 1));
+    const baseTime = 4 + (rank - 1) * spread;
+    const jitter = (Math.random() * 0.4 - 0.2);
+    const finishTime = Math.max(3.8, Math.min(raceDuration - 0.3, baseTime + jitter));
+    const delay = Number((Math.random() * 0.25).toFixed(2));
+    const duration = Number(Math.max(2, finishTime - delay).toFixed(2));
 
     lane.innerHTML = `
       <div class="race-rank" aria-hidden="true">?</div>
@@ -124,7 +137,7 @@ function renderRace(selected, raceDuration) {
       lane.classList.add("race-lane--done");
       const rank = lane.querySelector(".race-rank");
       if (rank) {
-        rank.textContent = `${index + 1}위`;
+        rank.textContent = `${rankMap.get(animal.id)}위`;
         rank.removeAttribute("aria-hidden");
       }
     }, (duration + delay) * 1000);
@@ -140,6 +153,9 @@ function startRace() {
   }
 
   raceInProgress = true;
+  if (racePage) {
+    racePage.classList.add("race-in-progress");
+  }
   startButton.disabled = true;
   countDown.disabled = true;
   countUp.disabled = true;
@@ -170,6 +186,9 @@ function startRace() {
 function resetRace() {
   raceInProgress = false;
   clearInterval(countdownId);
+  if (racePage) {
+    racePage.classList.remove("race-in-progress");
+  }
   selectedIds = new Set();
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
   raceTimer.textContent = "준비";
