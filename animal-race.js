@@ -129,7 +129,7 @@ function renderRace(selected, raceDuration) {
     const finishTime = Math.max(30, Math.min(36, baseTime + jitter));
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
-    const duration = 10;
+    const duration = 20;
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
@@ -156,7 +156,7 @@ function renderRace(selected, raceDuration) {
         finishRect.left - laneRect.left + finishGap
       );
       runner.style.left = `${startX}px`;
-      const steps = 30;
+      const steps = 20;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
       const total = weights.reduce((sum, w) => sum + w, 0);
       let acc = 0;
