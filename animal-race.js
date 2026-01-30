@@ -234,6 +234,7 @@ function renderRace(selected, raceDuration) {
         lastTriggerStep: -10,
         lastStepIndex: -1,
         dehydrationTimer: null,
+        consecutiveCooldown: false,
       });
 
       const meta = runnerMeta.get(animal.id);
@@ -250,10 +251,10 @@ function renderRace(selected, raceDuration) {
         if (stepIndex > meta.lastStepIndex) {
           for (let s = meta.lastStepIndex + 1; s <= stepIndex; s += 1) {
             if (s <= 0 || s >= steps - 1) continue;
-            if (meta.triggers[s - 1]) {
-              const isConsecutive = meta.triggers[s - 2] === true;
+            if (meta.triggers[s]) {
+              const isConsecutive = meta.triggers[s - 1] === true && !meta.consecutiveCooldown;
               const pauseDuration = isConsecutive ? 4 : 2;
-              meta.lastTriggerStep = isConsecutive ? -10 : s - 1;
+              meta.lastTriggerStep = isConsecutive ? -10 : s;
               meta.paused = true;
               if (sweat) {
                 sweat.textContent = isConsecutive ? "🥵" : "💦";
@@ -267,7 +268,13 @@ function renderRace(selected, raceDuration) {
                 if (sweat) sweat.classList.remove("race-sweat--show");
                 meta.animation.playbackRate = meta.currentRate;
               }, pauseDuration * 1000);
+              if (isConsecutive) {
+                meta.consecutiveCooldown = true;
+              } else {
+                meta.consecutiveCooldown = false;
+              }
             } else {
+              meta.consecutiveCooldown = false;
               meta.lastTriggerStep = -10;
             }
           }
