@@ -586,6 +586,21 @@ body {
   transform: translateY(0) scale(1);
 }
 
+.race-boost {
+  position: absolute;
+  left: -20px;
+  top: 0;
+  font-size: 16px;
+  opacity: 0;
+  transform: translateY(4px) scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.race-runner--boost .race-boost {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 .race-name {
   display: none;
 }

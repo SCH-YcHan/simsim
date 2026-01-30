@@ -104,14 +104,25 @@ function renderRace(selected, raceDuration) {
   const arenaPadding = 40;
   raceTrack.style.minHeight = `${arenaPadding + laneCount * laneHeight}px`;
 
-  displayOrder.forEach((animal) => {
-    const lane = document.createElement("div");
-    lane.className = "race-lane";
-
+  const plans = displayOrder.map((animal) => {
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
-      const baseDuration = 20;
-      const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
+    const baseDuration = 20;
+    const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
+    return { animal, delay, duration, finishEstimate: delay + duration };
+  });
+
+  const slowest = plans.reduce((prev, curr) => {
+    return curr.finishEstimate > prev.finishEstimate ? curr : prev;
+  }, plans[0]);
+  const slowestId = slowest?.animal?.id;
+  let boostTriggered = false;
+  const runnerMeta = new Map();
+
+  plans.forEach((plan) => {
+    const { animal, delay, duration } = plan;
+    const lane = document.createElement("div");
+    lane.className = "race-lane";
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
@@ -120,6 +131,7 @@ function renderRace(selected, raceDuration) {
           <span class="race-emoji">${animal.emoji}</span>
           <span class="race-name">${animal.name}</span>
           <span class="race-sweat" aria-hidden="true">💦</span>
+          <span class="race-boost" aria-hidden="true">🔥</span>
         </span>
       </div>
     `;
@@ -161,6 +173,7 @@ function renderRace(selected, raceDuration) {
       const keyframes = [];
 
       const dehydrationPercentThreshold = 0.1;
+      const isBoostTarget = animal.id === slowestId;
       weights.forEach((w, idx) => {
         acc += w / total;
         const progress = Math.min(acc, 1);
@@ -170,30 +183,30 @@ function renderRace(selected, raceDuration) {
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         });
 
-      const prevProgress = progress - w / total;
-      const stepDistance = (finishX - startX) * (progress - prevProgress);
-      const stepPercent = stepDistance / Math.max(1, finishX - startX);
-      if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
-        dehydrationCount += 1;
-        const isConsecutive = dehydrationCount >= 2;
-        const pauseDuration = isConsecutive ? 4 : 2;
-        const pauseStart = elapsed;
-        elapsed += pauseDuration;
-        keyframes.push({
-          offset: elapsed,
-          transform: `translate(${(finishX - startX) * progress}px, -50%)`,
-        });
-        pauses.push({
-          start: pauseStart,
-          end: elapsed,
-          consecutive: isConsecutive,
-        });
-        if (isConsecutive) {
+        const prevProgress = progress - w / total;
+        const stepDistance = (finishX - startX) * (progress - prevProgress);
+        const stepPercent = stepDistance / Math.max(1, finishX - startX);
+        if (!isBoostTarget && idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
+          dehydrationCount += 1;
+          const isConsecutive = dehydrationCount >= 2;
+          const pauseDuration = isConsecutive ? 4 : 2;
+          const pauseStart = elapsed;
+          elapsed += pauseDuration;
+          keyframes.push({
+            offset: elapsed,
+            transform: `translate(${(finishX - startX) * progress}px, -50%)`,
+          });
+          pauses.push({
+            start: pauseStart,
+            end: elapsed,
+            consecutive: isConsecutive,
+          });
+          if (isConsecutive) {
+            dehydrationCount = 0;
+          }
+        } else {
           dehydrationCount = 0;
         }
-      } else {
-        dehydrationCount = 0;
-      }
       });
 
       const totalDuration = elapsed;
@@ -239,7 +252,25 @@ function renderRace(selected, raceDuration) {
           rank.textContent = `${finishCount}위`;
           rank.removeAttribute("aria-hidden");
         }
+        if (!boostTriggered) {
+          boostTriggered = true;
+          const boostTarget = runnerMeta.get(slowestId);
+          if (boostTarget && !boostTarget.finished) {
+            boostTarget.boosted = true;
+            boostTarget.runner.classList.add("race-runner--boost");
+            boostTarget.animation.playbackRate = 2;
+          }
+        }
+        const meta = runnerMeta.get(animal.id);
+        if (meta) meta.finished = true;
       };
+
+      runnerMeta.set(animal.id, {
+        runner,
+        animation,
+        finished: false,
+        boosted: false,
+      });
     }
   });
 }
