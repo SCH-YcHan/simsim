@@ -164,18 +164,28 @@ function renderRace(selected, raceDuration) {
       let acc = 0;
       const stepDuration = duration / steps;
       const pauses = [];
-      let lastTriggerIdx = -100;
-      let dehydrateNext = false;
-      let consecutiveCooldown = false;
       let timeline = 0;
-      let elapsed = 0;
       const keyframes = [];
+      const framePoints = [];
 
       const dehydrationPercentThreshold = 0.1;
-      const framePoints = [];
-      weights.forEach((w, idx) => {
-        if (dehydrateNext) {
-          const isConsecutive = !consecutiveCooldown && lastTriggerIdx === idx - 1;
+      const progressList = [];
+      for (let idx = 0; idx < steps; idx += 1) {
+        acc += weights[idx] / total;
+        progressList[idx] = Math.min(acc, 1);
+      }
+
+      const triggers = progressList.map((progress, idx) => {
+        if (idx >= steps - 1) return false;
+        const prev = idx === 0 ? 0 : progressList[idx - 1];
+        const stepDistance = (finishX - startX) * (progress - prev);
+        const stepPercent = stepDistance / Math.max(1, finishX - startX);
+        return stepPercent >= dehydrationPercentThreshold;
+      });
+
+      for (let idx = 0; idx < steps; idx += 1) {
+        if (idx > 0 && triggers[idx - 1]) {
+          const isConsecutive = idx > 1 && triggers[idx - 2];
           const pauseDuration = isConsecutive ? 4 : 2;
           pauses.push({
             start: timeline,
@@ -183,33 +193,16 @@ function renderRace(selected, raceDuration) {
             consecutive: isConsecutive,
           });
           timeline += pauseDuration;
-          dehydrateNext = false;
-          if (isConsecutive) {
-            consecutiveCooldown = true;
-            lastTriggerIdx = -100;
-          } else {
-            consecutiveCooldown = false;
-          }
         }
 
-        acc += w / total;
-        const progress = Math.min(acc, 1);
-        elapsed += stepDuration;
         timeline += stepDuration;
+        const progress = progressList[idx];
         keyframes.push({
           offset: timeline,
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         });
-
-        const prevProgress = progress - w / total;
-        const stepDistance = (finishX - startX) * (progress - prevProgress);
-        const stepPercent = stepDistance / Math.max(1, finishX - startX);
-        if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
-          dehydrateNext = true;
-          lastTriggerIdx = idx;
-        }
         framePoints.push({ t: timeline, p: progress });
-      });
+      }
 
       const totalDuration = Math.max(0.001, timeline);
       const finishTransform = `translate(${finishX - startX}px, -50%)`;
