@@ -249,7 +249,7 @@ function renderRace(selected, raceDuration) {
         const stepIndex = Math.min(steps - 1, Math.floor(t * steps));
         if (stepIndex > meta.lastStepIndex) {
           for (let s = meta.lastStepIndex + 1; s <= stepIndex; s += 1) {
-            if (s >= steps - 1) continue;
+            if (s <= 0 || s >= steps - 1) continue;
             if (meta.triggers[s]) {
               const isConsecutive = meta.lastTriggerStep === s - 1;
               const pauseDuration = isConsecutive ? 4 : 2;
