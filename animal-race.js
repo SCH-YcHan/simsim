@@ -201,13 +201,16 @@ function renderRace(selected, raceDuration) {
       });
 
       const totalDuration = Math.max(0.001, duration);
-      const normalizedFrames = [
-        { offset: 0, transform: "translate(0, -50%)" },
-        ...keyframes.map((frame) => ({
-          ...frame,
-          offset: Math.min(1, Math.max(0, frame.offset / totalDuration)),
-        })),
-      ];
+      const finishTransform = `translate(${finishX - startX}px, -50%)`;
+      const normalizedFrames = keyframes.map((frame) => ({
+        ...frame,
+        offset: Math.min(1, Math.max(0, frame.offset / totalDuration)),
+      }));
+      normalizedFrames.push({ offset: 1, transform: finishTransform });
+      normalizedFrames.sort((a, b) => a.offset - b.offset);
+      if (normalizedFrames[0]?.offset !== 0) {
+        normalizedFrames.unshift({ offset: 0, transform: "translate(0, -50%)" });
+      }
 
       const animation = runner.animate(
         normalizedFrames,
