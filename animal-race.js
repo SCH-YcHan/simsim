@@ -223,7 +223,21 @@ function renderRace(selected, raceDuration) {
       );
 
       const sweat = runner.querySelector(".race-sweat");
-      const pauseTimers = [];
+      runnerMeta.set(animal.id, {
+        runner,
+        animation,
+        finished: false,
+        boosted: false,
+        paused: false,
+        currentRate: 1,
+        delayMs: delay * 1000,
+        totalDurationMs: totalDuration * 1000,
+        frames: framePoints,
+        timers: [],
+        pauseTimers: [],
+      });
+
+      const pauseTimers = runnerMeta.get(animal.id).pauseTimers;
       pauses.forEach((pause) => {
         const startAt = (delay + pause.start) * 1000;
         const endAt = (delay + pause.start + pause.duration) * 1000;
@@ -231,6 +245,7 @@ function renderRace(selected, raceDuration) {
           setTimeout(() => {
             const meta = runnerMeta.get(animal.id);
             if (!meta || meta.boosted || meta.finished) return;
+            meta.paused = true;
             if (sweat) {
               sweat.textContent = pause.consecutive ? "🥵" : "💦";
               sweat.classList.add("race-sweat--show");
@@ -240,6 +255,7 @@ function renderRace(selected, raceDuration) {
           setTimeout(() => {
             const meta = runnerMeta.get(animal.id);
             if (!meta || meta.boosted || meta.finished) return;
+            meta.paused = false;
             if (sweat) sweat.classList.remove("race-sweat--show");
             meta.animation.playbackRate = meta.currentRate;
           }, endAt)
@@ -262,6 +278,10 @@ function renderRace(selected, raceDuration) {
             lastMeta.currentRate = 2;
             lastMeta.runner.classList.add("race-runner--boost");
             lastMeta.animation.playbackRate = 2;
+            lastMeta.paused = false;
+            if (sweat) sweat.classList.remove("race-sweat--show");
+            lastMeta.pauseTimers.forEach((t) => clearTimeout(t));
+            lastMeta.pauseTimers = [];
 
             const currentTime = lastMeta.animation.currentTime ?? 0;
             const localTime = Math.max(0, currentTime - lastMeta.delayMs);
@@ -283,22 +303,10 @@ function renderRace(selected, raceDuration) {
           meta.finished = true;
           meta.runner.classList.remove("race-runner--boost");
           if (sweat) sweat.classList.remove("race-sweat--show");
-          pauseTimers.forEach((t) => clearTimeout(t));
+          meta.pauseTimers.forEach((t) => clearTimeout(t));
           meta.timers.forEach((t) => clearTimeout(t));
         }
       };
-
-      runnerMeta.set(animal.id, {
-        runner,
-        animation,
-        finished: false,
-        boosted: false,
-        currentRate: 1,
-        delayMs: delay * 1000,
-        totalDurationMs: totalDuration * 1000,
-        frames: framePoints,
-        timers: [],
-      });
     }
   });
 
