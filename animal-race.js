@@ -140,6 +140,9 @@ function renderRace(selected, raceDuration) {
     lanesContainer.appendChild(lane);
     const runner = lane.querySelector(".race-runner");
     if (runner) {
+      runner.style.setProperty("--finish-x", "calc(100% - 190px)");
+    }
+    if (runner) {
       runner.addEventListener(
         "animationend",
         () => {

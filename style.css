@@ -544,30 +544,29 @@ body {
   position: relative;
   overflow: hidden;
   min-height: 56px;
-  border-bottom: 1px dashed rgba(29, 26, 23, 0.08);
   --start-x: 82px;
   --finish-x: calc(100% - 180px);
-}
-
-.race-lane:last-child {
-  border-bottom: none;
 }
 
 .race-rank {
   font-weight: 700;
   color: var(--accent);
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(-50%) scale(0.98);
   transition: opacity 0.2s ease, transform 0.2s ease;
   position: absolute;
-  right: 20px;
+  left: 18px;
   top: 50%;
-  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(29, 26, 23, 0.12);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 13px;
 }
 
 .race-lane--done .race-rank {
   opacity: 1;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(1);
 }
 
 .race-runner {
