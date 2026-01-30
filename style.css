@@ -540,10 +540,10 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  padding: 14px 12px;
+  padding: 8px 12px;
   position: relative;
   overflow: hidden;
-  min-height: 56px;
+  min-height: 44px;
   --start-x: 82px;
   --finish-x: calc(100% - 170px);
 }
@@ -575,10 +575,10 @@ body {
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  background: #fff;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(29, 26, 23, 0.12);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
   animation-name: raceRun, runnerBob;
   animation-timing-function: linear, ease-in-out;
   animation-fill-mode: forwards;
