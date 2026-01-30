@@ -26,15 +26,7 @@ const appData = [
     description: "지루할 틈 없이, 가볍게 한 판!",
     items: [
       {
-        name: "오늘의 랜덤 미션",
-        link: "#",
-      },
-      {
-        name: "밈 제너레이터",
-        link: "#",
-      },
-      {
-        name: "사다리 게임",
+        name: "테트리스",
         link: "#",
       },
     ],
