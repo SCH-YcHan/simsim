@@ -545,7 +545,7 @@ body {
   overflow: hidden;
   min-height: 44px;
   --start-x: 28px;
-  --finish-x: calc(100% - 40px);
+  --finish-x: calc(100% - 60px);
 }
 
 .race-rank {
@@ -594,11 +594,17 @@ body {
   from {
     left: var(--start-x);
   }
-  45% {
-    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid1, 0.45));
+  20% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid1, 0.2));
   }
-  75% {
-    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid2, 0.75));
+  40% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid2, 0.4));
+  }
+  60% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid3, 0.6));
+  }
+  80% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid4, 0.8));
   }
   to {
     left: var(--finish-x);

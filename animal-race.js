@@ -128,8 +128,10 @@ function renderRace(selected, raceDuration) {
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
     const duration = Number(Math.max(7, finishTime - delay).toFixed(2));
-    const mid1 = (0.32 + Math.random() * 0.22).toFixed(2);
-    const mid2 = (0.58 + Math.random() * 0.22).toFixed(2);
+    const mid1 = (0.2 + Math.random() * 0.2).toFixed(2);
+    const mid2 = (0.4 + Math.random() * 0.2).toFixed(2);
+    const mid3 = (0.6 + Math.random() * 0.2).toFixed(2);
+    const mid4 = (0.8 + Math.random() * 0.2).toFixed(2);
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
@@ -144,6 +146,8 @@ function renderRace(selected, raceDuration) {
     if (runner) {
       runner.style.setProperty("--mid1", mid1);
       runner.style.setProperty("--mid2", mid2);
+      runner.style.setProperty("--mid3", mid3);
+      runner.style.setProperty("--mid4", mid4);
     }
     if (runner) {
       runner.addEventListener(
