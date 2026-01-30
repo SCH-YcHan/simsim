@@ -336,6 +336,10 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+.race-track-hidden {
+  display: none;
+}
+
 .race-in-progress .race-section--revamp {
   grid-template-columns: 1fr;
 }

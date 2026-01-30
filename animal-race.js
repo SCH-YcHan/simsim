@@ -19,6 +19,7 @@ const raceStatus = document.querySelector("#raceStatus");
 const raceTimer = document.querySelector("#raceTimer");
 const racePage = document.querySelector("#racePage");
 const raceCountdown = document.querySelector("#raceCountdown");
+const raceTrackSection = document.querySelector("#raceTrackSection");
 
 let selectedIds = new Set();
 let raceInProgress = false;
@@ -188,6 +189,9 @@ function startRace() {
   if (racePage) {
     racePage.classList.add("race-in-progress");
   }
+  if (raceTrackSection) {
+    raceTrackSection.classList.remove("race-track-hidden");
+  }
   startButton.disabled = true;
   raceTimer.textContent = "3초";
   if (raceCountdown) {
@@ -231,6 +235,9 @@ function resetRace() {
   if (raceCountdown) {
     raceCountdown.classList.remove("race-countdown--show");
     raceCountdown.textContent = "";
+  }
+  if (raceTrackSection) {
+    raceTrackSection.classList.add("race-track-hidden");
   }
   raceTrack.style.minHeight = "";
   document.querySelectorAll(".race-runner").forEach((runner) => {
