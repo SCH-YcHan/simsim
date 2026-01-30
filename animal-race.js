@@ -130,8 +130,8 @@ function renderRace(selected, raceDuration) {
     const duration = Number(Math.max(7, finishTime - delay).toFixed(2));
 
     lane.innerHTML = `
-      <div class="race-rank" aria-hidden="true">?</div>
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
+        <span class="race-rank" aria-hidden="true">?</span>
         <span class="race-emoji">${animal.emoji}</span>
         <span class="race-name">${animal.name}</span>
       </div>
@@ -139,9 +139,6 @@ function renderRace(selected, raceDuration) {
 
     lanesContainer.appendChild(lane);
     const runner = lane.querySelector(".race-runner");
-    if (runner) {
-      runner.style.setProperty("--finish-x", "calc(100% - 190px)");
-    }
     if (runner) {
       runner.addEventListener(
         "animationend",
