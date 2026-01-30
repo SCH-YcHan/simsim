@@ -44,15 +44,7 @@ const appData = [
     description: "지금의 나를 한 문장으로!",
     items: [
       {
-        name: "감성 온도",
-        link: "#",
-      },
-      {
-        name: "집중력 측정",
-        link: "#",
-      },
-      {
-        name: "속도 & 실수율",
+        name: "반응속도 측정",
         link: "#",
       },
     ],
