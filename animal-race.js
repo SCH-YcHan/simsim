@@ -72,14 +72,16 @@ function renderRace(selected) {
   shuffled.forEach((animal, index) => {
     const lane = document.createElement("div");
     lane.className = "race-lane";
+    const duration = (2.2 + Math.random() * 1.8).toFixed(2);
+    const delay = (Math.random() * 0.2).toFixed(2);
     lane.innerHTML = `
       <div class="race-rank">${index + 1}위</div>
-      <div class="race-runner">
-        <span class="race-emoji">${animal.emoji}</span>
-        <span class="race-name">${animal.name}</span>
-      </div>
-      <div class="race-progress">
-        <div class="race-bar" style="width: ${90 - index * 6}%"></div>
+      <div class="race-trackline">
+        <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
+          <span class="race-emoji">${animal.emoji}</span>
+          <span class="race-name">${animal.name}</span>
+        </div>
+        <div class="race-finish">FINISH</div>
       </div>
     `;
     raceTrack.appendChild(lane);
