@@ -49,8 +49,8 @@ function renderAnimals() {
         return;
       }
 
-      if (selectedIds.size >= targetCount) {
-        flashMessage("선택한 수만큼만 참여할 수 있어요.");
+      if (selectedIds.size >= animals.length) {
+        flashMessage("더 이상 선택할 수 없어요.");
         return;
       }
 
