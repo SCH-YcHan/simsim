@@ -222,8 +222,7 @@ function renderRace(selected, raceDuration) {
         prevX: 0,
         totalDistance: 0,
         prevTime: 0,
-        dehydratedLastTick: false,
-        consecutiveFlag: false,
+        lastDehydrate: false,
         paused: false,
       });
 
@@ -233,8 +232,7 @@ function renderRace(selected, raceDuration) {
       meta.prevX = startAbsX;
       meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevTime = performance.now() + delay * 1000 + 300;
-      meta.consecutiveFlag = false;
-      meta.dehydratedLastTick = false;
+      meta.lastDehydrate = false;
 
       const stepPercentThreshold = 0.1;
       const stepTimeMs = stepDuration * 1000;
@@ -253,7 +251,7 @@ function renderRace(selected, raceDuration) {
           const stepPercent = deltaX / meta.totalDistance;
           const shouldDehydrate = stepPercent >= stepPercentThreshold;
           if (shouldDehydrate) {
-            const isConsecutive = meta.dehydratedLastTick && !meta.consecutiveFlag;
+            const isConsecutive = meta.lastDehydrate;
             const pauseDuration = isConsecutive ? 4 : 2;
             meta.paused = true;
             if (sweat) {
@@ -268,16 +266,9 @@ function renderRace(selected, raceDuration) {
               if (sweat) sweat.classList.remove("race-sweat--show");
               meta.animation.playbackRate = meta.currentRate;
             }, pauseDuration * 1000);
-            if (isConsecutive) {
-              meta.consecutiveFlag = true;
-              meta.dehydratedLastTick = false;
-            } else {
-              meta.consecutiveFlag = false;
-              meta.dehydratedLastTick = true;
-            }
+            meta.lastDehydrate = !isConsecutive;
           } else {
-            meta.dehydratedLastTick = false;
-            meta.consecutiveFlag = false;
+            meta.lastDehydrate = false;
           }
           meta.prevX = currentX;
           meta.prevTime = now;
