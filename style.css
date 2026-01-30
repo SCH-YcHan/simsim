@@ -582,6 +582,13 @@ body {
   border: none;
 }
 
+.race-runner__bob {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  animation: runnerBob 0.6s ease-in-out infinite alternate;
+}
+
 .race-emoji {
   font-size: 30px;
 }

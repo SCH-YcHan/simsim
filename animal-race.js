@@ -131,9 +131,11 @@ function renderRace(selected, raceDuration) {
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
-        <span class="race-rank" aria-hidden="true">?</span>
-        <span class="race-emoji">${animal.emoji}</span>
-        <span class="race-name">${animal.name}</span>
+        <span class="race-runner__bob">
+          <span class="race-rank" aria-hidden="true">?</span>
+          <span class="race-emoji">${animal.emoji}</span>
+          <span class="race-name">${animal.name}</span>
+        </span>
       </div>
     `;
 
@@ -156,7 +158,6 @@ function renderRace(selected, raceDuration) {
         };
       });
 
-      runner.style.animation = "runnerBob 0.6s ease-in-out infinite alternate";
       const animation = runner.animate(
         [{ offset: 0, transform: "translate(0, -50%)" }, ...keyframes],
         {
