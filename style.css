@@ -268,6 +268,31 @@ body {
   margin-bottom: 32px;
 }
 
+.race-hero--revamp {
+  padding: 24px 26px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow);
+}
+
+.race-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.race-badge {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.15);
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
 .race-back {
   font-size: 14px;
   text-decoration: none;
@@ -286,9 +311,28 @@ body {
   color: var(--muted);
 }
 
+.race-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.race-timer {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(29, 26, 23, 0.08);
+  font-weight: 600;
+  color: var(--muted);
+}
+
 .race-section {
   display: grid;
   gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.race-section--revamp {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
@@ -300,6 +344,47 @@ body {
   display: grid;
   gap: 16px;
   box-shadow: 0 12px 28px rgba(29, 26, 23, 0.08);
+}
+
+.race-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.race-count {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.race-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(29, 26, 23, 0.08);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.stepper-btn {
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.race-status {
+  font-weight: 600;
+  color: var(--accent);
 }
 
 .race-panel__header h2 {
@@ -329,6 +414,11 @@ body {
   text-align: center;
   cursor: pointer;
   transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.animal-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .animal-card--selected {
@@ -444,6 +534,24 @@ body {
   to {
     left: calc(100% - 160px);
   }
+}
+
+.race-steps {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.race-tip {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 94, 58, 0.1);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .race-toast {

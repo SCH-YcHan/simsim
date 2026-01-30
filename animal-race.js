@@ -7,14 +7,24 @@ const animals = [
   { id: "monkey", name: "원숭이", emoji: "🐵" },
   { id: "fox", name: "여우", emoji: "🦊" },
   { id: "panda", name: "판다", emoji: "🐼" },
+  { id: "bear", name: "곰", emoji: "🐻" },
+  { id: "pig", name: "돼지", emoji: "🐷" },
 ];
 
 const animalGrid = document.querySelector("#animalGrid");
 const raceTrack = document.querySelector("#raceTrack");
 const startButton = document.querySelector("#startRace");
 const resetButton = document.querySelector("#resetRace");
+const countValue = document.querySelector("#countValue");
+const countDown = document.querySelector("#countDown");
+const countUp = document.querySelector("#countUp");
+const raceStatus = document.querySelector("#raceStatus");
+const raceTimer = document.querySelector("#raceTimer");
 
 let selectedIds = new Set();
+let targetCount = 4;
+let raceInProgress = false;
+let countdownId = null;
 
 function renderAnimals() {
   animalGrid.innerHTML = "";
@@ -28,24 +38,46 @@ function renderAnimals() {
       <div class="animal-name">${animal.name}</div>
     `;
 
+    if (selectedIds.has(animal.id)) {
+      button.classList.add("animal-card--selected");
+    }
+
     button.addEventListener("click", () => {
+      if (raceInProgress) return;
       if (selectedIds.has(animal.id)) {
         selectedIds.delete(animal.id);
         button.classList.remove("animal-card--selected");
+        updateStatus();
         return;
       }
 
-      if (selectedIds.size >= 6) {
-        flashMessage("최대 6마리까지 선택할 수 있어요.");
+      if (selectedIds.size >= targetCount) {
+        flashMessage("선택한 수만큼만 참여할 수 있어요.");
         return;
       }
 
       selectedIds.add(animal.id);
       button.classList.add("animal-card--selected");
+      updateStatus();
     });
 
     animalGrid.appendChild(button);
   });
+}
+
+function updateStatus() {
+  raceStatus.textContent = `선택 ${selectedIds.size} / ${targetCount}`;
+  startButton.disabled = selectedIds.size !== targetCount || raceInProgress;
+}
+
+function setTargetCount(nextCount) {
+  targetCount = Math.min(10, Math.max(2, nextCount));
+  countValue.textContent = targetCount;
+  if (selectedIds.size > targetCount) {
+    selectedIds = new Set(Array.from(selectedIds).slice(0, targetCount));
+  }
+  renderAnimals();
+  updateStatus();
 }
 
 function flashMessage(message) {
@@ -64,18 +96,17 @@ function flashMessage(message) {
   }, 1800);
 }
 
-function renderRace(selected) {
+function renderRace(selected, raceDuration) {
   raceTrack.innerHTML = "";
-
   const shuffled = [...selected].sort(() => Math.random() - 0.5);
-  let maxTime = 0;
 
   shuffled.forEach((animal, index) => {
     const lane = document.createElement("div");
     lane.className = "race-lane";
-    const duration = Number((2.2 + Math.random() * 1.8).toFixed(2));
-    const delay = Number((Math.random() * 0.2).toFixed(2));
-    maxTime = Math.max(maxTime, duration + delay);
+
+    const duration = Number((raceDuration - 1.5 + Math.random() * 1.4).toFixed(2));
+    const delay = Number((Math.random() * 0.3).toFixed(2));
+
     lane.innerHTML = `
       <div class="race-rank" aria-hidden="true">?</div>
       <div class="race-trackline">
@@ -86,7 +117,9 @@ function renderRace(selected) {
         <div class="race-finish">FINISH</div>
       </div>
     `;
+
     raceTrack.appendChild(lane);
+
     setTimeout(() => {
       lane.classList.add("race-lane--done");
       const rank = lane.querySelector(".race-rank");
@@ -98,19 +131,58 @@ function renderRace(selected) {
   });
 }
 
-startButton.addEventListener("click", () => {
+function startRace() {
+  if (raceInProgress) return;
   const selected = animals.filter((animal) => selectedIds.has(animal.id));
-  if (selected.length < 2) {
-    flashMessage("최소 2마리를 선택해주세요!");
+  if (selected.length !== targetCount) {
+    flashMessage("선택 수를 맞춰주세요!");
     return;
   }
-  renderRace(selected);
-});
 
-resetButton.addEventListener("click", () => {
+  raceInProgress = true;
+  startButton.disabled = true;
+  countDown.disabled = true;
+  countUp.disabled = true;
+  raceTimer.textContent = "10초";
+
+  let remaining = 10;
+  clearInterval(countdownId);
+  countdownId = setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      clearInterval(countdownId);
+      raceTimer.textContent = "결과 공개";
+      return;
+    }
+    raceTimer.textContent = `${remaining}초`;
+  }, 1000);
+
+  renderRace(selected, 10);
+
+  setTimeout(() => {
+    raceInProgress = false;
+    countDown.disabled = false;
+    countUp.disabled = false;
+    updateStatus();
+  }, 10000);
+}
+
+function resetRace() {
+  raceInProgress = false;
+  clearInterval(countdownId);
   selectedIds = new Set();
-  renderAnimals();
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
-});
+  raceTimer.textContent = "준비";
+  countDown.disabled = false;
+  countUp.disabled = false;
+  renderAnimals();
+  updateStatus();
+}
+
+startButton.addEventListener("click", startRace);
+resetButton.addEventListener("click", resetRace);
+countDown.addEventListener("click", () => setTargetCount(targetCount - 1));
+countUp.addEventListener("click", () => setTargetCount(targetCount + 1));
 
 renderAnimals();
+updateStatus();

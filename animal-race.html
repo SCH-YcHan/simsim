@@ -11,33 +11,62 @@
 </head>
 <body>
   <div class="page race-page">
-    <header class="race-hero">
-      <a class="race-back" href="/index.html">← 홈으로</a>
+    <header class="race-hero race-hero--revamp">
+      <div class="race-hero__top">
+        <a class="race-back" href="/index.html">← 홈으로</a>
+        <span class="race-badge">RANDOM RACE</span>
+      </div>
       <h1 class="race-title">동물경주</h1>
-      <p class="race-subtitle">동물들을 선택하고 출발! 랜덤 경주로 순위를 뽑아보세요.</p>
+      <p class="race-subtitle">선택한 동물들이 달려 순위를 정합니다. 결과는 완전 랜덤!</p>
+      <div class="race-hero__actions">
+        <button class="primary" id="startRace" type="button" disabled>경주 시작</button>
+        <button class="ghost" id="resetRace" type="button">초기화</button>
+        <div class="race-timer" id="raceTimer">준비</div>
+      </div>
     </header>
 
-    <section class="race-section">
+    <section class="race-section race-section--revamp">
       <div class="race-panel">
         <div class="race-panel__header">
           <h2>참가 동물 선택</h2>
-          <p>최소 2마리, 최대 6마리 선택</p>
+          <p>참가 수를 정하고 동물을 골라주세요.</p>
+        </div>
+        <div class="race-controls">
+          <div class="race-count">
+            <span>참가 수</span>
+            <div class="race-stepper">
+              <button type="button" class="stepper-btn" id="countDown">-</button>
+              <span id="countValue">4</span>
+              <button type="button" class="stepper-btn" id="countUp">+</button>
+            </div>
+            <small>2 ~ 10명</small>
+          </div>
+          <div class="race-status" id="raceStatus">선택 0 / 4</div>
         </div>
         <div class="race-animals" id="animalGrid"></div>
-        <div class="race-actions">
-          <button class="primary" id="startRace" type="button">경주 시작</button>
-          <button class="ghost" id="resetRace" type="button">초기화</button>
+      </div>
+
+      <div class="race-panel">
+        <div class="race-panel__header">
+          <h2>경주장</h2>
+          <p>달리는 모습을 보고 결과를 확인하세요.</p>
+        </div>
+        <div class="race-track" id="raceTrack">
+          <div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>
         </div>
       </div>
 
       <div class="race-panel">
         <div class="race-panel__header">
-          <h2>경주 결과</h2>
-          <p>순위는 매번 랜덤으로 결정됩니다.</p>
+          <h2>게임 방법</h2>
+          <p>초간단 복불복 레이스</p>
         </div>
-        <div class="race-track" id="raceTrack">
-          <div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>
-        </div>
+        <ol class="race-steps">
+          <li>참가 수를 정하고 동물을 선택합니다.</li>
+          <li>경주 시작 버튼을 누르면 10초 동안 달립니다.</li>
+          <li>완주 후 순위를 확인하세요!</li>
+        </ol>
+        <div class="race-tip">친구·동료와 벌칙, 커피 내기에 딱!</div>
       </div>
     </section>
   </div>
