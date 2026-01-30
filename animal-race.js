@@ -132,15 +132,21 @@ function renderRace(selected, raceDuration) {
     `;
 
     raceTrack.appendChild(lane);
-
-    setTimeout(() => {
-      lane.classList.add("race-lane--done");
-      const rank = lane.querySelector(".race-rank");
-      if (rank) {
-        rank.textContent = `${rankMap.get(animal.id)}위`;
-        rank.removeAttribute("aria-hidden");
-      }
-    }, (duration + delay) * 1000);
+    const runner = lane.querySelector(".race-runner");
+    if (runner) {
+      runner.addEventListener(
+        "animationend",
+        () => {
+          lane.classList.add("race-lane--done");
+          const rank = lane.querySelector(".race-rank");
+          if (rank) {
+            rank.textContent = `${rankMap.get(animal.id)}위`;
+            rank.removeAttribute("aria-hidden");
+          }
+        },
+        { once: true }
+      );
+    }
   });
 }
 

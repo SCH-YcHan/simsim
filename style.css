@@ -540,6 +540,10 @@ body {
   animation-fill-mode: forwards;
 }
 
+.race-name {
+  display: none;
+}
+
 @keyframes raceRun {
   from {
     left: 12px;
