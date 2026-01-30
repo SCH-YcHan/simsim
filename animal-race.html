@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>동물경주 - SIMSIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="page race-page">
+    <header class="race-hero">
+      <a class="race-back" href="/index.html">← 홈으로</a>
+      <h1 class="race-title">동물경주</h1>
+      <p class="race-subtitle">동물들을 선택하고 출발! 랜덤 경주로 순위를 뽑아보세요.</p>
+    </header>
+
+    <section class="race-section">
+      <div class="race-panel">
+        <div class="race-panel__header">
+          <h2>참가 동물 선택</h2>
+          <p>최소 2마리, 최대 6마리 선택</p>
+        </div>
+        <div class="race-animals" id="animalGrid"></div>
+        <div class="race-actions">
+          <button class="primary" id="startRace" type="button">경주 시작</button>
+          <button class="ghost" id="resetRace" type="button">초기화</button>
+        </div>
+      </div>
+
+      <div class="race-panel">
+        <div class="race-panel__header">
+          <h2>경주 결과</h2>
+          <p>순위는 매번 랜덤으로 결정됩니다.</p>
+        </div>
+        <div class="race-track" id="raceTrack">
+          <div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script defer src="/animal-race.js"></script>
+</body>
+</html>
