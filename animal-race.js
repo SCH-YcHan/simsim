@@ -164,7 +164,7 @@ function renderRace(selected, raceDuration) {
       let acc = 0;
       const stepDuration = duration / steps;
       const pauses = [];
-      let lastDehydrated = false;
+      let lastDehydrationStep = -10;
       let elapsed = 0;
       const keyframes = [];
 
@@ -184,16 +184,16 @@ function renderRace(selected, raceDuration) {
         const stepDistance = (finishX - startX) * (progress - prevProgress);
         const stepPercent = stepDistance / Math.max(1, finishX - startX);
         if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
-          const isConsecutive = lastDehydrated;
+          const isConsecutive = idx === lastDehydrationStep + 1;
           const pauseDuration = isConsecutive ? 4 : 2;
           pauses.push({
             start: elapsed,
             duration: pauseDuration,
             consecutive: isConsecutive,
           });
-          lastDehydrated = isConsecutive ? false : true;
+          lastDehydrationStep = isConsecutive ? -10 : idx;
         } else {
-          lastDehydrated = false;
+          lastDehydrationStep = -10;
         }
       });
 
