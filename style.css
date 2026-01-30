@@ -472,7 +472,7 @@ body {
 
 .race-lanes {
   display: grid;
-  gap: 14px;
+  gap: 20px;
 }
 
 .race-start-line,
