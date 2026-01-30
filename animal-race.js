@@ -151,12 +151,13 @@ function renderRace(selected, raceDuration) {
         const progress = Math.min(acc, 1);
         return {
           offset: (idx + 1) / steps,
-          transform: `translateX(${(finishX - startX) * progress}px) translateY(-50%)`,
+          transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         };
       });
 
+      runner.style.animation = "runnerBob 0.6s ease-in-out infinite alternate";
       const animation = runner.animate(
-        [{ offset: 0, transform: "translateX(0) translateY(-50%)" }, ...keyframes],
+        [{ offset: 0, transform: "translate(0, -50%)" }, ...keyframes],
         {
           duration: duration * 1000,
           delay: delay * 1000,

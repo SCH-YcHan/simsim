@@ -503,7 +503,7 @@ body {
 
 .race-lanes {
   display: grid;
-  gap: 0;
+  gap: 2px;
 }
 
 .race-start-line,
@@ -540,10 +540,10 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  padding: 8px 12px;
+  padding: 6px 12px;
   position: relative;
   overflow: hidden;
-  min-height: 44px;
+  min-height: 36px;
   --start-x: 28px;
   --finish-x: calc(100% - 60px);
 }
@@ -580,10 +580,10 @@ body {
   padding: 0;
   border-radius: 0;
   border: none;
-  animation-name: runnerBob;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+}
+
+.race-emoji {
+  font-size: 30px;
 }
 
 .race-name {
