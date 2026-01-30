@@ -508,17 +508,18 @@ body {
   background: rgba(29, 26, 23, 0.06);
   overflow: hidden;
   padding: 8px 14px;
+  --finish-x: calc(100% - 54px);
 }
 
-.race-finish {
+.race-finish-line {
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: rgba(29, 26, 23, 0.35);
+  right: 22px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 999px;
+  background: #e11d48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
 }
 
 .race-runner {
@@ -544,7 +545,7 @@ body {
     left: 12px;
   }
   to {
-    left: calc(100% - 160px);
+    left: var(--finish-x);
   }
 }
 

@@ -127,7 +127,7 @@ function renderRace(selected, raceDuration) {
           <span class="race-emoji">${animal.emoji}</span>
           <span class="race-name">${animal.name}</span>
         </div>
-        <div class="race-finish">FINISH</div>
+        <div class="race-finish-line" aria-hidden="true"></div>
       </div>
     `;
 
