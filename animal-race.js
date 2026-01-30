@@ -128,10 +128,6 @@ function renderRace(selected, raceDuration) {
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
     const duration = Number(Math.max(7, finishTime - delay).toFixed(2));
-    const mid1 = (0.2 + Math.random() * 0.2).toFixed(2);
-    const mid2 = (0.4 + Math.random() * 0.2).toFixed(2);
-    const mid3 = (0.6 + Math.random() * 0.2).toFixed(2);
-    const mid4 = (0.8 + Math.random() * 0.2).toFixed(2);
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
@@ -144,24 +140,39 @@ function renderRace(selected, raceDuration) {
     lanesContainer.appendChild(lane);
     const runner = lane.querySelector(".race-runner");
     if (runner) {
-      runner.style.setProperty("--mid1", mid1);
-      runner.style.setProperty("--mid2", mid2);
-      runner.style.setProperty("--mid3", mid3);
-      runner.style.setProperty("--mid4", mid4);
-    }
-    if (runner) {
-      runner.addEventListener(
-        "animationend",
-        () => {
-          lane.classList.add("race-lane--done");
-          const rank = lane.querySelector(".race-rank");
-          if (rank) {
-            rank.textContent = `${rankMap.get(animal.id)}위`;
-            rank.removeAttribute("aria-hidden");
-          }
-        },
-        { once: true }
+      const startX = parseFloat(getComputedStyle(lane).getPropertyValue("--start-x"));
+      const finishX = parseFloat(getComputedStyle(lane).getPropertyValue("--finish-x"));
+      const steps = Math.max(8, Math.ceil(duration));
+      const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
+      const total = weights.reduce((sum, w) => sum + w, 0);
+      let acc = 0;
+      const keyframes = weights.map((w, idx) => {
+        acc += w / total;
+        const progress = Math.min(acc, 1);
+        return {
+          offset: (idx + 1) / steps,
+          transform: `translateX(${(finishX - startX) * progress}px) translateY(-50%)`,
+        };
+      });
+
+      const animation = runner.animate(
+        [{ offset: 0, transform: "translateX(0) translateY(-50%)" }, ...keyframes],
+        {
+          duration: duration * 1000,
+          delay: delay * 1000,
+          easing: "linear",
+          fill: "forwards",
+        }
       );
+
+      animation.onfinish = () => {
+        lane.classList.add("race-lane--done");
+        const rank = lane.querySelector(".race-rank");
+        if (rank) {
+          rank.textContent = `${rankMap.get(animal.id)}위`;
+          rank.removeAttribute("aria-hidden");
+        }
+      };
     }
   });
 }
@@ -226,6 +237,9 @@ function resetRace() {
     raceCountdown.classList.remove("race-countdown--show");
     raceCountdown.textContent = "";
   }
+  document.querySelectorAll(".race-runner").forEach((runner) => {
+    runner.getAnimations().forEach((anim) => anim.cancel());
+  });
   selectedIds = new Set();
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
   raceTimer.textContent = "준비";
