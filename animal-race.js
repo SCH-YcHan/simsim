@@ -129,7 +129,7 @@ function renderRace(selected, raceDuration) {
     const finishTime = Math.max(30, Math.min(36, baseTime + jitter));
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
-    const duration = Number(Math.max(7, finishTime - delay).toFixed(2));
+    const duration = 10;
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
