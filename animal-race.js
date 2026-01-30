@@ -159,7 +159,7 @@ function renderRace(selected, raceDuration) {
       let elapsed = 0;
       const keyframes = [];
 
-      const dehydrationPercentThreshold = 0.1;
+      const dehydrationPercentThreshold = 0.05;
       weights.forEach((w, idx) => {
         acc += w / total;
         const progress = Math.min(acc, 1);
