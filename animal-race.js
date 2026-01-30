@@ -146,11 +146,15 @@ function renderRace(selected, raceDuration) {
       const startGap = 12;
       const finishGap = 12;
       const startX = Math.max(0, startRect.left - laneRect.left - runnerWidth - startGap);
-      const finishX = Math.min(
+      let finishX = Math.min(
         laneRect.width - runnerWidth,
         finishRect.left - laneRect.left + finishGap
       );
+      if (finishX <= startX + 40) {
+        finishX = Math.min(laneRect.width - runnerWidth, startX + Math.max(80, runnerWidth + 20));
+      }
       runner.style.left = `${startX}px`;
+      runner.style.opacity = "1";
       const steps = 20;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.5);
       const total = weights.reduce((sum, w) => sum + w, 0);
