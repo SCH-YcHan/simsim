@@ -68,14 +68,16 @@ function renderRace(selected) {
   raceTrack.innerHTML = "";
 
   const shuffled = [...selected].sort(() => Math.random() - 0.5);
+  let maxTime = 0;
 
   shuffled.forEach((animal, index) => {
     const lane = document.createElement("div");
     lane.className = "race-lane";
-    const duration = (2.2 + Math.random() * 1.8).toFixed(2);
-    const delay = (Math.random() * 0.2).toFixed(2);
+    const duration = Number((2.2 + Math.random() * 1.8).toFixed(2));
+    const delay = Number((Math.random() * 0.2).toFixed(2));
+    maxTime = Math.max(maxTime, duration + delay);
     lane.innerHTML = `
-      <div class="race-rank">${index + 1}위</div>
+      <div class="race-rank" aria-hidden="true">?</div>
       <div class="race-trackline">
         <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
           <span class="race-emoji">${animal.emoji}</span>
@@ -85,6 +87,14 @@ function renderRace(selected) {
       </div>
     `;
     raceTrack.appendChild(lane);
+    setTimeout(() => {
+      lane.classList.add("race-lane--done");
+      const rank = lane.querySelector(".race-rank");
+      if (rank) {
+        rank.textContent = `${index + 1}위`;
+        rank.removeAttribute("aria-hidden");
+      }
+    }, (duration + delay) * 1000);
   });
 }
 

@@ -389,6 +389,14 @@ body {
 .race-rank {
   font-weight: 700;
   color: var(--accent);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.race-lane--done .race-rank {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .race-trackline {
