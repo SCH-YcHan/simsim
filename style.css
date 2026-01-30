@@ -494,7 +494,7 @@ body {
 .race-arena {
   position: relative;
   display: grid;
-  padding: 16px 12px;
+  padding: 16px 8px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(29, 26, 23, 0.08);
@@ -517,13 +517,13 @@ body {
 }
 
 .race-start-line {
-  left: 32px;
+  left: 16px;
   background: #0f766e;
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
 }
 
 .race-finish-line {
-  right: 32px;
+  right: 16px;
   background: #e11d48;
   box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
 }
@@ -544,8 +544,8 @@ body {
   position: relative;
   overflow: hidden;
   min-height: 36px;
-  --start-x: 32px;
-  --finish-x: calc(100% - 32px);
+  --start-x: 16px;
+  --finish-x: calc(100% - 16px);
 }
 
 .race-rank {
