@@ -1,6 +1,6 @@
 const appData = [
   {
-    category: "10초게임",
+    category: "할래말래",
     description: "친구·동료와 내기 한판?",
     items: [
       {
