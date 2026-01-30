@@ -220,6 +220,7 @@ function renderRace(selected, raceDuration) {
         timers: [],
         pauseTimers: [],
         prevX: 0,
+        totalDistance: 0,
         prevTime: 0,
         dehydratedLastTick: false,
         consecutiveFlag: false,
@@ -227,7 +228,10 @@ function renderRace(selected, raceDuration) {
       });
 
       const meta = runnerMeta.get(animal.id);
-      meta.prevX = startX;
+      const startAbsX = laneRect.left + startX;
+      const finishAbsX = laneRect.left + finishX;
+      meta.prevX = startAbsX;
+      meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevTime = performance.now() + delay * 1000 + 300;
       meta.consecutiveFlag = false;
       meta.dehydratedLastTick = false;
@@ -246,8 +250,7 @@ function renderRace(selected, raceDuration) {
           const rect = meta.runner.getBoundingClientRect();
           const currentX = rect.left;
           const deltaX = Math.abs(currentX - meta.prevX);
-          const totalDistance = Math.max(1, finishX - startX);
-          const stepPercent = deltaX / totalDistance;
+          const stepPercent = deltaX / meta.totalDistance;
           const shouldDehydrate = stepPercent >= stepPercentThreshold;
           if (shouldDehydrate) {
             const isConsecutive = meta.dehydratedLastTick && !meta.consecutiveFlag;
