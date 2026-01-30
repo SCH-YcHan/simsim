@@ -169,21 +169,18 @@ function renderRace(selected, raceDuration) {
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         });
 
-        const isBlockEnd = (idx + 1) % blockSize === 0;
-        if (isBlockEnd) {
-          const prevProgress = progress - w / total;
-          const stepDistance = (finishX - startX) * (progress - prevProgress);
-          const stepPercent = stepDistance / Math.max(1, finishX - startX);
-          if (stepPercent >= dehydrationPercentThreshold) {
-            const pauseStart = elapsed;
-            elapsed += 2;
-            keyframes.push({
-              offset: elapsed,
-              transform: `translate(${(finishX - startX) * progress}px, -50%)`,
-            });
-            pauses.push({ start: pauseStart, end: elapsed });
-          }
-        }
+      const prevProgress = progress - w / total;
+      const stepDistance = (finishX - startX) * (progress - prevProgress);
+      const stepPercent = stepDistance / Math.max(1, finishX - startX);
+      if (stepPercent >= dehydrationPercentThreshold) {
+        const pauseStart = elapsed;
+        elapsed += 2;
+        keyframes.push({
+          offset: elapsed,
+          transform: `translate(${(finishX - startX) * progress}px, -50%)`,
+        });
+        pauses.push({ start: pauseStart, end: elapsed });
+      }
       });
 
       const totalDuration = elapsed;
