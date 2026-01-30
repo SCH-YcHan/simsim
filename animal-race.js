@@ -184,8 +184,8 @@ function renderRace(selected, raceDuration) {
         const stepDistance = (finishX - startX) * (progress - prevProgress);
         const stepPercent = stepDistance / Math.max(1, finishX - startX);
         if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
+          const isConsecutive = dehydrationCount >= 1;
           dehydrationCount += 1;
-          const isConsecutive = dehydrationCount >= 2;
           const pauseDuration = isConsecutive ? 4 : 2;
           pauses.push({
             start: elapsed,
@@ -279,7 +279,8 @@ function renderRace(selected, raceDuration) {
             lastMeta.runner.classList.add("race-runner--boost");
             lastMeta.animation.playbackRate = 2;
             lastMeta.paused = false;
-            if (sweat) sweat.classList.remove("race-sweat--show");
+            const boostSweat = lastMeta.runner.querySelector(".race-sweat");
+            if (boostSweat) boostSweat.classList.remove("race-sweat--show");
             lastMeta.pauseTimers.forEach((t) => clearTimeout(t));
             lastMeta.pauseTimers = [];
 
