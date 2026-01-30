@@ -544,8 +544,8 @@ body {
   position: relative;
   overflow: hidden;
   min-height: 44px;
-  --start-x: 82px;
-  --finish-x: calc(100% - 170px);
+  --start-x: 28px;
+  --finish-x: calc(100% - 40px);
 }
 
 .race-rank {
@@ -593,6 +593,12 @@ body {
 @keyframes raceRun {
   from {
     left: var(--start-x);
+  }
+  45% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid1, 0.45));
+  }
+  75% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * var(--mid2, 0.75));
   }
   to {
     left: var(--finish-x);
