@@ -147,8 +147,14 @@ function renderRace(selected, raceDuration) {
       const laneRect = lane.getBoundingClientRect();
       const startRect = startLine.getBoundingClientRect();
       const finishRect = finishLine.getBoundingClientRect();
-      const startX = Math.max(0, startRect.left - laneRect.left);
-      const finishX = Math.max(startX + 60, finishRect.left - laneRect.left);
+      const runnerWidth = runner.getBoundingClientRect().width;
+      const startGap = 4;
+      const finishGap = 4;
+      const startX = Math.max(0, startRect.left - laneRect.left - runnerWidth - startGap);
+      const finishX = Math.min(
+        laneRect.width - runnerWidth,
+        finishRect.left - laneRect.left + finishGap
+      );
       runner.style.left = `${startX}px`;
       const steps = Math.max(8, Math.ceil(duration));
       const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
