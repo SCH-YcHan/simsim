@@ -4,15 +4,19 @@ const appData = [
     description: "친구·동료와 내기 한판?",
     items: [
       {
-        name: "10초 타이머 챌린지",
+        name: "동물경주",
         link: "#",
       },
       {
-        name: "반응속도 테스트",
+        name: "제비뽑기",
         link: "#",
       },
       {
-        name: "순간 기억 복사",
+        name: "사다리타기",
+        link: "#",
+      },
+      {
+        name: "업앤다운",
         link: "#",
       },
     ],
