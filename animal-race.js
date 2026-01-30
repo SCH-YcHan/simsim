@@ -163,7 +163,6 @@ function renderRace(selected, raceDuration) {
       const total = weights.reduce((sum, w) => sum + w, 0);
       let acc = 0;
       const stepDuration = duration / steps;
-      const pauses = [];
       const keyframes = [];
       const framePoints = [];
 
@@ -230,37 +229,53 @@ function renderRace(selected, raceDuration) {
         })),
         timers: [],
         pauseTimers: [],
+        triggers,
+        progressList,
+        lastTriggerStep: -10,
+        lastStepIndex: -1,
+        dehydrationTimer: null,
       });
 
-      const pauseTimers = runnerMeta.get(animal.id).pauseTimers;
-      let cumulativePause = 0;
-      for (let idx = 1; idx < steps; idx += 1) {
-        if (!triggers[idx - 1]) continue;
-        const isConsecutive = idx > 1 && triggers[idx - 2];
-        const pauseDuration = isConsecutive ? 4 : 2;
-        const startAt = (delay + idx * stepDuration + cumulativePause) * 1000;
-        const endAt = (delay + idx * stepDuration + cumulativePause + pauseDuration) * 1000;
-        cumulativePause += pauseDuration;
-        pauseTimers.push(
-          setTimeout(() => {
-            const meta = runnerMeta.get(animal.id);
-            if (!meta || meta.boosted || meta.finished) return;
-            meta.paused = true;
-            if (sweat) {
-              sweat.textContent = isConsecutive ? "🥵" : "💦";
-              sweat.classList.add("race-sweat--show");
+      const meta = runnerMeta.get(animal.id);
+      const tick = () => {
+        if (!meta || meta.finished) return;
+        if (meta.boosted) {
+          requestAnimationFrame(tick);
+          return;
+        }
+        const currentTime = meta.animation.currentTime ?? 0;
+        const localTime = Math.max(0, currentTime - meta.delayMs);
+        const t = Math.min(1, localTime / meta.totalDurationMs);
+        const stepIndex = Math.min(steps - 1, Math.floor(t * steps));
+        if (stepIndex > meta.lastStepIndex) {
+          for (let s = meta.lastStepIndex + 1; s <= stepIndex; s += 1) {
+            if (s >= steps - 1) continue;
+            if (meta.triggers[s]) {
+              const isConsecutive = meta.lastTriggerStep === s - 1;
+              const pauseDuration = isConsecutive ? 4 : 2;
+              meta.lastTriggerStep = isConsecutive ? -10 : s;
+              meta.paused = true;
+              if (sweat) {
+                sweat.textContent = isConsecutive ? "🥵" : "💦";
+                sweat.classList.add("race-sweat--show");
+              }
+              meta.animation.playbackRate = 0;
+              clearTimeout(meta.dehydrationTimer);
+              meta.dehydrationTimer = setTimeout(() => {
+                if (!meta || meta.boosted || meta.finished) return;
+                meta.paused = false;
+                if (sweat) sweat.classList.remove("race-sweat--show");
+                meta.animation.playbackRate = meta.currentRate;
+              }, pauseDuration * 1000);
+            } else {
+              meta.lastTriggerStep = -10;
             }
-            meta.animation.playbackRate = 0;
-          }, startAt),
-          setTimeout(() => {
-            const meta = runnerMeta.get(animal.id);
-            if (!meta || meta.boosted || meta.finished) return;
-            meta.paused = false;
-            if (sweat) sweat.classList.remove("race-sweat--show");
-            meta.animation.playbackRate = meta.currentRate;
-          }, endAt)
-        );
-      }
+          }
+          meta.lastStepIndex = stepIndex;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
 
       animation.onfinish = () => {
         finishCount += 1;
@@ -283,6 +298,8 @@ function renderRace(selected, raceDuration) {
             if (boostSweat) boostSweat.classList.remove("race-sweat--show");
             lastMeta.pauseTimers.forEach((t) => clearTimeout(t));
             lastMeta.pauseTimers = [];
+            clearTimeout(lastMeta.dehydrationTimer);
+            lastMeta.dehydrationTimer = null;
 
             for (let i = 1; i <= steps; i += 1) {
               const timer = setTimeout(() => {
@@ -301,6 +318,7 @@ function renderRace(selected, raceDuration) {
           if (sweat) sweat.classList.remove("race-sweat--show");
           meta.pauseTimers.forEach((t) => clearTimeout(t));
           meta.timers.forEach((t) => clearTimeout(t));
+          clearTimeout(meta.dehydrationTimer);
         }
       };
     }
