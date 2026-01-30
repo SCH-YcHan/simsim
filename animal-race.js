@@ -144,6 +144,13 @@ function renderRace(selected, raceDuration) {
       runner.style.opacity = "1";
       const steps = 20;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.5);
+      const blockSize = 5;
+      for (let i = 0; i < steps; i += blockSize) {
+        const multiplier = Math.random() < 0.5 ? 0.5 : 2;
+        for (let j = i; j < Math.min(i + blockSize, steps); j += 1) {
+          weights[j] *= multiplier;
+        }
+      }
       const total = weights.reduce((sum, w) => sum + w, 0);
       let acc = 0;
       const keyframes = weights.map((w, idx) => {
