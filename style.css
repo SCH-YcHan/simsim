@@ -139,6 +139,7 @@ body {
   border-radius: var(--radius-md);
   padding: 22px;
   box-shadow: 0 12px 28px rgba(29, 26, 23, 0.08);
+  align-content: start;
 }
 
 .category--row {
@@ -150,6 +151,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-height: 52px;
 }
 
 .category__header--row {
@@ -159,6 +161,7 @@ body {
 .category__title {
   font-size: 22px;
   font-weight: 700;
+  line-height: 1.15;
 }
 
 .category__count {
@@ -166,11 +169,13 @@ body {
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  line-height: 1.2;
 }
 
 .item-list {
   display: grid;
   gap: 10px;
+  margin-top: 2px;
 }
 
 .item {
