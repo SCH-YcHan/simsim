@@ -491,6 +491,39 @@ body {
   position: relative;
 }
 
+.race-arena {
+  position: relative;
+  display: grid;
+  padding: 8px 0;
+}
+
+.race-lanes {
+  display: grid;
+  gap: 10px;
+}
+
+.race-start-line,
+.race-finish-line {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.race-start-line {
+  left: 22px;
+  background: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.race-finish-line {
+  right: 22px;
+  background: #e11d48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+}
+
 .race-placeholder {
   padding: 18px;
   border-radius: 14px;
@@ -508,6 +541,11 @@ body {
   border-radius: 14px;
   background: rgba(247, 243, 239, 0.7);
   border: 1px solid rgba(29, 26, 23, 0.08);
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  --start-x: 82px;
+  --finish-x: calc(100% - 170px);
 }
 
 .race-rank {
@@ -523,41 +561,9 @@ body {
   transform: translateY(0);
 }
 
-.race-trackline {
-  position: relative;
-  height: 52px;
-  border-radius: 999px;
-  background: rgba(29, 26, 23, 0.06);
-  overflow: hidden;
-  padding: 8px 14px;
-  --finish-x: calc(100% - 54px);
-}
-
-.race-start-line {
-  position: absolute;
-  left: 22px;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 999px;
-  background: #0f766e;
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
-}
-
-.race-finish-line {
-  position: absolute;
-  right: 22px;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 999px;
-  background: #e11d48;
-  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
-}
-
 .race-runner {
   position: absolute;
-  left: 12px;
+  left: var(--start-x);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -569,7 +575,7 @@ body {
   border-radius: 999px;
   border: 1px solid rgba(29, 26, 23, 0.12);
   animation-name: raceRun;
-  animation-timing-function: cubic-bezier(0.3, 0.6, 0.2, 1);
+  animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
 
@@ -579,7 +585,7 @@ body {
 
 @keyframes raceRun {
   from {
-    left: 12px;
+    left: var(--start-x);
   }
   to {
     left: var(--finish-x);

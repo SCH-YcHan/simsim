@@ -99,8 +99,15 @@ function flashMessage(message) {
 }
 
 function renderRace(selected, raceDuration) {
-  raceTrack.innerHTML = "";
+  raceTrack.innerHTML = `
+    <div class="race-arena">
+      <div class="race-start-line" aria-hidden="true"></div>
+      <div class="race-finish-line" aria-hidden="true"></div>
+      <div class="race-lanes" id="raceLanes"></div>
+    </div>
+  `;
 
+  const lanesContainer = document.querySelector("#raceLanes");
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
   const finishOrder = [...selected].sort(() => Math.random() - 0.5);
 
@@ -124,17 +131,13 @@ function renderRace(selected, raceDuration) {
 
     lane.innerHTML = `
       <div class="race-rank" aria-hidden="true">?</div>
-      <div class="race-trackline">
-        <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
-          <span class="race-emoji">${animal.emoji}</span>
-          <span class="race-name">${animal.name}</span>
-        </div>
-        <div class="race-start-line" aria-hidden="true"></div>
-        <div class="race-finish-line" aria-hidden="true"></div>
+      <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
+        <span class="race-emoji">${animal.emoji}</span>
+        <span class="race-name">${animal.name}</span>
       </div>
     `;
 
-    raceTrack.appendChild(lane);
+    lanesContainer.appendChild(lane);
     const runner = lane.querySelector(".race-runner");
     if (runner) {
       runner.addEventListener(
