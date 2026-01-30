@@ -107,7 +107,7 @@ function renderRace(selected, raceDuration) {
   const plans = displayOrder.map((animal) => {
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
-    const baseDuration = 20;
+    const baseDuration = typeof raceDuration === "number" ? raceDuration : 20;
     const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
     return { animal, delay, duration, finishEstimate: delay + duration };
   });
@@ -176,9 +176,8 @@ function renderRace(selected, raceDuration) {
         const progress = Math.min(acc, 1);
         elapsed += stepDuration;
         timeline += stepDuration;
-        framePoints.push({ t: elapsed / duration, p: progress });
         keyframes.push({
-          offset: elapsed,
+          offset: timeline,
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         });
 
@@ -198,9 +197,10 @@ function renderRace(selected, raceDuration) {
         } else {
           lastDehydrationStep = -10;
         }
+        framePoints.push({ t: timeline, p: progress });
       });
 
-      const totalDuration = Math.max(0.001, duration);
+      const totalDuration = Math.max(0.001, timeline);
       const finishTransform = `translate(${finishX - startX}px, -50%)`;
       const normalizedFrames = keyframes.map((frame) => ({
         ...frame,
@@ -232,7 +232,10 @@ function renderRace(selected, raceDuration) {
         currentRate: 1,
         delayMs: delay * 1000,
         totalDurationMs: totalDuration * 1000,
-        frames: framePoints,
+        frames: framePoints.map((fp) => ({
+          t: fp.t / totalDuration,
+          p: fp.p,
+        })),
         timers: [],
         pauseTimers: [],
       });
@@ -361,7 +364,7 @@ function startRace() {
     }
   }, 1000);
 
-  renderRace(selected, 10);
+  renderRace(selected, 20);
 
   setTimeout(() => {
     raceInProgress = false;
