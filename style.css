@@ -544,7 +544,7 @@ body {
 .race-runner {
   position: absolute;
   left: var(--start-x);
-  top: 56%;
+  top: 58%;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
