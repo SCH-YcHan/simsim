@@ -108,6 +108,8 @@ function renderRace(selected, raceDuration) {
   `;
 
   const lanesContainer = document.querySelector("#raceLanes");
+  const startLine = document.querySelector(".race-start-line");
+  const finishLine = document.querySelector(".race-finish-line");
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
   const finishOrder = [...selected].sort(() => Math.random() - 0.5);
 
@@ -122,9 +124,9 @@ function renderRace(selected, raceDuration) {
 
     const rank = rankMap.get(animal.id);
     const spread = Math.min(0.9, 2.2 / (selected.length || 1));
-    const baseTime = 10 + (rank - 1) * spread;
+    const baseTime = 30 + (rank - 1) * spread;
     const jitter = (Math.random() * 0.9 - 0.45);
-    const finishTime = Math.max(10, Math.min(12.5, baseTime + jitter));
+    const finishTime = Math.max(30, Math.min(36, baseTime + jitter));
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
     const duration = Number(Math.max(7, finishTime - delay).toFixed(2));
@@ -142,9 +144,12 @@ function renderRace(selected, raceDuration) {
     lanesContainer.appendChild(lane);
     const runner = lane.querySelector(".race-runner");
     if (runner) {
-      const laneWidth = lane.getBoundingClientRect().width;
-      const startX = 32;
-      const finishX = Math.max(startX + 60, laneWidth - 32);
+      const laneRect = lane.getBoundingClientRect();
+      const startRect = startLine.getBoundingClientRect();
+      const finishRect = finishLine.getBoundingClientRect();
+      const startX = Math.max(0, startRect.left - laneRect.left);
+      const finishX = Math.max(startX + 60, finishRect.left - laneRect.left);
+      runner.style.left = `${startX}px`;
       const steps = Math.max(8, Math.ceil(duration));
       const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
       const total = weights.reduce((sum, w) => sum + w, 0);

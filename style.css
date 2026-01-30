@@ -560,11 +560,16 @@ body {
   padding: 4px 10px;
   font-size: 13px;
   white-space: nowrap;
+  position: absolute;
+  right: 100%;
+  margin-right: 8px;
+  display: none;
 }
 
 .race-lane--done .race-rank {
   opacity: 1;
   transform: translateX(0) scale(1);
+  display: inline-flex;
 }
 
 .race-runner {
