@@ -117,11 +117,6 @@ function renderRace(selected, raceDuration) {
     const lane = document.createElement("div");
     lane.className = "race-lane";
 
-    const rank = rankMap.get(animal.id);
-    const spread = Math.min(0.9, 2.2 / (selected.length || 1));
-    const baseTime = 30 + (rank - 1) * spread;
-    const jitter = (Math.random() * 0.9 - 0.45);
-    const finishTime = Math.max(30, Math.min(36, baseTime + jitter));
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
     const duration = 20;
