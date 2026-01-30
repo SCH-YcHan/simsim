@@ -1,96 +1,80 @@
 const appData = [
   {
     category: "10초게임",
-    description: "짧고 강렬한 미니게임",
     items: [
       {
-        name: "10초 타이머",
+        name: "10초 타이머 챌린지",
         tag: "Speed",
-        desc: "10초를 정확히 맞추는 리듬 게임",
         link: "#",
       },
       {
-        name: "두뇌 반사",
+        name: "반응속도 테스트",
         tag: "Quick",
-        desc: "반응속도 체크 & 랭킹 도전",
         link: "#",
       },
       {
-        name: "순간 기억",
+        name: "순간 기억 복사",
         tag: "Focus",
-        desc: "화면에 뜬 패턴을 10초 안에 복사",
         link: "#",
       },
     ],
   },
   {
     category: "킬링타임",
-    description: "심심할 때 켜는 컨텐츠",
     items: [
       {
-        name: "오늘의 랜덤",
+        name: "오늘의 랜덤 미션",
         tag: "Daily",
-        desc: "하루 한 번 랜덤 미션을 뽑아보세요",
         link: "#",
       },
       {
         name: "밈 제너레이터",
         tag: "Fun",
-        desc: "짧은 문장으로 밈 이미지 만들기",
         link: "#",
       },
       {
-        name: "사다리 챌린지",
+        name: "사다리 게임",
         tag: "Game",
-        desc: "친구들과 바로 플레이 가능한 사다리",
         link: "#",
       },
     ],
   },
   {
     category: "테스트",
-    description: "성향/심리/취향 테스트",
     items: [
       {
         name: "감성 온도",
         tag: "Mood",
-        desc: "현재 감정을 시각화해주는 간단 테스트",
         link: "#",
       },
       {
         name: "집중력 측정",
         tag: "Focus",
-        desc: "3분만에 집중력 지표 확인",
         link: "#",
       },
       {
-        name: "나의 속도",
+        name: "속도 & 실수율",
         tag: "Stats",
-        desc: "반응속도와 실수율을 그래프로",
         link: "#",
       },
     ],
   },
   {
     category: "계산기",
-    description: "빠르고 직관적인 계산 도구",
     items: [
       {
         name: "생활비 계산기",
         tag: "Money",
-        desc: "지출을 정리하고 예산을 예측",
         link: "#",
       },
       {
         name: "D-Day",
         tag: "Date",
-        desc: "중요한 날짜까지 남은 시간 계산",
         link: "#",
       },
       {
         name: "단위 변환",
         tag: "Tool",
-        desc: "길이, 무게, 온도 변환 한 번에",
         link: "#",
       },
     ],
@@ -110,7 +94,6 @@ function createItem(item) {
       <div class="item__tag">${item.tag}</div>
       <div class="item__title">${item.name}</div>
     </div>
-    <div class="item__desc">${item.desc}</div>
     <a class="item__link" href="${item.link}">바로가기 <span>→</span></a>
   `;
 
@@ -130,11 +113,19 @@ function renderCatalog(data) {
     header.innerHTML = `
       <div>
         <div class="category__title">${group.category}</div>
-        <div class="category__count">${group.description} · ${group.items.length}개</div>
+        <div class="category__count">${group.items.length}개</div>
       </div>
     `;
 
+    const list = document.createElement("div");
+    list.className = "item-list";
+
+    group.items.forEach((item) => {
+      list.appendChild(createItem(item));
+    });
+
     section.appendChild(header);
+    section.appendChild(list);
     catalog.appendChild(section);
   });
 }

@@ -175,7 +175,7 @@ body {
 
 .item {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   padding: 14px 16px;
   border-radius: var(--radius-sm);
   background: rgba(247, 243, 239, 0.6);
@@ -205,11 +205,6 @@ body {
   font-weight: 700;
 }
 
-.item__desc {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
-}
 
 .item__link {
   display: inline-flex;
