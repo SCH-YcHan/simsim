@@ -110,7 +110,8 @@ function renderRace(selected, raceDuration) {
 
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
-    const duration = 20;
+    const baseDuration = 20;
+    const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
 
     lane.innerHTML = `
       <div class="race-runner" style="animation-duration: ${duration}s; animation-delay: ${delay}s;">
