@@ -156,6 +156,7 @@ function renderRace(selected, raceDuration) {
       let acc = 0;
       const stepDuration = duration / steps;
       const pauses = [];
+      let dehydrationCount = 0;
       let elapsed = 0;
       const keyframes = [];
 
@@ -173,13 +174,25 @@ function renderRace(selected, raceDuration) {
       const stepDistance = (finishX - startX) * (progress - prevProgress);
       const stepPercent = stepDistance / Math.max(1, finishX - startX);
       if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
+        dehydrationCount += 1;
+        const isConsecutive = dehydrationCount >= 2;
+        const pauseDuration = isConsecutive ? 4 : 2;
         const pauseStart = elapsed;
-        elapsed += 2;
+        elapsed += pauseDuration;
         keyframes.push({
           offset: elapsed,
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         });
-        pauses.push({ start: pauseStart, end: elapsed });
+        pauses.push({
+          start: pauseStart,
+          end: elapsed,
+          consecutive: isConsecutive,
+        });
+        if (isConsecutive) {
+          dehydrationCount = 0;
+        }
+      } else {
+        dehydrationCount = 0;
       }
       });
 
@@ -207,7 +220,14 @@ function renderRace(selected, raceDuration) {
         if (!sweat) return;
         const showAt = (delay + pause.start) * 1000;
         const hideAt = (delay + pause.end) * 1000;
-        setTimeout(() => sweat.classList.add("race-sweat--show"), showAt);
+        setTimeout(() => {
+          if (pause.consecutive) {
+            sweat.textContent = "🥵";
+          } else {
+            sweat.textContent = "💦";
+          }
+          sweat.classList.add("race-sweat--show");
+        }, showAt);
         setTimeout(() => sweat.classList.remove("race-sweat--show"), hideAt);
       });
 
