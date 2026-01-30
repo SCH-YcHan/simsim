@@ -146,10 +146,8 @@ function renderRace(selected, raceDuration) {
       const steps = 20;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.5);
       const blockSize = 4;
-      const blockMultipliers = [];
       for (let i = 0; i < steps; i += blockSize) {
         const multiplier = Math.random() < 0.5 ? 0.5 : 2;
-        blockMultipliers.push(multiplier);
         for (let j = i; j < Math.min(i + blockSize, steps); j += 1) {
           weights[j] *= multiplier;
         }
@@ -161,6 +159,7 @@ function renderRace(selected, raceDuration) {
       let elapsed = 0;
       const keyframes = [];
 
+      const dehydrationThreshold = 500;
       weights.forEach((w, idx) => {
         acc += w / total;
         const progress = Math.min(acc, 1);
@@ -172,8 +171,9 @@ function renderRace(selected, raceDuration) {
 
         const isBlockEnd = (idx + 1) % blockSize === 0;
         if (isBlockEnd) {
-          const blockIndex = Math.floor(idx / blockSize);
-          if (blockMultipliers[blockIndex] === 2) {
+          const prevProgress = progress - w / total;
+          const stepDistance = (finishX - startX) * (progress - prevProgress);
+          if (stepDistance >= dehydrationThreshold) {
             const pauseStart = elapsed;
             elapsed += 2;
             keyframes.push({
