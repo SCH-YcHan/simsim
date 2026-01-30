@@ -250,10 +250,10 @@ function renderRace(selected, raceDuration) {
         if (stepIndex > meta.lastStepIndex) {
           for (let s = meta.lastStepIndex + 1; s <= stepIndex; s += 1) {
             if (s <= 0 || s >= steps - 1) continue;
-            if (meta.triggers[s]) {
-              const isConsecutive = meta.lastTriggerStep === s - 1;
+            if (meta.triggers[s - 1]) {
+              const isConsecutive = meta.triggers[s - 2] === true;
               const pauseDuration = isConsecutive ? 4 : 2;
-              meta.lastTriggerStep = isConsecutive ? -10 : s;
+              meta.lastTriggerStep = isConsecutive ? -10 : s - 1;
               meta.paused = true;
               if (sweat) {
                 sweat.textContent = isConsecutive ? "🥵" : "💦";
