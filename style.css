@@ -544,8 +544,8 @@ body {
   position: relative;
   overflow: hidden;
   min-height: 36px;
-  --start-x: 28px;
-  --finish-x: calc(100% - 60px);
+  --start-x: 22px;
+  --finish-x: calc(100% - 40px);
 }
 
 .race-rank {
@@ -580,6 +580,7 @@ body {
   padding: 0;
   border-radius: 0;
   border: none;
+  z-index: 3;
 }
 
 .race-runner__bob {
