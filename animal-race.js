@@ -121,13 +121,13 @@ function renderRace(selected, raceDuration) {
     lane.className = "race-lane";
 
     const rank = rankMap.get(animal.id);
-    const spread = Math.min(0.85, (raceDuration - 3) / (selected.length || 1));
-    const baseTime = 2.4 + (rank - 1) * spread;
-    const jitter = (Math.random() * 0.5 - 0.25);
-    const finishTime = Math.max(2.2, Math.min(raceDuration - 0.2, baseTime + jitter));
+    const spread = Math.min(0.9, 2.2 / (selected.length || 1));
+    const baseTime = 10 + (rank - 1) * spread;
+    const jitter = (Math.random() * 0.9 - 0.45);
+    const finishTime = Math.max(10, Math.min(12.5, baseTime + jitter));
     const startDelay = 3;
-    const delay = Number((startDelay + Math.random() * 0.25).toFixed(2));
-    const duration = Number(Math.max(2, finishTime - delay).toFixed(2));
+    const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
+    const duration = Number(Math.max(7, finishTime - delay).toFixed(2));
 
     lane.innerHTML = `
       <div class="race-rank" aria-hidden="true">?</div>

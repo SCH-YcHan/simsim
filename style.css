@@ -494,19 +494,23 @@ body {
 .race-arena {
   position: relative;
   display: grid;
-  padding: 8px 0;
+  padding: 16px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(29, 26, 23, 0.08);
+  box-shadow: 0 10px 25px rgba(29, 26, 23, 0.08);
 }
 
 .race-lanes {
   display: grid;
-  gap: 10px;
+  gap: 0;
 }
 
 .race-start-line,
 .race-finish-line {
   position: absolute;
-  top: 8px;
-  bottom: 8px;
+  top: 16px;
+  bottom: 16px;
   width: 3px;
   border-radius: 999px;
   z-index: 1;
@@ -534,18 +538,19 @@ body {
 
 .race-lane {
   display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 12px;
+  grid-template-columns: 1fr;
   align-items: center;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(247, 243, 239, 0.7);
-  border: 1px solid rgba(29, 26, 23, 0.08);
+  padding: 14px 12px;
   position: relative;
   overflow: hidden;
   min-height: 56px;
+  border-bottom: 1px dashed rgba(29, 26, 23, 0.08);
   --start-x: 82px;
-  --finish-x: calc(100% - 170px);
+  --finish-x: calc(100% - 180px);
+}
+
+.race-lane:last-child {
+  border-bottom: none;
 }
 
 .race-rank {
@@ -554,11 +559,15 @@ body {
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 0.2s ease, transform 0.2s ease;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .race-lane--done .race-rank {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-50%);
 }
 
 .race-runner {
@@ -574,9 +583,11 @@ body {
   padding: 6px 10px;
   border-radius: 999px;
   border: 1px solid rgba(29, 26, 23, 0.12);
-  animation-name: raceRun;
-  animation-timing-function: linear;
+  animation-name: raceRun, runnerBob;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1), ease-in-out;
   animation-fill-mode: forwards;
+  animation-iteration-count: 1, infinite;
+  animation-direction: normal, alternate;
 }
 
 .race-name {
@@ -587,8 +598,23 @@ body {
   from {
     left: var(--start-x);
   }
+  45% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * 0.55);
+  }
+  75% {
+    left: calc(var(--start-x) + (var(--finish-x) - var(--start-x)) * 0.78);
+  }
   to {
     left: var(--finish-x);
+  }
+}
+
+@keyframes runnerBob {
+  from {
+    transform: translateY(-52%);
+  }
+  to {
+    transform: translateY(-46%);
   }
 }
 
