@@ -62,15 +62,7 @@ const appData = [
     description: "복잡한 계산은 여기서 끝!",
     items: [
       {
-        name: "생활비 계산기",
-        link: "#",
-      },
-      {
-        name: "D-Day",
-        link: "#",
-      },
-      {
-        name: "단위 변환",
+        name: "복리 계산기",
         link: "#",
       },
     ],
