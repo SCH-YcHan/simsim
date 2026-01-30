@@ -503,7 +503,7 @@ body {
 
 .race-lanes {
   display: grid;
-  gap: 8px;
+  gap: 14px;
 }
 
 .race-start-line,
@@ -540,10 +540,10 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  padding: 10px 12px;
+  padding: 14px 12px;
   position: relative;
   overflow: hidden;
-  min-height: 56px;
+  min-height: 72px;
   --start-x: 8px;
   --finish-x: calc(100% - 8px);
 }

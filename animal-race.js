@@ -113,8 +113,8 @@ function renderRace(selected, raceDuration) {
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
   let finishCount = 0;
   const laneCount = displayOrder.length;
-  const laneHeight = 64;
-  const arenaPadding = 36;
+  const laneHeight = 80;
+  const arenaPadding = 40;
   raceTrack.style.minHeight = `${arenaPadding + laneCount * laneHeight}px`;
 
   displayOrder.forEach((animal) => {
