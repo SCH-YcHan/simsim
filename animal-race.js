@@ -236,7 +236,7 @@ function renderRace(selected, raceDuration) {
       meta.consecutiveFlag = false;
       meta.dehydratedLastTick = false;
 
-      const stepPercentThreshold = 0.2;
+      const stepPercentThreshold = 0.1;
       const stepTimeMs = stepDuration * 1000;
 
       const tick = () => {
