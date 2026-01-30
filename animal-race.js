@@ -111,12 +111,7 @@ function renderRace(selected, raceDuration) {
   const startLine = document.querySelector(".race-start-line");
   const finishLine = document.querySelector(".race-finish-line");
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
-  const finishOrder = [...selected].sort(() => Math.random() - 0.5);
-
-  const rankMap = new Map();
-  finishOrder.forEach((animal, index) => {
-    rankMap.set(animal.id, index + 1);
-  });
+  let finishCount = 0;
 
   displayOrder.forEach((animal) => {
     const lane = document.createElement("div");
@@ -180,10 +175,11 @@ function renderRace(selected, raceDuration) {
       );
 
       animation.onfinish = () => {
+        finishCount += 1;
         lane.classList.add("race-lane--done");
         const rank = lane.querySelector(".race-rank");
         if (rank) {
-          rank.textContent = `${rankMap.get(animal.id)}위`;
+          rank.textContent = `${finishCount}위`;
           rank.removeAttribute("aria-hidden");
         }
       };
