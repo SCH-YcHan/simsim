@@ -112,10 +112,6 @@ function renderRace(selected, raceDuration) {
     return { animal, delay, duration, finishEstimate: delay + duration };
   });
 
-  const slowest = plans.reduce((prev, curr) => {
-    return curr.finishEstimate > prev.finishEstimate ? curr : prev;
-  }, plans[0]);
-  const slowestId = slowest?.animal?.id;
   let boostTriggered = false;
   const runnerMeta = new Map();
 
@@ -173,11 +169,12 @@ function renderRace(selected, raceDuration) {
       const keyframes = [];
 
       const dehydrationPercentThreshold = 0.1;
-      const isBoostTarget = animal.id === slowestId;
+      const framePoints = [];
       weights.forEach((w, idx) => {
         acc += w / total;
         const progress = Math.min(acc, 1);
         elapsed += stepDuration;
+        framePoints.push({ t: elapsed / duration, p: progress });
         keyframes.push({
           offset: elapsed,
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
@@ -186,19 +183,13 @@ function renderRace(selected, raceDuration) {
         const prevProgress = progress - w / total;
         const stepDistance = (finishX - startX) * (progress - prevProgress);
         const stepPercent = stepDistance / Math.max(1, finishX - startX);
-        if (!isBoostTarget && idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
+        if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
           dehydrationCount += 1;
           const isConsecutive = dehydrationCount >= 2;
           const pauseDuration = isConsecutive ? 4 : 2;
-          const pauseStart = elapsed;
-          elapsed += pauseDuration;
-          keyframes.push({
-            offset: elapsed,
-            transform: `translate(${(finishX - startX) * progress}px, -50%)`,
-          });
           pauses.push({
-            start: pauseStart,
-            end: elapsed,
+            start: elapsed,
+            duration: pauseDuration,
             consecutive: isConsecutive,
           });
           if (isConsecutive) {
@@ -209,7 +200,7 @@ function renderRace(selected, raceDuration) {
         }
       });
 
-      const totalDuration = elapsed;
+      const totalDuration = duration;
       const normalizedFrames = [
         { offset: 0, transform: "translate(0, -50%)" },
         ...keyframes.map((frame) => ({
@@ -229,19 +220,27 @@ function renderRace(selected, raceDuration) {
       );
 
       const sweat = runner.querySelector(".race-sweat");
+      const pauseTimers = [];
       pauses.forEach((pause) => {
-        if (!sweat) return;
-        const showAt = (delay + pause.start) * 1000;
-        const hideAt = (delay + pause.end) * 1000;
-        setTimeout(() => {
-          if (pause.consecutive) {
-            sweat.textContent = "🥵";
-          } else {
-            sweat.textContent = "💦";
-          }
-          sweat.classList.add("race-sweat--show");
-        }, showAt);
-        setTimeout(() => sweat.classList.remove("race-sweat--show"), hideAt);
+        const startAt = (delay + pause.start) * 1000;
+        const endAt = (delay + pause.start + pause.duration) * 1000;
+        pauseTimers.push(
+          setTimeout(() => {
+            const meta = runnerMeta.get(animal.id);
+            if (!meta || meta.boosted || meta.finished) return;
+            if (sweat) {
+              sweat.textContent = pause.consecutive ? "🥵" : "💦";
+              sweat.classList.add("race-sweat--show");
+            }
+            meta.animation.playbackRate = 0;
+          }, startAt),
+          setTimeout(() => {
+            const meta = runnerMeta.get(animal.id);
+            if (!meta || meta.boosted || meta.finished) return;
+            if (sweat) sweat.classList.remove("race-sweat--show");
+            meta.animation.playbackRate = meta.currentRate;
+          }, endAt)
+        );
       });
 
       animation.onfinish = () => {
@@ -254,15 +253,36 @@ function renderRace(selected, raceDuration) {
         }
         if (!boostTriggered) {
           boostTriggered = true;
-          const boostTarget = runnerMeta.get(slowestId);
-          if (boostTarget && !boostTarget.finished) {
-            boostTarget.boosted = true;
-            boostTarget.runner.classList.add("race-runner--boost");
-            boostTarget.animation.playbackRate = 2;
+          const lastMeta = getCurrentLastMeta();
+          if (lastMeta && !lastMeta.finished) {
+            lastMeta.boosted = true;
+            lastMeta.currentRate = 2;
+            lastMeta.runner.classList.add("race-runner--boost");
+            lastMeta.animation.playbackRate = 2;
+
+            const currentTime = lastMeta.animation.currentTime ?? 0;
+            const localTime = Math.max(0, currentTime - lastMeta.delayMs);
+            const t = Math.min(1, localTime / lastMeta.totalDurationMs);
+            const currentStep = Math.floor(t * steps);
+            const remainingSteps = Math.max(0, steps - currentStep - 1);
+            for (let i = 1; i <= remainingSteps; i += 1) {
+              const timer = setTimeout(() => {
+                if (lastMeta.finished || !lastMeta.boosted) return;
+                lastMeta.currentRate = Math.min(lastMeta.currentRate * 2, 8);
+                lastMeta.animation.playbackRate = lastMeta.currentRate;
+              }, i * 1000);
+              lastMeta.timers.push(timer);
+            }
           }
         }
         const meta = runnerMeta.get(animal.id);
-        if (meta) meta.finished = true;
+        if (meta) {
+          meta.finished = true;
+          meta.runner.classList.remove("race-runner--boost");
+          if (sweat) sweat.classList.remove("race-sweat--show");
+          pauseTimers.forEach((t) => clearTimeout(t));
+          meta.timers.forEach((t) => clearTimeout(t));
+        }
       };
 
       runnerMeta.set(animal.id, {
@@ -270,9 +290,44 @@ function renderRace(selected, raceDuration) {
         animation,
         finished: false,
         boosted: false,
+        currentRate: 1,
+        delayMs: delay * 1000,
+        totalDurationMs: totalDuration * 1000,
+        frames: framePoints,
+        timers: [],
       });
     }
   });
+
+  function getCurrentLastMeta() {
+    let last = null;
+    runnerMeta.forEach((meta) => {
+      if (meta.finished) return;
+      const currentTime = meta.animation.currentTime ?? 0;
+      const localTime = Math.max(0, currentTime - meta.delayMs);
+      const t = Math.min(1, localTime / meta.totalDurationMs);
+      let progress = t;
+      const frames = meta.frames;
+      if (frames && frames.length) {
+        const nextIndex = frames.findIndex((f) => f.t >= t);
+        if (nextIndex <= 0) {
+          progress = frames[0].p;
+        } else if (nextIndex === -1) {
+          progress = frames[frames.length - 1].p;
+        } else {
+          const prev = frames[nextIndex - 1];
+          const next = frames[nextIndex];
+          const span = Math.max(0.0001, next.t - prev.t);
+          const ratio = (t - prev.t) / span;
+          progress = prev.p + (next.p - prev.p) * ratio;
+        }
+      }
+      if (!last || progress < last.progress) {
+        last = { meta, progress };
+      }
+    });
+    return last?.meta ?? null;
+  }
 }
 
 function startRace() {
