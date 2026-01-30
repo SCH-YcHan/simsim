@@ -140,8 +140,9 @@ function renderRace(selected, raceDuration) {
     lanesContainer.appendChild(lane);
     const runner = lane.querySelector(".race-runner");
     if (runner) {
-      const startX = parseFloat(getComputedStyle(lane).getPropertyValue("--start-x"));
-      const finishX = parseFloat(getComputedStyle(lane).getPropertyValue("--finish-x"));
+      const laneWidth = lane.getBoundingClientRect().width;
+      const startX = 28;
+      const finishX = Math.max(startX + 60, laneWidth - 60);
       const steps = Math.max(8, Math.ceil(duration));
       const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
       const total = weights.reduce((sum, w) => sum + w, 0);
