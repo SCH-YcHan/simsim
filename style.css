@@ -65,9 +65,11 @@ body {
   line-height: 1.08;
 }
 
-.hero__title br {
+.hero__line {
   display: block;
-  content: "";
+}
+
+.hero__line--spaced {
   margin-top: 50px;
 }
 
