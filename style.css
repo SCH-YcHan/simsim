@@ -155,7 +155,7 @@ body {
 }
 
 .category__header--row {
-  justify-content: flex-start;
+  justify-content: space-between;
 }
 
 .category__title {
@@ -174,13 +174,13 @@ body {
 
 .item-list {
   display: grid;
-  gap: 10px;
-  margin-top: 2px;
+  gap: 4px;
+  margin-top: 0;
 }
 
 .item {
   display: grid;
-  padding: 8px 0;
+  padding: 2px 0;
 }
 
 .item__name {
@@ -188,7 +188,7 @@ body {
   border: none;
   background: transparent;
   text-align: left;
-  padding: 12px 14px;
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-size: 16px;
   font-weight: 600;
