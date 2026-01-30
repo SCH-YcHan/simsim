@@ -159,7 +159,7 @@ function renderRace(selected, raceDuration) {
       let elapsed = 0;
       const keyframes = [];
 
-      const dehydrationPercentThreshold = 0.05;
+      const dehydrationPercentThreshold = 0.1;
       weights.forEach((w, idx) => {
         acc += w / total;
         const progress = Math.min(acc, 1);
@@ -172,7 +172,7 @@ function renderRace(selected, raceDuration) {
       const prevProgress = progress - w / total;
       const stepDistance = (finishX - startX) * (progress - prevProgress);
       const stepPercent = stepDistance / Math.max(1, finishX - startX);
-      if (stepPercent >= dehydrationPercentThreshold) {
+      if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
         const pauseStart = elapsed;
         elapsed += 2;
         keyframes.push({
