@@ -574,7 +574,7 @@ body {
 .race-sweat {
   position: absolute;
   right: -18px;
-  top: -8px;
+  top: -4px;
   font-size: 16px;
   opacity: 0;
   transform: translateY(4px) scale(0.9);
