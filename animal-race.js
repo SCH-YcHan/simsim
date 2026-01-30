@@ -165,6 +165,7 @@ function renderRace(selected, raceDuration) {
       const stepDuration = duration / steps;
       const pauses = [];
       let lastDehydrationStep = -10;
+      let dehydrateNext = false;
       let timeline = 0;
       let elapsed = 0;
       const keyframes = [];
@@ -172,6 +173,19 @@ function renderRace(selected, raceDuration) {
       const dehydrationPercentThreshold = 0.1;
       const framePoints = [];
       weights.forEach((w, idx) => {
+        if (dehydrateNext) {
+          const isConsecutive = lastDehydrationStep === idx - 1;
+          const pauseDuration = isConsecutive ? 4 : 2;
+          pauses.push({
+            start: timeline,
+            duration: pauseDuration,
+            consecutive: isConsecutive,
+          });
+          timeline += pauseDuration;
+          dehydrateNext = false;
+          lastDehydrationStep = isConsecutive ? -10 : idx - 1;
+        }
+
         acc += w / total;
         const progress = Math.min(acc, 1);
         elapsed += stepDuration;
@@ -185,17 +199,8 @@ function renderRace(selected, raceDuration) {
         const stepDistance = (finishX - startX) * (progress - prevProgress);
         const stepPercent = stepDistance / Math.max(1, finishX - startX);
         if (idx < steps - 1 && stepPercent >= dehydrationPercentThreshold) {
-          const isConsecutive = idx === lastDehydrationStep + 1;
-          const pauseDuration = isConsecutive ? 4 : 2;
-          pauses.push({
-            start: timeline,
-            duration: pauseDuration,
-            consecutive: isConsecutive,
-          });
-          lastDehydrationStep = isConsecutive ? -10 : idx;
-          timeline += pauseDuration;
-        } else {
-          lastDehydrationStep = -10;
+          dehydrateNext = true;
+          lastDehydrationStep = idx;
         }
         framePoints.push({ t: timeline, p: progress });
       });
