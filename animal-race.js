@@ -112,6 +112,10 @@ function renderRace(selected, raceDuration) {
   const finishLine = document.querySelector(".race-finish-line");
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
   let finishCount = 0;
+  const laneCount = displayOrder.length;
+  const laneHeight = 46;
+  const arenaPadding = 32;
+  raceTrack.style.minHeight = `${arenaPadding + laneCount * laneHeight}px`;
 
   displayOrder.forEach((animal) => {
     const lane = document.createElement("div");
@@ -246,6 +250,7 @@ function resetRace() {
     raceCountdown.classList.remove("race-countdown--show");
     raceCountdown.textContent = "";
   }
+  raceTrack.style.minHeight = "";
   document.querySelectorAll(".race-runner").forEach((runner) => {
     runner.getAnimations().forEach((anim) => anim.cancel());
   });
