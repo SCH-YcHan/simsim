@@ -1,6 +1,7 @@
 const appData = [
   {
     category: "10초게임",
+    description: "짧고 강렬한 미니 게임 모음",
     items: [
       {
         name: "10초 타이머 챌린지",
@@ -18,6 +19,7 @@ const appData = [
   },
   {
     category: "킬링타임",
+    description: "심심할 때 바로 즐기는 콘텐츠",
     items: [
       {
         name: "오늘의 랜덤 미션",
@@ -35,6 +37,7 @@ const appData = [
   },
   {
     category: "테스트",
+    description: "성향과 몰입도를 가볍게 확인",
     items: [
       {
         name: "감성 온도",
@@ -52,6 +55,7 @@ const appData = [
   },
   {
     category: "계산기",
+    description: "생활에 필요한 계산을 빠르게",
     items: [
       {
         name: "생활비 계산기",
@@ -101,6 +105,10 @@ function renderCatalog(data) {
       <div class="category__count">${group.items.length}개</div>
     `;
 
+    const summary = document.createElement("div");
+    summary.className = "category__summary";
+    summary.textContent = group.description;
+
     const list = document.createElement("div");
     list.className = "item-list";
 
@@ -109,6 +117,7 @@ function renderCatalog(data) {
     });
 
     section.appendChild(header);
+    section.appendChild(summary);
     section.appendChild(list);
     catalog.appendChild(section);
   });

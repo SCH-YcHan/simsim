@@ -166,11 +166,18 @@ body {
 }
 
 .category__count {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   line-height: 1.2;
+}
+
+.category__summary {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: -6px;
 }
 
 .item-list {
