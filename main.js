@@ -4,17 +4,14 @@ const appData = [
     items: [
       {
         name: "10초 타이머 챌린지",
-        tag: "Speed",
         link: "#",
       },
       {
         name: "반응속도 테스트",
-        tag: "Quick",
         link: "#",
       },
       {
         name: "순간 기억 복사",
-        tag: "Focus",
         link: "#",
       },
     ],
@@ -24,17 +21,14 @@ const appData = [
     items: [
       {
         name: "오늘의 랜덤 미션",
-        tag: "Daily",
         link: "#",
       },
       {
         name: "밈 제너레이터",
-        tag: "Fun",
         link: "#",
       },
       {
         name: "사다리 게임",
-        tag: "Game",
         link: "#",
       },
     ],
@@ -44,17 +38,14 @@ const appData = [
     items: [
       {
         name: "감성 온도",
-        tag: "Mood",
         link: "#",
       },
       {
         name: "집중력 측정",
-        tag: "Focus",
         link: "#",
       },
       {
         name: "속도 & 실수율",
-        tag: "Stats",
         link: "#",
       },
     ],
@@ -64,17 +55,14 @@ const appData = [
     items: [
       {
         name: "생활비 계산기",
-        tag: "Money",
         link: "#",
       },
       {
         name: "D-Day",
-        tag: "Date",
         link: "#",
       },
       {
         name: "단위 변환",
-        tag: "Tool",
         link: "#",
       },
     ],
@@ -90,11 +78,9 @@ function createItem(item) {
   entry.className = "item fade-up";
 
   entry.innerHTML = `
-    <div class="item__meta">
-      <div class="item__tag">${item.tag}</div>
-      <div class="item__title">${item.name}</div>
-    </div>
-    <a class="item__link" href="${item.link}">바로가기 <span>→</span></a>
+    <button class="item__name" type="button" data-link="${item.link}">
+      ${item.name}
+    </button>
   `;
 
   return entry;
@@ -141,9 +127,7 @@ function filterCatalog(keyword) {
     .map((group) => {
       const items = group.items.filter((item) => {
         return (
-          item.name.toLowerCase().includes(normalized) ||
-          item.desc.toLowerCase().includes(normalized) ||
-          item.tag.toLowerCase().includes(normalized)
+          item.name.toLowerCase().includes(normalized)
         );
       });
 
@@ -163,4 +147,14 @@ searchInput.addEventListener("input", (event) => {
 resetButton.addEventListener("click", () => {
   searchInput.value = "";
   renderCatalog(appData);
+});
+
+catalog.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const button = target.closest(".item__name");
+  if (!button) return;
+  const link = button.dataset.link;
+  if (!link || link === "#") return;
+  window.location.href = link;
 });
