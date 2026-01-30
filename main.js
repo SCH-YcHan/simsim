@@ -5,18 +5,22 @@ const appData = [
     items: [
       {
         name: "동물경주",
+        image: "",
         link: "#",
       },
       {
         name: "제비뽑기",
+        image: "",
         link: "#",
       },
       {
         name: "사다리타기",
+        image: "",
         link: "#",
       },
       {
         name: "업앤다운",
+        image: "",
         link: "#",
       },
     ],
@@ -27,6 +31,7 @@ const appData = [
     items: [
       {
         name: "테트리스",
+        image: "",
         link: "#",
       },
     ],
@@ -37,6 +42,7 @@ const appData = [
     items: [
       {
         name: "반응속도 측정",
+        image: "",
         link: "#",
       },
     ],
@@ -47,6 +53,7 @@ const appData = [
     items: [
       {
         name: "복리 계산기",
+        image: "",
         link: "#",
       },
     ],
@@ -61,10 +68,19 @@ function createItem(item) {
   const entry = document.createElement("div");
   entry.className = "item fade-up";
 
+  const media = item.image
+    ? `<img class="app-card__image" src="${item.image}" alt="${item.name} 미리보기">`
+    : `<div class="app-card__placeholder">미리보기</div>`;
+
   entry.innerHTML = `
-    <button class="item__name" type="button" data-link="${item.link}">
-      ${item.name}
-    </button>
+    <div class="app-card">
+      <div class="app-card__media">
+        ${media}
+      </div>
+      <button class="app-card__name" type="button" data-link="${item.link}">
+        ${item.name}
+      </button>
+    </div>
   `;
 
   return entry;

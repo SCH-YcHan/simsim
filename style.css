@@ -190,21 +190,56 @@ body {
 
 .item-list {
   display: grid;
-  gap: 4px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
   margin-top: 0;
 }
 
 .item {
   display: grid;
-  padding: 2px 0;
+  padding: 0;
 }
 
-.item__name {
+.app-card {
+  display: grid;
+  gap: 10px;
+  background: rgba(247, 243, 239, 0.7);
+  border: 1px solid rgba(29, 26, 23, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+}
+
+.app-card__media {
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(255, 94, 58, 0.14));
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.app-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.app-card__placeholder {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed rgba(29, 26, 23, 0.15);
+}
+
+.app-card__name {
   width: 100%;
   border: none;
   background: transparent;
   text-align: left;
-  padding: 8px 12px;
+  padding: 6px 4px;
   border-radius: var(--radius-sm);
   font-size: 16px;
   font-weight: 600;
@@ -214,7 +249,7 @@ body {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.item__name:hover {
+.app-card__name:hover {
   background: rgba(255, 94, 58, 0.08);
   transform: translateX(2px);
 }
