@@ -21,6 +21,7 @@ const countUp = document.querySelector("#countUp");
 const raceStatus = document.querySelector("#raceStatus");
 const raceTimer = document.querySelector("#raceTimer");
 const racePage = document.querySelector("#racePage");
+const raceCountdown = document.querySelector("#raceCountdown");
 
 let selectedIds = new Set();
 let targetCount = 4;
@@ -113,10 +114,10 @@ function renderRace(selected, raceDuration) {
     lane.className = "race-lane";
 
     const rank = rankMap.get(animal.id);
-    const spread = Math.min(0.6, (raceDuration - 4) / (selected.length || 1));
-    const baseTime = 4 + (rank - 1) * spread;
-    const jitter = (Math.random() * 0.4 - 0.2);
-    const finishTime = Math.max(3.8, Math.min(raceDuration - 0.3, baseTime + jitter));
+    const spread = Math.min(0.85, (raceDuration - 3) / (selected.length || 1));
+    const baseTime = 2.4 + (rank - 1) * spread;
+    const jitter = (Math.random() * 0.5 - 0.25);
+    const finishTime = Math.max(2.2, Math.min(raceDuration - 0.2, baseTime + jitter));
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.25).toFixed(2));
     const duration = Number(Math.max(2, finishTime - delay).toFixed(2));
@@ -168,6 +169,10 @@ function startRace() {
   countDown.disabled = true;
   countUp.disabled = true;
   raceTimer.textContent = "3초";
+  if (raceCountdown) {
+    raceCountdown.textContent = "3";
+    raceCountdown.classList.add("race-countdown--show");
+  }
 
   let remaining = 3;
   clearInterval(countdownId);
@@ -176,9 +181,16 @@ function startRace() {
     if (remaining <= 0) {
       clearInterval(countdownId);
       raceTimer.textContent = "GO!";
+      if (raceCountdown) {
+        raceCountdown.textContent = "GO!";
+        setTimeout(() => raceCountdown.classList.remove("race-countdown--show"), 500);
+      }
       return;
     }
     raceTimer.textContent = `${remaining}초`;
+    if (raceCountdown) {
+      raceCountdown.textContent = String(remaining);
+    }
   }, 1000);
 
   renderRace(selected, 10);
@@ -196,6 +208,10 @@ function resetRace() {
   clearInterval(countdownId);
   if (racePage) {
     racePage.classList.remove("race-in-progress");
+  }
+  if (raceCountdown) {
+    raceCountdown.classList.remove("race-countdown--show");
+    raceCountdown.textContent = "";
   }
   selectedIds = new Set();
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';

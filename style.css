@@ -348,6 +348,27 @@ body {
   min-height: 420px;
 }
 
+.race-countdown {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(48px, 10vw, 96px);
+  font-weight: 700;
+  color: rgba(29, 26, 23, 0.75);
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.race-countdown--show {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .race-panel {
   background: var(--card);
   border: 1px solid var(--line);
@@ -467,6 +488,7 @@ body {
   display: grid;
   gap: 12px;
   min-height: 220px;
+  position: relative;
 }
 
 .race-placeholder {
