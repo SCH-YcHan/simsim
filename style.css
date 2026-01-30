@@ -68,7 +68,7 @@ body {
 .hero__title br {
   display: block;
   content: "";
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .hero__subtitle {
