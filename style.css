@@ -511,6 +511,17 @@ body {
   --finish-x: calc(100% - 54px);
 }
 
+.race-start-line {
+  position: absolute;
+  left: 22px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 999px;
+  background: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
 .race-finish-line {
   position: absolute;
   right: 22px;

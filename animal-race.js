@@ -117,7 +117,8 @@ function renderRace(selected, raceDuration) {
     const baseTime = 4 + (rank - 1) * spread;
     const jitter = (Math.random() * 0.4 - 0.2);
     const finishTime = Math.max(3.8, Math.min(raceDuration - 0.3, baseTime + jitter));
-    const delay = Number((Math.random() * 0.25).toFixed(2));
+    const startDelay = 3;
+    const delay = Number((startDelay + Math.random() * 0.25).toFixed(2));
     const duration = Number(Math.max(2, finishTime - delay).toFixed(2));
 
     lane.innerHTML = `
@@ -127,6 +128,7 @@ function renderRace(selected, raceDuration) {
           <span class="race-emoji">${animal.emoji}</span>
           <span class="race-name">${animal.name}</span>
         </div>
+        <div class="race-start-line" aria-hidden="true"></div>
         <div class="race-finish-line" aria-hidden="true"></div>
       </div>
     `;
@@ -165,15 +167,15 @@ function startRace() {
   startButton.disabled = true;
   countDown.disabled = true;
   countUp.disabled = true;
-  raceTimer.textContent = "10초";
+  raceTimer.textContent = "3초";
 
-  let remaining = 10;
+  let remaining = 3;
   clearInterval(countdownId);
   countdownId = setInterval(() => {
     remaining -= 1;
     if (remaining <= 0) {
       clearInterval(countdownId);
-      raceTimer.textContent = "결과 공개";
+      raceTimer.textContent = "GO!";
       return;
     }
     raceTimer.textContent = `${remaining}초`;
