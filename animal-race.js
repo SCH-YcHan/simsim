@@ -148,8 +148,8 @@ function renderRace(selected, raceDuration) {
       const startRect = startLine.getBoundingClientRect();
       const finishRect = finishLine.getBoundingClientRect();
       const runnerWidth = runner.getBoundingClientRect().width;
-      const startGap = 8;
-      const finishGap = 8;
+      const startGap = 12;
+      const finishGap = 12;
       const startX = Math.max(0, startRect.left - laneRect.left - runnerWidth - startGap);
       const finishX = Math.min(
         laneRect.width - runnerWidth,
