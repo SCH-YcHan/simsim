@@ -97,10 +97,8 @@ function renderCatalog(data) {
     const header = document.createElement("div");
     header.className = "category__header category__header--row";
     header.innerHTML = `
-      <div>
-        <div class="category__title">${group.category}</div>
-        <div class="category__count">${group.items.length}개</div>
-      </div>
+      <div class="category__title">${group.category}</div>
+      <div class="category__count">${group.items.length}개</div>
     `;
 
     const list = document.createElement("div");
