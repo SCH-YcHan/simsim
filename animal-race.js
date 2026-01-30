@@ -164,7 +164,6 @@ function renderRace(selected, raceDuration) {
       let acc = 0;
       const stepDuration = duration / steps;
       const pauses = [];
-      let timeline = 0;
       const keyframes = [];
       const framePoints = [];
 
@@ -184,27 +183,16 @@ function renderRace(selected, raceDuration) {
       });
 
       for (let idx = 0; idx < steps; idx += 1) {
-        if (idx > 0 && triggers[idx - 1]) {
-          const isConsecutive = idx > 1 && triggers[idx - 2];
-          const pauseDuration = isConsecutive ? 4 : 2;
-          pauses.push({
-            start: timeline,
-            duration: pauseDuration,
-            consecutive: isConsecutive,
-          });
-          timeline += pauseDuration;
-        }
-
-        timeline += stepDuration;
+        const elapsed = (idx + 1) * stepDuration;
         const progress = progressList[idx];
         keyframes.push({
-          offset: timeline,
+          offset: elapsed,
           transform: `translate(${(finishX - startX) * progress}px, -50%)`,
         });
-        framePoints.push({ t: timeline, p: progress });
+        framePoints.push({ t: elapsed / duration, p: progress });
       }
 
-      const totalDuration = Math.max(0.001, timeline);
+      const totalDuration = Math.max(0.001, duration);
       const finishTransform = `translate(${finishX - startX}px, -50%)`;
       const normalizedFrames = keyframes.map((frame) => ({
         ...frame,
@@ -245,16 +233,21 @@ function renderRace(selected, raceDuration) {
       });
 
       const pauseTimers = runnerMeta.get(animal.id).pauseTimers;
-      pauses.forEach((pause) => {
-        const startAt = (delay + pause.start) * 1000;
-        const endAt = (delay + pause.start + pause.duration) * 1000;
+      let cumulativePause = 0;
+      for (let idx = 1; idx < steps; idx += 1) {
+        if (!triggers[idx - 1]) continue;
+        const isConsecutive = idx > 1 && triggers[idx - 2];
+        const pauseDuration = isConsecutive ? 4 : 2;
+        const startAt = (delay + idx * stepDuration + cumulativePause) * 1000;
+        const endAt = (delay + idx * stepDuration + cumulativePause + pauseDuration) * 1000;
+        cumulativePause += pauseDuration;
         pauseTimers.push(
           setTimeout(() => {
             const meta = runnerMeta.get(animal.id);
             if (!meta || meta.boosted || meta.finished) return;
             meta.paused = true;
             if (sweat) {
-              sweat.textContent = pause.consecutive ? "🥵" : "💦";
+              sweat.textContent = isConsecutive ? "🥵" : "💦";
               sweat.classList.add("race-sweat--show");
             }
             meta.animation.playbackRate = 0;
@@ -267,7 +260,7 @@ function renderRace(selected, raceDuration) {
             meta.animation.playbackRate = meta.currentRate;
           }, endAt)
         );
-      });
+      }
 
       animation.onfinish = () => {
         finishCount += 1;
