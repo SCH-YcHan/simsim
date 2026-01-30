@@ -222,8 +222,8 @@ function renderRace(selected, raceDuration) {
         prevX: 0,
         totalDistance: 0,
         prevTime: 0,
-        lastDehydrate: false,
-        paused: false,
+        dehydrateStreak: 0,
+        skipDehydrateCheck: false,
       });
 
       const meta = runnerMeta.get(animal.id);
@@ -232,8 +232,6 @@ function renderRace(selected, raceDuration) {
       meta.prevX = startAbsX;
       meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevTime = performance.now() + delay * 1000 + 300;
-      meta.lastDehydrate = false;
-
       const stepPercentThreshold = 0.1;
       const stepTimeMs = stepDuration * 1000;
 
@@ -244,6 +242,14 @@ function renderRace(selected, raceDuration) {
           return;
         }
         const now = performance.now();
+        if (meta.skipDehydrateCheck) {
+          const rect = meta.runner.getBoundingClientRect();
+          meta.prevX = rect.left;
+          meta.prevTime = now;
+          meta.skipDehydrateCheck = false;
+          requestAnimationFrame(tick);
+          return;
+        }
         if (now - meta.prevTime >= stepTimeMs && !meta.paused) {
           const rect = meta.runner.getBoundingClientRect();
           const currentX = rect.left;
@@ -251,7 +257,8 @@ function renderRace(selected, raceDuration) {
           const stepPercent = deltaX / meta.totalDistance;
           const shouldDehydrate = stepPercent >= stepPercentThreshold;
           if (shouldDehydrate) {
-            const isConsecutive = meta.lastDehydrate;
+            meta.dehydrateStreak += 1;
+            const isConsecutive = meta.dehydrateStreak >= 2;
             const pauseDuration = isConsecutive ? 4 : 2;
             meta.paused = true;
             if (sweat) {
@@ -265,10 +272,13 @@ function renderRace(selected, raceDuration) {
               meta.paused = false;
               if (sweat) sweat.classList.remove("race-sweat--show");
               meta.animation.playbackRate = meta.currentRate;
+              meta.skipDehydrateCheck = true;
             }, pauseDuration * 1000);
-            meta.lastDehydrate = !isConsecutive;
+            if (isConsecutive) {
+              meta.dehydrateStreak = 0;
+            }
           } else {
-            meta.lastDehydrate = false;
+            meta.dehydrateStreak = 0;
           }
           meta.prevX = currentX;
           meta.prevTime = now;
