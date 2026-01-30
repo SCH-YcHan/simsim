@@ -156,7 +156,7 @@ function renderRace(selected, raceDuration) {
         finishRect.left - laneRect.left + finishGap
       );
       runner.style.left = `${startX}px`;
-      const steps = Math.max(8, Math.ceil(duration));
+      const steps = 10;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
       const total = weights.reduce((sum, w) => sum + w, 0);
       let acc = 0;
