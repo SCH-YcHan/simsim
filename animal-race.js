@@ -200,12 +200,12 @@ function renderRace(selected, raceDuration) {
         }
       });
 
-      const totalDuration = duration;
+      const totalDuration = Math.max(0.001, duration);
       const normalizedFrames = [
         { offset: 0, transform: "translate(0, -50%)" },
         ...keyframes.map((frame) => ({
           ...frame,
-          offset: frame.offset / totalDuration,
+          offset: Math.min(1, Math.max(0, frame.offset / totalDuration)),
         })),
       ];
 
