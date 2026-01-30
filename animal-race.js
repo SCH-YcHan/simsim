@@ -157,7 +157,7 @@ function renderRace(selected, raceDuration) {
       );
       runner.style.left = `${startX}px`;
       const steps = 20;
-      const weights = Array.from({ length: steps }, () => Math.random() + 0.2);
+      const weights = Array.from({ length: steps }, () => Math.random() + 0.5);
       const total = weights.reduce((sum, w) => sum + w, 0);
       let acc = 0;
       const keyframes = weights.map((w, idx) => {
