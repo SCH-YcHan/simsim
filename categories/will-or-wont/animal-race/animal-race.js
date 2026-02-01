@@ -233,7 +233,7 @@ function renderRace(selected, raceDuration) {
       const finishAbsX = laneRect.left + finishX;
       meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevStepIndex = 0;
-      meta.prevStepTime = performance.now() + delay * 1000 + 300;
+      meta.prevStepTime = 0;
       const stepTimeMs = stepDuration * 1000;
       const fastStepRatio = 0.25;
 
@@ -264,6 +264,12 @@ function renderRace(selected, raceDuration) {
           );
           const stepIndex = Math.floor(progress * steps);
           if (stepIndex > meta.prevStepIndex) {
+            if (!meta.prevStepTime) {
+              meta.prevStepIndex = stepIndex;
+              meta.prevStepTime = now;
+              requestAnimationFrame(tick);
+              return;
+            }
             const stepsAdvanced = stepIndex - meta.prevStepIndex;
             const elapsedMs = now - meta.prevStepTime;
             const shouldDehydrate =
