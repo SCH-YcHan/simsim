@@ -227,7 +227,6 @@ function renderRace(selected, raceDuration) {
         })),
         timers: [],
         pauseTimers: [],
-        prevProgress: 0,
         lastSegmentIndex: 0,
         lastSegmentTime: 0,
         dehydrateStreak: 0,
@@ -235,10 +234,9 @@ function renderRace(selected, raceDuration) {
       });
 
       const meta = runnerMeta.get(animal.id);
-      meta.prevProgress = 0;
       meta.lastSegmentIndex = 0;
       meta.lastSegmentTime = 0;
-      const minProgressForCheck = 2 / steps;
+      const segmentsPerCheck = 2;
       const dehydrationWindowMs = 1000;
 
       const getProgressAtTime = (frames, t) => {
@@ -273,7 +271,6 @@ function renderRace(selected, raceDuration) {
             return;
           }
           const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
-          meta.prevProgress = progress;
           meta.lastSegmentIndex = Math.floor(progress * steps);
           meta.lastSegmentTime = currentTimeMs;
           meta.skipDehydrateCheck = false;
@@ -290,16 +287,15 @@ function renderRace(selected, raceDuration) {
             return;
           }
           const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
-          if (progress < minProgressForCheck || !meta.lastSegmentTime) {
-            meta.prevProgress = progress;
-            meta.lastSegmentIndex = Math.floor(progress * steps);
+          const segmentIndex = Math.floor(progress * steps);
+          if (!meta.lastSegmentTime) {
+            meta.lastSegmentIndex = segmentIndex;
             meta.lastSegmentTime = currentTimeMs;
             requestAnimationFrame(tick);
             return;
           }
-          const progressDelta = progress - meta.prevProgress;
-          if (progressDelta >= minProgressForCheck) {
-            const segmentIndex = Math.floor(progress * steps);
+          const segmentsAdvanced = segmentIndex - meta.lastSegmentIndex;
+          if (segmentsAdvanced >= segmentsPerCheck) {
             const elapsedMs = currentTimeMs - meta.lastSegmentTime;
             const shouldDehydrate = elapsedMs <= dehydrationWindowMs;
             if (shouldDehydrate) {
@@ -326,7 +322,6 @@ function renderRace(selected, raceDuration) {
           } else {
             meta.dehydrateStreak = 0;
           }
-            meta.prevProgress = progress;
             meta.lastSegmentIndex = segmentIndex;
             meta.lastSegmentTime = currentTimeMs;
           }
