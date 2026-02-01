@@ -239,7 +239,7 @@ function renderRace(selected, raceDuration) {
       meta.lastSegmentIndex = 0;
       meta.lastSegmentTime = 0;
       const minProgressForCheck = 2 / steps;
-      const dehydrationWindowMs = 500;
+      const dehydrationWindowMs = 1000;
 
       const getProgressAtTime = (frames, t) => {
         if (!frames.length) return 0;
@@ -275,7 +275,7 @@ function renderRace(selected, raceDuration) {
           const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
           meta.prevProgress = progress;
           meta.lastSegmentIndex = Math.floor(progress * steps);
-          meta.lastSegmentTime = performance.now();
+          meta.lastSegmentTime = currentTimeMs;
           meta.skipDehydrateCheck = false;
           requestAnimationFrame(tick);
           return;
@@ -293,15 +293,14 @@ function renderRace(selected, raceDuration) {
           if (progress < minProgressForCheck || !meta.lastSegmentTime) {
             meta.prevProgress = progress;
             meta.lastSegmentIndex = Math.floor(progress * steps);
-            meta.lastSegmentTime = performance.now();
+            meta.lastSegmentTime = currentTimeMs;
             requestAnimationFrame(tick);
             return;
           }
           const progressDelta = progress - meta.prevProgress;
           if (progressDelta >= minProgressForCheck) {
-            const now = performance.now();
             const segmentIndex = Math.floor(progress * steps);
-            const elapsedMs = now - meta.lastSegmentTime;
+            const elapsedMs = currentTimeMs - meta.lastSegmentTime;
             const shouldDehydrate = elapsedMs <= dehydrationWindowMs;
             if (shouldDehydrate) {
             meta.dehydrateStreak += 1;
@@ -329,7 +328,7 @@ function renderRace(selected, raceDuration) {
           }
             meta.prevProgress = progress;
             meta.lastSegmentIndex = segmentIndex;
-            meta.lastSegmentTime = now;
+            meta.lastSegmentTime = currentTimeMs;
           }
         }
         requestAnimationFrame(tick);
