@@ -95,6 +95,10 @@ function renderRace(selected, raceDuration) {
   `;
 
   const lanesContainer = document.querySelector("#raceLanes");
+  const arena = raceTrack.querySelector(".race-arena");
+  if (raceCountdown && arena) {
+    arena.appendChild(raceCountdown);
+  }
   const startLine = document.querySelector(".race-start-line");
   const finishLine = document.querySelector(".race-finish-line");
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
@@ -416,6 +420,9 @@ function resetRace() {
   });
   selectedIds = new Set();
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
+  if (raceCountdown) {
+    raceTrack.appendChild(raceCountdown);
+  }
   raceTimer.textContent = "준비";
   renderAnimals();
   updateStatus();
