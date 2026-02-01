@@ -5,7 +5,7 @@ const appData = [
     items: [
       {
         name: "동물경주",
-        image: "/image%20copy%206.png",
+        image: "/categories/will-or-wont/animal-race/animalrun.png",
         link: "/categories/will-or-wont/animal-race/index.html",
       },
       {
