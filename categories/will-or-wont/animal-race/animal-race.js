@@ -108,7 +108,7 @@ function renderRace(selected, raceDuration) {
     const startDelay = 3;
     const delay = Number((startDelay + Math.random() * 0.35).toFixed(2));
     const baseDuration = typeof raceDuration === "number" ? raceDuration : 20;
-    const duration = Number((baseDuration * (0.7 + Math.random() * 0.6)).toFixed(2));
+    const duration = Number((baseDuration * (0.75 + Math.random() * 0.75)).toFixed(2));
     return { animal, delay, duration, finishEstimate: delay + duration };
   });
 
