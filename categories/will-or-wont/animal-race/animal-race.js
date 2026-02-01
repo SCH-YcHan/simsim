@@ -264,9 +264,11 @@ function renderRace(selected, raceDuration) {
           );
           const stepIndex = Math.floor(progress * steps);
           if (stepIndex > meta.prevStepIndex) {
+            const stepsAdvanced = stepIndex - meta.prevStepIndex;
             const elapsedMs = now - meta.prevStepTime;
-            const shouldDehydrate = elapsedMs <= stepTimeMs * fastStepRatio;
-          if (shouldDehydrate) {
+            const shouldDehydrate =
+              elapsedMs <= stepTimeMs * stepsAdvanced * fastStepRatio;
+            if (shouldDehydrate) {
             meta.dehydrateStreak += 1;
             const isConsecutive = meta.dehydrateStreak >= 2;
             const pauseDuration = isConsecutive ? 4 : 2;
