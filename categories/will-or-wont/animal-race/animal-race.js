@@ -263,7 +263,7 @@ function renderRace(selected, raceDuration) {
             Math.max(0, (rect.left - startAbsX) / meta.totalDistance)
           );
           const stepIndex = Math.floor(progress * steps);
-          if (stepIndex > meta.prevStepIndex) {
+          if (stepIndex >= meta.prevStepIndex + 2) {
             if (!meta.prevStepTime) {
               meta.prevStepIndex = stepIndex;
               meta.prevStepTime = now;
