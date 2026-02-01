@@ -221,7 +221,6 @@ function renderRace(selected, raceDuration) {
         })),
         timers: [],
         pauseTimers: [],
-        totalDistance: 0,
         prevStepIndex: 0,
         prevStepTime: 0,
         dehydrateStreak: 0,
@@ -229,9 +228,6 @@ function renderRace(selected, raceDuration) {
       });
 
       const meta = runnerMeta.get(animal.id);
-      const startAbsX = laneRect.left + startX;
-      const finishAbsX = laneRect.left + finishX;
-      meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevStepIndex = 0;
       meta.prevStepTime = 0;
       const stepTimeMs = stepDuration * 1000;
@@ -243,35 +239,40 @@ function renderRace(selected, raceDuration) {
           requestAnimationFrame(tick);
           return;
         }
-        const now = performance.now();
         if (meta.skipDehydrateCheck) {
-          const rect = meta.runner.getBoundingClientRect();
-          const progress = Math.min(
-            1,
-            Math.max(0, (rect.left - startAbsX) / meta.totalDistance)
-          );
-          meta.prevStepIndex = Math.floor(progress * steps);
-          meta.prevStepTime = now;
+          const currentTimeMs =
+            typeof meta.animation.currentTime === "number"
+              ? Math.max(0, meta.animation.currentTime)
+              : null;
+          if (currentTimeMs === null) {
+            requestAnimationFrame(tick);
+            return;
+          }
+          meta.prevStepIndex = Math.floor(currentTimeMs / stepTimeMs);
+          meta.prevStepTime = currentTimeMs;
           meta.skipDehydrateCheck = false;
           requestAnimationFrame(tick);
           return;
         }
         if (!meta.paused) {
-          const rect = meta.runner.getBoundingClientRect();
-          const progress = Math.min(
-            1,
-            Math.max(0, (rect.left - startAbsX) / meta.totalDistance)
-          );
-          const stepIndex = Math.floor(progress * steps);
+          const currentTimeMs =
+            typeof meta.animation.currentTime === "number"
+              ? Math.max(0, meta.animation.currentTime)
+              : null;
+          if (currentTimeMs === null) {
+            requestAnimationFrame(tick);
+            return;
+          }
+          const stepIndex = Math.floor(currentTimeMs / stepTimeMs);
           if (stepIndex >= meta.prevStepIndex + 2) {
             if (!meta.prevStepTime) {
               meta.prevStepIndex = stepIndex;
-              meta.prevStepTime = now;
+              meta.prevStepTime = currentTimeMs;
               requestAnimationFrame(tick);
               return;
             }
             const stepsAdvanced = stepIndex - meta.prevStepIndex;
-            const elapsedMs = now - meta.prevStepTime;
+            const elapsedMs = currentTimeMs - meta.prevStepTime;
             const shouldDehydrate =
               elapsedMs <= stepTimeMs * stepsAdvanced * fastStepRatio;
             if (shouldDehydrate) {
@@ -299,7 +300,7 @@ function renderRace(selected, raceDuration) {
             meta.dehydrateStreak = 0;
           }
             meta.prevStepIndex = stepIndex;
-            meta.prevStepTime = now;
+            meta.prevStepTime = currentTimeMs;
           }
         }
         requestAnimationFrame(tick);
