@@ -237,7 +237,7 @@ function renderRace(selected, raceDuration) {
       meta.lastSegmentIndex = null;
       meta.lastSegmentTime = null;
       const segmentsPerCheck = 2;
-      const dehydrationWindowMs = 2000;
+      const dehydrationWindowMs = 1000;
 
       const getProgressAtTime = (frames, t) => {
         if (!frames.length) return 0;
