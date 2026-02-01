@@ -335,7 +335,7 @@ body {
   transition: transform 0.2s ease;
 }
 
-.app-card__name:hover {
+.app-card:hover .app-card__name {
   transform: translateX(2px);
 }
 
