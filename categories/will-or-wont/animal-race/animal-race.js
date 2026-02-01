@@ -227,17 +227,17 @@ function renderRace(selected, raceDuration) {
         })),
         timers: [],
         pauseTimers: [],
-        lastSegmentIndex: 0,
-        lastSegmentTime: 0,
+        lastSegmentIndex: null,
+        lastSegmentTime: null,
         dehydrateStreak: 0,
         skipDehydrateCheck: false,
       });
 
       const meta = runnerMeta.get(animal.id);
-      meta.lastSegmentIndex = 0;
-      meta.lastSegmentTime = 0;
+      meta.lastSegmentIndex = null;
+      meta.lastSegmentTime = null;
       const segmentsPerCheck = 2;
-      const dehydrationWindowMs = 1000;
+      const dehydrationWindowMs = 2000;
 
       const getProgressAtTime = (frames, t) => {
         if (!frames.length) return 0;
@@ -288,7 +288,11 @@ function renderRace(selected, raceDuration) {
           }
           const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
           const segmentIndex = Math.floor(progress * steps);
-          if (!meta.lastSegmentTime) {
+          if (segmentIndex <= 0) {
+            requestAnimationFrame(tick);
+            return;
+          }
+          if (meta.lastSegmentTime === null || meta.lastSegmentIndex === null) {
             meta.lastSegmentIndex = segmentIndex;
             meta.lastSegmentTime = currentTimeMs;
             requestAnimationFrame(tick);
