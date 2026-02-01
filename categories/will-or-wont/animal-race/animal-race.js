@@ -234,7 +234,7 @@ function renderRace(selected, raceDuration) {
       meta.prevX = startAbsX;
       meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevTime = performance.now() + delay * 1000 + 300;
-      const stepPercentThreshold = 0.1;
+      const stepPercentThreshold = 0.05;
       const stepTimeMs = stepDuration * 1000;
 
       const tick = () => {
