@@ -235,7 +235,7 @@ function renderRace(selected, raceDuration) {
       meta.prevStepIndex = 0;
       meta.prevStepTime = 0;
       const stepTimeMs = stepDuration * 1000;
-      const fastStepRatio = 0.5;
+      const fastStepRatio = 1;
 
       const tick = () => {
         if (!meta || meta.finished) return;
