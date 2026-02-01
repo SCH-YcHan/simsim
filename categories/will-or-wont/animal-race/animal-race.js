@@ -236,7 +236,7 @@ function renderRace(selected, raceDuration) {
       const meta = runnerMeta.get(animal.id);
       meta.prevProgress = 0;
       meta.prevCheckTime = 0;
-      const fastStepRatio = 0.8;
+      const fastStepRatio = 0.5;
       const minProgressForCheck = 2 / steps;
       const minStartProgress = 1 / steps;
 
