@@ -153,9 +153,9 @@ function renderRace(selected, raceDuration) {
       runner.style.opacity = "1";
       const steps = 20;
       const weights = Array.from({ length: steps }, () => Math.random() + 0.5);
-      const blockSize = 4;
+      const blockSize = 2;
       for (let i = 0; i < steps; i += blockSize) {
-        const multiplier = Math.random() < 0.5 ? 0.5 : 2;
+        const multiplier = Math.random() < 0.5 ? 0.75 : 2;
         for (let j = i; j < Math.min(i + blockSize, steps); j += 1) {
           weights[j] *= multiplier;
         }
