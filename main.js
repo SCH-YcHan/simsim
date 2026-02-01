@@ -73,13 +73,11 @@ function createItem(item) {
     : `<div class="app-card__placeholder">미리보기</div>`;
 
   entry.innerHTML = `
-    <div class="app-card">
+    <div class="app-card" role="button" tabindex="0" data-link="${item.link}">
       <div class="app-card__media">
         ${media}
       </div>
-      <button class="app-card__name" type="button" data-link="${item.link}">
-        ${item.name}
-      </button>
+      <div class="app-card__name">${item.name}</div>
     </div>
   `;
 
@@ -155,9 +153,21 @@ resetButton.addEventListener("click", () => {
 catalog.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
-  const button = target.closest(".app-card__name");
-  if (!button) return;
-  const link = button.dataset.link;
+  const card = target.closest(".app-card");
+  if (!card) return;
+  const link = card.dataset.link;
   if (!link || link === "#") return;
+  window.location.href = link;
+});
+
+catalog.addEventListener("keydown", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = target.closest(".app-card");
+  if (!card) return;
+  const link = card.dataset.link;
+  if (!link || link === "#") return;
+  event.preventDefault();
   window.location.href = link;
 });
