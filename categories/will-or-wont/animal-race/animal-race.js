@@ -216,7 +216,7 @@ function renderRace(selected, raceDuration) {
         delayMs: delay * 1000,
         totalDurationMs: totalDuration * 1000,
         frames: framePoints.map((fp) => ({
-          t: fp.t / totalDuration,
+          t: fp.t,
           p: fp.p,
         })),
         timers: [],
@@ -233,6 +233,22 @@ function renderRace(selected, raceDuration) {
       const stepTimeMs = stepDuration * 1000;
       const fastStepRatio = 0.8;
 
+      const getProgressAtTime = (frames, t) => {
+        if (!frames.length) return 0;
+        if (t <= 0) return 0;
+        if (t >= 1) return 1;
+        for (let i = 0; i < frames.length - 1; i += 1) {
+          const a = frames[i];
+          const b = frames[i + 1];
+          if (t >= a.t && t <= b.t) {
+            const span = Math.max(0.0001, b.t - a.t);
+            const ratio = (t - a.t) / span;
+            return a.p + (b.p - a.p) * ratio;
+          }
+        }
+        return frames[frames.length - 1].p;
+      };
+
       const tick = () => {
         if (!meta || meta.finished) return;
         if (meta.boosted) {
@@ -248,7 +264,8 @@ function renderRace(selected, raceDuration) {
             requestAnimationFrame(tick);
             return;
           }
-          meta.prevStepIndex = Math.floor(currentTimeMs / stepTimeMs);
+          const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
+          meta.prevStepIndex = Math.floor(progress * steps);
           meta.prevStepTime = currentTimeMs;
           meta.skipDehydrateCheck = false;
           requestAnimationFrame(tick);
@@ -263,7 +280,8 @@ function renderRace(selected, raceDuration) {
             requestAnimationFrame(tick);
             return;
           }
-          const stepIndex = Math.floor(currentTimeMs / stepTimeMs);
+          const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
+          const stepIndex = Math.floor(progress * steps);
           if (stepIndex >= meta.prevStepIndex + 2) {
             if (!meta.prevStepTime) {
               meta.prevStepIndex = stepIndex;
