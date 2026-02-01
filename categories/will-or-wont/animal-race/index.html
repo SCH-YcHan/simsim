@@ -11,6 +11,15 @@
 </head>
 <body>
   <div class="page race-page" id="racePage">
+    <div class="race-result-overlay" id="raceResultOverlay" aria-hidden="true">
+      <div class="race-result">
+        <div class="race-result__header">
+          <div class="race-result__title">경주 결과</div>
+          <button class="race-result__close" type="button" id="raceResultClose">닫기</button>
+        </div>
+        <div class="race-result__list" id="raceResultList"></div>
+      </div>
+    </div>
     <header class="race-hero race-hero--revamp">
       <div class="race-hero__top">
         <a class="race-back" href="../../../index.html">← 홈으로</a>

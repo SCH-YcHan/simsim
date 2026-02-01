@@ -41,6 +41,85 @@ body {
   max-width: 1100px;
 }
 
+.race-result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(29, 26, 23, 0.45);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 50;
+}
+
+.race-result-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.race-result {
+  width: min(680px, 92vw);
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(29, 26, 23, 0.12);
+  box-shadow: 0 24px 60px rgba(29, 26, 23, 0.2);
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.race-result__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.race-result__title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.race-result__close {
+  border: 1px solid rgba(29, 26, 23, 0.18);
+  background: transparent;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.race-result__list {
+  display: grid;
+  gap: 10px;
+}
+
+.race-result__row {
+  display: grid;
+  grid-template-columns: 52px 1fr 120px 140px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(29, 26, 23, 0.04);
+}
+
+.race-result__rank {
+  font-weight: 700;
+  color: var(--accent-2);
+}
+
+.race-result__animal {
+  font-weight: 600;
+}
+
+.race-result__stat {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: right;
+}
+
 .hero {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.65));
   border: 1px solid rgba(255, 255, 255, 0.7);

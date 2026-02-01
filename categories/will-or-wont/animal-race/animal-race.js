@@ -20,10 +20,14 @@ const raceTimer = document.querySelector("#raceTimer");
 const racePage = document.querySelector("#racePage");
 let raceCountdown = document.querySelector("#raceCountdown");
 const raceTrackSection = document.querySelector("#raceTrackSection");
+const raceResultOverlay = document.querySelector("#raceResultOverlay");
+const raceResultList = document.querySelector("#raceResultList");
+const raceResultClose = document.querySelector("#raceResultClose");
 
 let selectedIds = new Set();
 let raceInProgress = false;
 let countdownId = null;
+let raceResults = [];
 
 function renderAnimals() {
   animalGrid.innerHTML = "";
@@ -229,6 +233,8 @@ function renderRace(selected, raceDuration) {
         pauseTimers: [],
         lastSegmentIndex: null,
         lastSegmentTime: null,
+        dehydrationCount: 0,
+        consecutiveDehydrationCount: 0,
         dehydrateStreak: 0,
         skipDehydrateCheck: false,
       });
@@ -313,29 +319,33 @@ function renderRace(selected, raceDuration) {
             const elapsedMs = effectiveTimeMs - meta.lastSegmentTime;
             const shouldDehydrate = elapsedMs <= dehydrationWindowMs;
             if (shouldDehydrate) {
-            meta.dehydrateStreak += 1;
-            const isConsecutive = meta.dehydrateStreak >= 2;
-            const pauseDuration = isConsecutive ? 4 : 2;
-            meta.paused = true;
-            if (sweat) {
-              sweat.textContent = isConsecutive ? "🥵" : "💦";
-              sweat.classList.add("race-sweat--show");
-            }
-            meta.animation.playbackRate = 0;
-            clearTimeout(meta.dehydrationTimer);
-            meta.dehydrationTimer = setTimeout(() => {
-              if (!meta || meta.boosted || meta.finished) return;
-              meta.paused = false;
-              if (sweat) sweat.classList.remove("race-sweat--show");
-              meta.animation.playbackRate = meta.currentRate;
-              meta.skipDehydrateCheck = true;
-            }, pauseDuration * 1000);
-            if (isConsecutive) {
+              meta.dehydrationCount += 1;
+              meta.dehydrateStreak += 1;
+              const isConsecutive = meta.dehydrateStreak >= 2;
+              const pauseDuration = isConsecutive ? 4 : 2;
+              if (isConsecutive) {
+                meta.consecutiveDehydrationCount += 1;
+              }
+              meta.paused = true;
+              if (sweat) {
+                sweat.textContent = isConsecutive ? "🥵" : "💦";
+                sweat.classList.add("race-sweat--show");
+              }
+              meta.animation.playbackRate = 0;
+              clearTimeout(meta.dehydrationTimer);
+              meta.dehydrationTimer = setTimeout(() => {
+                if (!meta || meta.boosted || meta.finished) return;
+                meta.paused = false;
+                if (sweat) sweat.classList.remove("race-sweat--show");
+                meta.animation.playbackRate = meta.currentRate;
+                meta.skipDehydrateCheck = true;
+              }, pauseDuration * 1000);
+              if (isConsecutive) {
+                meta.dehydrateStreak = 0;
+              }
+            } else {
               meta.dehydrateStreak = 0;
             }
-          } else {
-            meta.dehydrateStreak = 0;
-          }
             meta.lastSegmentIndex = segmentIndex;
             meta.lastSegmentTime = effectiveTimeMs;
           }
@@ -345,6 +355,7 @@ function renderRace(selected, raceDuration) {
       requestAnimationFrame(tick);
 
       animation.onfinish = () => {
+        const meta = runnerMeta.get(animal.id);
         finishCount += 1;
         lane.classList.add("race-lane--done");
         const rank = lane.querySelector(".race-rank");
@@ -352,6 +363,12 @@ function renderRace(selected, raceDuration) {
           rank.textContent = `${finishCount}위`;
           rank.removeAttribute("aria-hidden");
         }
+        raceResults.push({
+          rank: finishCount,
+          animal,
+          dehydrationCount: meta ? meta.dehydrationCount : 0,
+          consecutiveDehydrationCount: meta ? meta.consecutiveDehydrationCount : 0,
+        });
         if (!boostTriggered) {
           boostTriggered = true;
           const lastMeta = getCurrentLastMetaByPosition();
@@ -378,7 +395,6 @@ function renderRace(selected, raceDuration) {
             }
           }
         }
-        const meta = runnerMeta.get(animal.id);
         if (meta) {
           meta.finished = true;
           meta.runner.classList.remove("race-runner--boost");
@@ -386,6 +402,9 @@ function renderRace(selected, raceDuration) {
           meta.pauseTimers.forEach((t) => clearTimeout(t));
           meta.timers.forEach((t) => clearTimeout(t));
           clearTimeout(meta.dehydrationTimer);
+        }
+        if (finishCount === laneCount) {
+          showRaceResults();
         }
       };
     }
@@ -405,6 +424,34 @@ function renderRace(selected, raceDuration) {
   }
 }
 
+function showRaceResults() {
+  if (!raceResultOverlay || !raceResultList) return;
+  const sorted = [...raceResults].sort((a, b) => a.rank - b.rank);
+  raceResultList.innerHTML = sorted
+    .map((result) => {
+      return `
+        <div class="race-result__row">
+          <div class="race-result__rank">${result.rank}위</div>
+          <div class="race-result__animal">${result.animal.emoji} ${result.animal.name}</div>
+          <div class="race-result__stat">탈수 ${result.dehydrationCount}회</div>
+          <div class="race-result__stat">연속탈수 ${result.consecutiveDehydrationCount}회</div>
+        </div>
+      `;
+    })
+    .join("");
+  raceResultOverlay.classList.add("is-visible");
+  raceResultOverlay.setAttribute("aria-hidden", "false");
+}
+
+function hideRaceResults() {
+  if (!raceResultOverlay) return;
+  raceResultOverlay.classList.remove("is-visible");
+  raceResultOverlay.setAttribute("aria-hidden", "true");
+  if (raceResultList) {
+    raceResultList.innerHTML = "";
+  }
+}
+
 function startRace() {
   if (raceInProgress) return;
   const selected = animals.filter((animal) => selectedIds.has(animal.id));
@@ -414,6 +461,8 @@ function startRace() {
   }
 
   raceInProgress = true;
+  raceResults = [];
+  hideRaceResults();
   if (racePage) {
     racePage.classList.add("race-in-progress");
   }
@@ -457,6 +506,7 @@ function startRace() {
 function resetRace() {
   raceInProgress = false;
   clearInterval(countdownId);
+  hideRaceResults();
   if (racePage) {
     racePage.classList.remove("race-in-progress");
   }
@@ -472,6 +522,7 @@ function resetRace() {
     runner.getAnimations().forEach((anim) => anim.cancel());
   });
   selectedIds = new Set();
+  raceResults = [];
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
   raceCountdown = null;
   raceTimer.textContent = "준비";
@@ -481,6 +532,15 @@ function resetRace() {
 
 startButton.addEventListener("click", startRace);
 resetButton.addEventListener("click", resetRace);
+
+if (raceResultClose && raceResultOverlay) {
+  raceResultClose.addEventListener("click", hideRaceResults);
+  raceResultOverlay.addEventListener("click", (event) => {
+    if (event.target === raceResultOverlay) {
+      hideRaceResults();
+    }
+  });
+}
 
 renderAnimals();
 updateStatus();
