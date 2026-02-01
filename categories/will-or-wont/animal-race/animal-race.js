@@ -182,6 +182,12 @@ function renderRace(selected, raceDuration) {
         });
         framePoints.push({ t: elapsed / duration, p: progress });
       }
+      if (!framePoints.length || framePoints[0].t > 0) {
+        framePoints.unshift({ t: 0, p: 0 });
+      }
+      if (framePoints[framePoints.length - 1].t < 1) {
+        framePoints.push({ t: 1, p: 1 });
+      }
 
       const totalDuration = Math.max(0.001, duration);
       const finishTransform = `translate(${finishX - startX}px, -50%)`;
