@@ -234,8 +234,8 @@ function renderRace(selected, raceDuration) {
       meta.prevX = startAbsX;
       meta.totalDistance = Math.max(1, finishAbsX - startAbsX);
       meta.prevTime = performance.now() + delay * 1000 + 300;
-      const fastStepThresholdMs = 800;
       const stepTimeMs = stepDuration * 1000;
+      const fastStepRatio = 0.8;
 
       const tick = () => {
         if (!meta || meta.finished) return;
@@ -256,7 +256,7 @@ function renderRace(selected, raceDuration) {
           const rect = meta.runner.getBoundingClientRect();
           const currentX = rect.left;
           const elapsedMs = now - meta.prevTime;
-          const shouldDehydrate = elapsedMs <= fastStepThresholdMs;
+          const shouldDehydrate = elapsedMs <= stepTimeMs * fastStepRatio;
           if (shouldDehydrate) {
             meta.dehydrateStreak += 1;
             const isConsecutive = meta.dehydrateStreak >= 2;
