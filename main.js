@@ -6,7 +6,7 @@ const appData = [
       {
         name: "동물경주",
         image: "",
-        link: "/animal-race.html",
+        link: "/categories/will-or-wont/animal-race/index.html",
       },
       {
         name: "제비뽑기",
