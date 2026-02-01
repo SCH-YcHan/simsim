@@ -185,9 +185,11 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
+  min-width: 0;
 }
 
 .search input {
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 14px 16px;
@@ -757,6 +759,10 @@ body {
 @media (max-width: 720px) {
   .hero {
     padding: 28px;
+  }
+
+  .hero__actions {
+    align-items: stretch;
   }
 
   .primary {
