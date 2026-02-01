@@ -23,11 +23,14 @@ const raceTrackSection = document.querySelector("#raceTrackSection");
 const raceResultOverlay = document.querySelector("#raceResultOverlay");
 const raceResultList = document.querySelector("#raceResultList");
 const raceResultClose = document.querySelector("#raceResultClose");
+const raceResultReplay = document.querySelector("#raceResultReplay");
+const raceResultReset = document.querySelector("#raceResultReset");
 
 let selectedIds = new Set();
 let raceInProgress = false;
 let countdownId = null;
 let raceResults = [];
+let raceStartTimeMs = null;
 
 function renderAnimals() {
   animalGrid.innerHTML = "";
@@ -368,6 +371,7 @@ function renderRace(selected, raceDuration) {
           animal,
           dehydrationCount: meta ? meta.dehydrationCount : 0,
           consecutiveDehydrationCount: meta ? meta.consecutiveDehydrationCount : 0,
+          finishTimeMs: raceStartTimeMs ? performance.now() - raceStartTimeMs : null,
         });
         if (!boostTriggered) {
           boostTriggered = true;
@@ -429,12 +433,17 @@ function showRaceResults() {
   const sorted = [...raceResults].sort((a, b) => a.rank - b.rank);
   raceResultList.innerHTML = sorted
     .map((result) => {
+      const timeText =
+        typeof result.finishTimeMs === "number"
+          ? `${(result.finishTimeMs / 1000).toFixed(1)}초`
+          : "-";
       return `
         <div class="race-result__row">
           <div class="race-result__rank">${result.rank}위</div>
           <div class="race-result__animal">${result.animal.emoji} ${result.animal.name}</div>
           <div class="race-result__stat">탈수 ${result.dehydrationCount}회</div>
           <div class="race-result__stat">연속탈수 ${result.consecutiveDehydrationCount}회</div>
+          <div class="race-result__stat">시간 ${timeText}</div>
         </div>
       `;
     })
@@ -461,6 +470,7 @@ function startRace() {
   }
 
   raceInProgress = true;
+  raceStartTimeMs = null;
   raceResults = [];
   hideRaceResults();
   if (racePage) {
@@ -479,6 +489,7 @@ function startRace() {
     if (remaining <= 0) {
       clearInterval(countdownId);
       raceTimer.textContent = "GO!";
+      raceStartTimeMs = performance.now();
       if (raceCountdown) {
         raceCountdown.textContent = "GO!";
         setTimeout(() => raceCountdown.classList.remove("race-countdown--show"), 500);
@@ -503,10 +514,12 @@ function startRace() {
   }, 10000);
 }
 
-function resetRace() {
+function resetRace(keepSelection = false) {
+  const preservedSelection = keepSelection ? new Set(selectedIds) : null;
   raceInProgress = false;
   clearInterval(countdownId);
   hideRaceResults();
+  raceStartTimeMs = null;
   if (racePage) {
     racePage.classList.remove("race-in-progress");
   }
@@ -521,7 +534,7 @@ function resetRace() {
   document.querySelectorAll(".race-runner").forEach((runner) => {
     runner.getAnimations().forEach((anim) => anim.cancel());
   });
-  selectedIds = new Set();
+  selectedIds = keepSelection && preservedSelection ? preservedSelection : new Set();
   raceResults = [];
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
   raceCountdown = null;
@@ -539,6 +552,19 @@ if (raceResultClose && raceResultOverlay) {
     if (event.target === raceResultOverlay) {
       hideRaceResults();
     }
+  });
+}
+
+if (raceResultReplay) {
+  raceResultReplay.addEventListener("click", () => {
+    resetRace(true);
+    startRace();
+  });
+}
+
+if (raceResultReset) {
+  raceResultReset.addEventListener("click", () => {
+    resetRace(false);
   });
 }
 
