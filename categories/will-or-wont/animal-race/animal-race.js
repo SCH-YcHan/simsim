@@ -18,7 +18,7 @@ const resetButton = document.querySelector("#resetRace");
 const raceStatus = document.querySelector("#raceStatus");
 const raceTimer = document.querySelector("#raceTimer");
 const racePage = document.querySelector("#racePage");
-const raceCountdown = document.querySelector("#raceCountdown");
+let raceCountdown = document.querySelector("#raceCountdown");
 const raceTrackSection = document.querySelector("#raceTrackSection");
 
 let selectedIds = new Set();
@@ -91,14 +91,12 @@ function renderRace(selected, raceDuration) {
       <div class="race-start-line" aria-hidden="true"></div>
       <div class="race-finish-line" aria-hidden="true"></div>
       <div class="race-lanes" id="raceLanes"></div>
+      <div class="race-countdown" id="raceCountdown" aria-live="polite"></div>
     </div>
   `;
 
   const lanesContainer = document.querySelector("#raceLanes");
-  const arena = raceTrack.querySelector(".race-arena");
-  if (raceCountdown && arena) {
-    arena.appendChild(raceCountdown);
-  }
+  raceCountdown = raceTrack.querySelector("#raceCountdown");
   const startLine = document.querySelector(".race-start-line");
   const finishLine = document.querySelector(".race-finish-line");
   const displayOrder = [...selected].sort(() => Math.random() - 0.5);
@@ -369,10 +367,6 @@ function startRace() {
   }
   startButton.disabled = true;
   raceTimer.textContent = "3초";
-  if (raceCountdown) {
-    raceCountdown.textContent = "3";
-    raceCountdown.classList.add("race-countdown--show");
-  }
 
   let remaining = 3;
   clearInterval(countdownId);
@@ -394,6 +388,10 @@ function startRace() {
   }, 1000);
 
   renderRace(selected, 20);
+  if (raceCountdown) {
+    raceCountdown.textContent = "3";
+    raceCountdown.classList.add("race-countdown--show");
+  }
 
   setTimeout(() => {
     raceInProgress = false;
@@ -420,9 +418,7 @@ function resetRace() {
   });
   selectedIds = new Set();
   raceTrack.innerHTML = '<div class="race-placeholder">동물을 선택하고 경주를 시작하세요!</div>';
-  if (raceCountdown) {
-    raceTrack.appendChild(raceCountdown);
-  }
+  raceCountdown = null;
   raceTimer.textContent = "준비";
   renderAnimals();
   updateStatus();
