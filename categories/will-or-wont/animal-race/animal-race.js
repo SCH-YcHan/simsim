@@ -227,17 +227,18 @@ function renderRace(selected, raceDuration) {
         })),
         timers: [],
         pauseTimers: [],
-        prevStepIndex: 0,
-        prevStepTime: 0,
+        prevProgress: 0,
+        prevCheckTime: 0,
         dehydrateStreak: 0,
         skipDehydrateCheck: false,
       });
 
       const meta = runnerMeta.get(animal.id);
-      meta.prevStepIndex = 0;
-      meta.prevStepTime = 0;
-      const stepTimeMs = stepDuration * 1000;
+      meta.prevProgress = 0;
+      meta.prevCheckTime = 0;
       const fastStepRatio = 0.8;
+      const minProgressForCheck = 2 / steps;
+      const minStartProgress = 1 / steps;
 
       const getProgressAtTime = (frames, t) => {
         if (!frames.length) return 0;
@@ -271,8 +272,8 @@ function renderRace(selected, raceDuration) {
             return;
           }
           const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
-          meta.prevStepIndex = Math.floor(progress * steps);
-          meta.prevStepTime = currentTimeMs;
+          meta.prevProgress = progress;
+          meta.prevCheckTime = currentTimeMs;
           meta.skipDehydrateCheck = false;
           requestAnimationFrame(tick);
           return;
@@ -287,18 +288,18 @@ function renderRace(selected, raceDuration) {
             return;
           }
           const progress = getProgressAtTime(meta.frames, currentTimeMs / meta.totalDurationMs);
-          const stepIndex = Math.floor(progress * steps);
-          if (stepIndex >= meta.prevStepIndex + 2) {
-            if (!meta.prevStepTime) {
-              meta.prevStepIndex = stepIndex;
-              meta.prevStepTime = currentTimeMs;
-              requestAnimationFrame(tick);
-              return;
-            }
-            const stepsAdvanced = stepIndex - meta.prevStepIndex;
-            const elapsedMs = currentTimeMs - meta.prevStepTime;
-            const shouldDehydrate =
-              elapsedMs <= stepTimeMs * stepsAdvanced * fastStepRatio;
+          if (progress < minStartProgress || !meta.prevCheckTime) {
+            meta.prevProgress = progress;
+            meta.prevCheckTime = currentTimeMs;
+            requestAnimationFrame(tick);
+            return;
+          }
+          const progressDelta = progress - meta.prevProgress;
+          if (progressDelta >= minProgressForCheck) {
+            const elapsedMs = currentTimeMs - meta.prevCheckTime;
+            const expectedSpeed = 1 / meta.totalDurationMs;
+            const actualSpeed = progressDelta / Math.max(1, elapsedMs);
+            const shouldDehydrate = actualSpeed >= expectedSpeed * fastStepRatio;
             if (shouldDehydrate) {
             meta.dehydrateStreak += 1;
             const isConsecutive = meta.dehydrateStreak >= 2;
@@ -323,8 +324,8 @@ function renderRace(selected, raceDuration) {
           } else {
             meta.dehydrateStreak = 0;
           }
-            meta.prevStepIndex = stepIndex;
-            meta.prevStepTime = currentTimeMs;
+            meta.prevProgress = progress;
+            meta.prevCheckTime = currentTimeMs;
           }
         }
         requestAnimationFrame(tick);
