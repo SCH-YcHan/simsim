@@ -64,7 +64,7 @@ function createCardElement(card, index) {
   button.dataset.index = String(index);
   button.innerHTML = `
     <span class="jebi-card__inner">
-      <span class="jebi-card__face jebi-card__face--front">제비 ${index + 1}</span>
+      <span class="jebi-card__face jebi-card__face--front">${index + 1}</span>
       <span class="jebi-card__face jebi-card__face--back ${card.isPenalty ? "is-penalty" : "is-pass"}">
         ${card.isPenalty ? "꽝" : "통과"}
       </span>
