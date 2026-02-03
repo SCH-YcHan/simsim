@@ -11,7 +11,7 @@ const appData = [
       {
         name: "제비뽑기",
         image: "",
-        link: "#",
+        link: "/categories/will-or-wont/jebi-bbobgi/index.html",
       },
       {
         name: "사다리타기",

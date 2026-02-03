@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>제비뽑기 - SIMSIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <link href="../../../style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="page jebi-page">
+    <header class="jebi-hero">
+      <div class="jebi-hero__top">
+        <a class="race-back" href="../../../index.html">← 홈으로</a>
+        <span class="jebi-badge">LUCKY DRAW</span>
+      </div>
+      <h1 class="jebi-title">제비뽑기</h1>
+      <p class="jebi-subtitle">총 인원과 벌칙 인원을 정하고 카드를 뒤집어 결과를 확인하세요.</p>
+    </header>
+
+    <section class="jebi-panel">
+      <div class="jebi-panel__header">
+        <h2>게임 설정</h2>
+        <p>카드를 모두 뒤집으면 게임이 종료됩니다.</p>
+      </div>
+      <div class="jebi-form">
+        <label class="jebi-field" for="totalPeople">
+          <span>총 인원</span>
+          <input id="totalPeople" type="number" min="2" max="30" value="6" />
+        </label>
+        <label class="jebi-field" for="penaltyPeople">
+          <span>벌칙 인원</span>
+          <input id="penaltyPeople" type="number" min="1" max="29" value="2" />
+        </label>
+      </div>
+      <div class="jebi-actions">
+        <button class="primary" type="button" id="startJebi">카드 생성</button>
+        <button class="ghost" type="button" id="resetJebi">초기화</button>
+      </div>
+      <p class="jebi-status" id="jebiStatus">인원을 설정하고 카드 생성 버튼을 눌러주세요.</p>
+    </section>
+
+    <section class="jebi-panel">
+      <div class="jebi-panel__header">
+        <h2>카드 뒤집기</h2>
+        <p id="jebiProgress">아직 시작 전입니다.</p>
+      </div>
+      <div class="jebi-grid" id="jebiGrid">
+        <div class="jebi-placeholder">카드가 생성되면 여기 표시됩니다.</div>
+      </div>
+    </section>
+  </div>
+
+  <script defer src="./jebi-bbobgi.js"></script>
+</body>
+</html>

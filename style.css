@@ -745,6 +745,183 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+.jebi-page {
+  max-width: 1000px;
+  display: grid;
+  gap: 20px;
+}
+
+.jebi-hero {
+  display: grid;
+  gap: 10px;
+  padding: 24px 26px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow);
+}
+
+.jebi-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.jebi-badge {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.15);
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.jebi-title {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 42px);
+  font-family: var(--font-title);
+}
+
+.jebi-subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+
+.jebi-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+  box-shadow: 0 12px 28px rgba(29, 26, 23, 0.08);
+}
+
+.jebi-panel__header h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.jebi-panel__header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.jebi-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.jebi-field {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.jebi-field input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-size: 16px;
+  font-family: var(--font-body);
+  background: #fff;
+}
+
+.jebi-field input:focus {
+  outline: none;
+  border-color: rgba(255, 94, 58, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.15);
+}
+
+.jebi-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jebi-status {
+  margin: 0;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.jebi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.jebi-placeholder {
+  grid-column: 1 / -1;
+  border: 1px dashed rgba(29, 26, 23, 0.15);
+  border-radius: 12px;
+  text-align: center;
+  padding: 18px;
+  color: var(--muted);
+}
+
+.jebi-card {
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  perspective: 900px;
+}
+
+.jebi-card__inner {
+  width: 100%;
+  min-height: 110px;
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+  position: relative;
+}
+
+.jebi-card.is-flipped .jebi-card__inner {
+  transform: rotateY(180deg);
+}
+
+.jebi-card__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(29, 26, 23, 0.16);
+  backface-visibility: hidden;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.jebi-card__face--front {
+  background: linear-gradient(140deg, rgba(15, 118, 110, 0.2), rgba(255, 94, 58, 0.2));
+  color: var(--ink);
+}
+
+.jebi-card__face--back {
+  transform: rotateY(180deg);
+  background: #fff;
+}
+
+.jebi-card__face--back.is-penalty {
+  color: #c1121f;
+  border-color: rgba(193, 18, 31, 0.4);
+  background: rgba(193, 18, 31, 0.07);
+}
+
+.jebi-card__face--back.is-pass {
+  color: #0f766e;
+  border-color: rgba(15, 118, 110, 0.4);
+  background: rgba(15, 118, 110, 0.08);
+}
+
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -772,5 +949,10 @@ body {
 
   .catalog {
     grid-template-columns: 1fr;
+  }
+
+  .jebi-actions .primary,
+  .jebi-actions .ghost {
+    width: 100%;
   }
 }
