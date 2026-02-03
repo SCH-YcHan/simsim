@@ -103,12 +103,11 @@ function renderCards() {
 
 function endGame() {
   gameInProgress = false;
-  const passCount = cards.length - revealedPenaltyCount;
   const penaltyNumbers = cards
     .map((card, index) => (card.isPenalty ? index + 1 : null))
     .filter((value) => value !== null)
     .join(", ");
-  statusText.textContent = `게임 종료! 꽝 ${revealedPenaltyCount}명, 통과 ${passCount}명 확인 완료. 꽝 번호: ${penaltyNumbers}`;
+  statusText.textContent = `게임 종료! 꽝 번호: ${penaltyNumbers}`;
 }
 
 function flipCard(index, button) {
