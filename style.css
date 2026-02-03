@@ -306,7 +306,7 @@ body {
   border-radius: 10px;
   overflow: hidden;
   background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(255, 94, 58, 0.14));
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   display: grid;
   place-items: center;
   color: var(--muted);
@@ -316,8 +316,9 @@ body {
 .app-card__image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  background: #fff;
 }
 
 .app-card__placeholder {
@@ -813,16 +814,12 @@ body {
 .jebi-form {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .jebi-control-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  display: block;
 }
 
 .jebi-field {
@@ -854,7 +851,6 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-left: auto;
 }
 
 .jebi-status {
