@@ -2,6 +2,7 @@ const totalPeopleInput = document.querySelector("#totalPeople");
 const penaltyPeopleInput = document.querySelector("#penaltyPeople");
 const startButton = document.querySelector("#startJebi");
 const resetButton = document.querySelector("#resetJebi");
+const revealAllButton = document.querySelector("#revealAllJebi");
 const statusText = document.querySelector("#jebiStatus");
 const progressText = document.querySelector("#jebiProgress");
 const cardGrid = document.querySelector("#jebiGrid");
@@ -74,6 +75,8 @@ function createCardElement(card, index) {
 }
 
 function updateProgress() {
+  revealAllButton.disabled = !cards.length || flippedCount === cards.length;
+
   if (!cards.length) {
     progressText.textContent = "아직 시작 전입니다.";
     return;
@@ -152,8 +155,28 @@ function resetGame() {
   renderCards();
 }
 
+function revealAllCards() {
+  if (!cards.length) {
+    statusText.textContent = "먼저 카드를 생성해주세요.";
+    return;
+  }
+
+  if (flippedCount === cards.length) {
+    statusText.textContent = "이미 모든 카드를 확인했습니다.";
+    return;
+  }
+
+  const cardButtons = cardGrid.querySelectorAll(".jebi-card");
+  cardButtons.forEach((button, index) => {
+    if (!(button instanceof HTMLButtonElement)) return;
+    if (cards[index]?.isFlipped) return;
+    flipCard(index, button);
+  });
+}
+
 startButton.addEventListener("click", startGame);
 resetButton.addEventListener("click", resetGame);
+revealAllButton.addEventListener("click", revealAllCards);
 
 cardGrid.addEventListener("click", (event) => {
   const target = event.target;

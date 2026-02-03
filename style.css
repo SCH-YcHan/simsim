@@ -811,9 +811,18 @@ body {
 }
 
 .jebi-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.jebi-control-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .jebi-field {
@@ -845,12 +854,20 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-left: auto;
 }
 
 .jebi-status {
   margin: 0;
   font-weight: 600;
   color: var(--accent);
+}
+
+.jebi-panel__header--between {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .jebi-grid {
@@ -952,6 +969,19 @@ body {
 
   .catalog {
     grid-template-columns: 1fr;
+  }
+
+  .jebi-control-row {
+    align-items: stretch;
+  }
+
+  .jebi-form {
+    width: 100%;
+  }
+
+  .jebi-panel__header--between {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .jebi-actions .primary,
