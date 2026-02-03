@@ -10,7 +10,7 @@ const appData = [
       },
       {
         name: "제비뽑기",
-        image: "",
+        image: "/categories/will-or-wont/jebi-bbobgi/jebi-bbobgi.png",
         link: "/categories/will-or-wont/jebi-bbobgi/index.html",
       },
       {

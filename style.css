@@ -901,8 +901,11 @@ body {
 }
 
 .jebi-card__face--front {
-  background: linear-gradient(140deg, rgba(15, 118, 110, 0.2), rgba(255, 94, 58, 0.2));
-  color: var(--ink);
+  background:
+    linear-gradient(140deg, rgba(29, 26, 23, 0.3), rgba(29, 26, 23, 0.15)),
+    url("/categories/will-or-wont/jebi-bbobgi/jebi-bbobgi.png") center / cover no-repeat;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 .jebi-card__face--back {
