@@ -415,7 +415,7 @@ function draw() {
 }
 
 function getMaxPower() {
-  return state.sheet.height * 0.9;
+  return state.sheet.height * 0.25;
 }
 
 let lastTime = 0;
