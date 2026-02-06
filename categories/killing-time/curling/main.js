@@ -24,7 +24,8 @@ const state = {
   dragging: false,
   dragStart: null,
   dragCurrent: null,
-  curl: 0, // -1 left, 0 off, 1 right
+  curlDir: 0, // -1 left, 0 off, 1 right
+  curlLevel: 0, // 0-3
   lastStoneId: null,
   undoStack: [],
   sheet: {
@@ -85,7 +86,8 @@ function resetGame() {
   state.dragging = false;
   state.dragStart = null;
   state.dragCurrent = null;
-  state.curl = 0;
+  state.curlDir = 0;
+  state.curlLevel = 0;
   state.lastStoneId = null;
   state.undoStack = [];
   logList.innerHTML = "";
@@ -106,7 +108,8 @@ function pushUndo() {
     shotsTaken: state.shotsTaken,
     redLeft: state.redLeft,
     blueLeft: state.blueLeft,
-    curl: state.curl,
+    curlDir: state.curlDir,
+    curlLevel: state.curlLevel,
     lastStoneId: state.lastStoneId,
     logs: Array.from(logList.children).map((li) => li.textContent),
   };
@@ -121,7 +124,8 @@ function undo() {
   state.shotsTaken = snapshot.shotsTaken;
   state.redLeft = snapshot.redLeft;
   state.blueLeft = snapshot.blueLeft;
-  state.curl = snapshot.curl;
+  state.curlDir = snapshot.curlDir;
+  state.curlLevel = snapshot.curlLevel;
   state.lastStoneId = snapshot.lastStoneId;
   logList.innerHTML = "";
   snapshot.logs.forEach((text) => {
@@ -218,12 +222,12 @@ function applyPhysics(dt) {
 
     const speed = Math.hypot(stone.vx, stone.vy);
     if (speed > 0) {
-      const curlStrength = 12;
+      const curlStrength = 12 * (state.curlLevel / 3);
       const nx = -stone.vy / speed;
       const ny = stone.vx / speed;
       const curlScale = Math.min(speed / 600, 1);
-      stone.vx += nx * curlStrength * curlScale * state.curl * dt;
-      stone.vy += ny * curlStrength * curlScale * state.curl * dt;
+      stone.vx += nx * curlStrength * curlScale * state.curlDir * dt;
+      stone.vy += ny * curlStrength * curlScale * state.curlDir * dt;
     }
 
     stone.x += stone.vx * dt;
@@ -463,17 +467,27 @@ scoreBtn.addEventListener("click", () => {
   scoreText.textContent = calculateScore().text;
 });
 
-curlBtn.addEventListener("click", () => {
-  if (state.curl === 0) {
-    state.curl = 1;
-    curlBtn.textContent = "Curl: Right";
-  } else if (state.curl === 1) {
-    state.curl = -1;
-    curlBtn.textContent = "Curl: Left";
-  } else {
-    state.curl = 0;
+function updateCurlButton() {
+  if (state.curlDir === 0 || state.curlLevel === 0) {
     curlBtn.textContent = "Curl: Off";
+    return;
   }
+  const dirLabel = state.curlDir === -1 ? "Left" : "Right";
+  curlBtn.textContent = `Curl: ${dirLabel} (${state.curlLevel})`;
+}
+
+curlBtn.addEventListener("click", () => {
+  if (state.curlDir === 0) {
+    state.curlDir = 1;
+    state.curlLevel = 1;
+  } else if (state.curlDir === 1) {
+    state.curlDir = -1;
+    state.curlLevel = 1;
+  } else {
+    state.curlDir = 0;
+    state.curlLevel = 0;
+  }
+  updateCurlButton();
 });
 
 overlayReset.addEventListener("click", resetGame);
@@ -483,21 +497,40 @@ window.addEventListener("keydown", (event) => {
   if (key === "r") resetGame();
   if (key === "u") undo();
   if (key === "c") {
-    if (state.curl === 0) {
-      state.curl = 1;
-      curlBtn.textContent = "Curl: Right";
-    } else if (state.curl === 1) {
-      state.curl = -1;
-      curlBtn.textContent = "Curl: Left";
+    if (state.curlDir === 0) {
+      state.curlDir = 1;
+      state.curlLevel = 1;
+    } else if (state.curlDir === 1) {
+      state.curlDir = -1;
+      state.curlLevel = 1;
     } else {
-      state.curl = 0;
-      curlBtn.textContent = "Curl: Off";
+      state.curlDir = 0;
+      state.curlLevel = 0;
     }
+    updateCurlButton();
+  }
+  if (key === "q") {
+    if (state.curlDir !== -1) {
+      state.curlDir = -1;
+      state.curlLevel = 1;
+    } else {
+      state.curlLevel = (state.curlLevel % 3) + 1;
+    }
+    updateCurlButton();
+  }
+  if (key === "e") {
+    if (state.curlDir !== 1) {
+      state.curlDir = 1;
+      state.curlLevel = 1;
+    } else {
+      state.curlLevel = (state.curlLevel % 3) + 1;
+    }
+    updateCurlButton();
   }
 });
 
 resizeCanvas();
 resetGame();
-curlBtn.textContent = "Curl: Off";
+updateCurlButton();
 requestAnimationFrame(loop);
 window.addEventListener("resize", resizeCanvas);
