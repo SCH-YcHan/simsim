@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tetris MVP</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <h1 class="title">Tetris</h1>
+      <div class="score">
+        <span>Score</span>
+        <strong id="score">0</strong>
+      </div>
+    </header>
+
+    <section class="stage">
+      <canvas id="board" width="320" height="640" aria-label="Tetris board"></canvas>
+      <div class="overlay" id="overlay" hidden>
+        <div class="overlay-card">
+          <h2 id="overlay-title">Game Over</h2>
+          <p>Press <b>R</b> to restart</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="next">
+        <div class="label">Next</div>
+        <canvas id="next" width="128" height="128" aria-label="Next piece"></canvas>
+      </div>
+      <div class="controls">
+        <div class="label">Controls</div>
+        <ul>
+          <li>← / → : Move</li>
+          <li>↓ : Soft drop</li>
+          <li>↑ : Rotate</li>
+          <li>Space : Hard drop</li>
+          <li>P : Pause</li>
+          <li>R : Restart</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

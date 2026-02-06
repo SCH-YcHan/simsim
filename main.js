@@ -32,7 +32,7 @@ const appData = [
       {
         name: "테트리스",
         image: "",
-        link: "#",
+        link: "/categories/killing-time/tetris/index.html",
       },
     ],
   },
