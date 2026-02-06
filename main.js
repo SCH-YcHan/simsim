@@ -14,11 +14,6 @@ const appData = [
         link: "/categories/will-or-wont/jebi-bbobgi/index.html",
       },
       {
-        name: "컬링",
-        image: "/categories/will-or-wont/curling/preview.png",
-        link: "/categories/will-or-wont/curling/index.html",
-      },
-      {
         name: "업앤다운",
         image: "",
         link: "#",
@@ -38,6 +33,11 @@ const appData = [
         name: "오목",
         image: "/categories/killing-time/omok/preview.png",
         link: "/categories/killing-time/omok/index.html",
+      },
+      {
+        name: "컬링",
+        image: "/categories/killing-time/curling/preview.png",
+        link: "/categories/killing-time/curling/index.html",
       },
     ],
   },
