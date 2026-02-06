@@ -222,7 +222,7 @@ function applyPhysics(dt) {
 
     const speed = Math.hypot(stone.vx, stone.vy);
     if (speed > 0) {
-      const curlStrength = 12 * (state.curlLevel / 3);
+      const curlStrength = 30 * (state.curlLevel / 3);
       const nx = -stone.vy / speed;
       const ny = stone.vx / speed;
       const curlScale = Math.min(speed / 600, 1);
@@ -390,6 +390,10 @@ function drawGuide() {
   const dist = Math.hypot(dx, dy);
   const maxPower = getMaxPower();
   const power = Math.min(dist / maxPower, 1);
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+  const spinLabel = state.curlDir === 0 || state.curlLevel === 0
+    ? "Off"
+    : `${state.curlDir === -1 ? "L" : "R"}${state.curlLevel}`;
 
   ctx.strokeStyle = "rgba(0,0,0,0.4)";
   ctx.lineWidth = 2;
@@ -402,7 +406,11 @@ function drawGuide() {
 
   ctx.fillStyle = "rgba(0,0,0,0.5)";
   ctx.font = "12px sans-serif";
-  ctx.fillText(`Power ${power.toFixed(2)}`, state.dragStart.x + 10, state.dragStart.y - 10);
+  ctx.fillText(
+    `Power ${power.toFixed(2)} · ${angle.toFixed(0)}° · Spin ${spinLabel}`,
+    state.dragStart.x + 10,
+    state.dragStart.y - 10
+  );
 }
 
 function drawCurrentStone() {
