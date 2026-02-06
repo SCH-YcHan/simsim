@@ -201,7 +201,7 @@ function updateMoveList() {
     const item = document.createElement("li");
     const coord = `${letters[move.x]}${move.y + 1}`;
     const stone = move.player === BLACK ? "●" : "○";
-    item.textContent = `${index + 1}. ${coord} ${stone}`;
+    item.textContent = `${coord} ${stone}`;
     moveList.appendChild(item);
   });
 }
