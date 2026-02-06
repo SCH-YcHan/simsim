@@ -1,0 +1,159 @@
+:root {
+  --bg: #0f1116;
+  --panel: #171a22;
+  --card: #1e2230;
+  --ink: #eef2f7;
+  --muted: #a6afbf;
+  --accent: #48c6ef;
+  --radius: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top, #1e2433 0%, #0e1117 60%, #0b0e13 100%);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+  display: grid;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 18px;
+  border-radius: var(--radius);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  background: var(--card);
+  color: var(--ink);
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+button:hover {
+  background: #2b3042;
+  transform: translateY(-1px);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 16px;
+}
+
+.sheet {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+#ice {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.panel {
+  display: grid;
+  gap: 16px;
+}
+
+.panel-block {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.panel-block h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+#logList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  display: grid;
+  gap: 6px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: grid;
+  place-items: center;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.overlay-card {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  padding: 24px 30px;
+  text-align: center;
+  display: grid;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}

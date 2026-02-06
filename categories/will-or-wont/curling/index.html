@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curling</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>Curling</h1>
+        <p id="statusText" aria-live="polite">현재 턴: Red · 남은 스톤: 4-4</p>
+      </div>
+      <div class="actions">
+        <button id="resetBtn" type="button">Reset</button>
+        <button id="undoBtn" type="button">Undo</button>
+        <button id="scoreBtn" type="button">Score</button>
+        <button id="curlBtn" type="button">Curl: Left</button>
+      </div>
+    </header>
+
+    <section class="layout">
+      <div class="sheet">
+        <canvas id="ice" aria-label="Curling sheet"></canvas>
+        <div class="hint">드래그로 조준/파워 설정 후 놓으면 발사됩니다.</div>
+      </div>
+      <aside class="panel">
+        <div class="panel-block">
+          <h2>샷 로그</h2>
+          <ol id="logList"></ol>
+        </div>
+        <div class="panel-block">
+          <h2>현재 점수</h2>
+          <div id="scoreText">아직 확정되지 않음</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="overlay-card">
+      <h2>End Complete</h2>
+      <p id="finalScore">Score</p>
+      <button id="overlayReset" type="button">Reset</button>
+    </div>
+  </div>
+
+  <script src="./main.js"></script>
+</body>
+</html>

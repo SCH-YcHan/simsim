@@ -14,9 +14,9 @@ const appData = [
         link: "/categories/will-or-wont/jebi-bbobgi/index.html",
       },
       {
-        name: "사다리타기",
-        image: "",
-        link: "#",
+        name: "컬링",
+        image: "/categories/will-or-wont/curling/preview.png",
+        link: "/categories/will-or-wont/curling/index.html",
       },
       {
         name: "업앤다운",
