@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>복리 계산기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <a class="back" href="/index.html">메인으로</a>
+      <div>
+        <h1>복리 계산기</h1>
+        <p>복리 주기와 추가 납입을 반영해 최종 금액을 계산합니다.</p>
+      </div>
+    </header>
+
+    <section class="panel">
+      <form id="calcForm" class="form" autocomplete="off">
+        <label class="field" for="principal">
+          <span>초기원금 P (원)</span>
+          <input id="principal" name="principal" type="number" min="0" step="1000" value="1000000" />
+        </label>
+        <label class="field" for="rate">
+          <span>연이율 r (%)</span>
+          <input id="rate" name="rate" type="number" min="0" step="0.1" value="5" />
+        </label>
+        <label class="field" for="years">
+          <span>기간 t (년)</span>
+          <input id="years" name="years" type="number" min="0" step="0.1" value="10" />
+        </label>
+        <label class="field" for="frequency">
+          <span>복리 주기 n (연 n회)</span>
+          <select id="frequency" name="frequency">
+            <option value="1">연 1회</option>
+            <option value="2">반기</option>
+            <option value="4">분기</option>
+            <option value="12" selected>월복리</option>
+            <option value="365">일복리</option>
+          </select>
+        </label>
+        <label class="field" for="pmt">
+          <span>매회 추가납입 PMT (원)</span>
+          <input id="pmt" name="pmt" type="number" min="0" step="1000" value="0" />
+        </label>
+        <label class="field" for="timing">
+          <span>납입 시점</span>
+          <select id="timing" name="timing">
+            <option value="end" selected>기말</option>
+            <option value="begin">기초</option>
+          </select>
+        </label>
+      </form>
+
+      <div class="actions">
+        <button class="ghost" id="resetBtn" type="button">초기화</button>
+        <button class="primary" id="copyBtn" type="button">결과 복사</button>
+      </div>
+
+      <div class="message" id="message" aria-live="polite"></div>
+    </section>
+
+    <section class="panel result">
+      <div class="result-main">
+        <span>최종 금액</span>
+        <strong id="finalAmount">0원</strong>
+      </div>
+      <div class="result-sub">
+        <div>
+          <span>총 납입원금</span>
+          <strong id="totalPrincipal">0원</strong>
+        </div>
+        <div>
+          <span>총 이자</span>
+          <strong id="totalInterest">0원</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel table" id="tablePanel">
+      <div class="table-header">
+        <h2>연도별 요약</h2>
+        <p>매년 말 잔액 기준</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>End Balance</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="table-note" id="tableNote" hidden>기간이 길어 요약 표를 생략합니다.</div>
+    </section>
+  </main>
+
+  <script src="./main.js"></script>
+</body>
+</html>

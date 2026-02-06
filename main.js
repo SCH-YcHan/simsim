@@ -54,7 +54,7 @@ const appData = [
       {
         name: "복리 계산기",
         image: "",
-        link: "#",
+        link: "/categories/calculator/compound-interest/index.html",
       },
     ],
   },
