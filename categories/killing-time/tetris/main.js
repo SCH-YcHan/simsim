@@ -64,6 +64,8 @@ const nextCanvas = document.getElementById("next");
 const scoreEl = document.getElementById("score");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlay-title");
+const overlayDesc = document.getElementById("overlay-desc");
+const startButton = document.getElementById("startButton");
 
 const boardCtx = boardCanvas.getContext("2d");
 const nextCtx = nextCanvas.getContext("2d");
@@ -75,6 +77,7 @@ const state = {
   score: 0,
   gameOver: false,
   paused: false,
+  started: false,
   dropInterval: DROP_INTERVAL,
   softDrop: false,
   lastTime: 0,
@@ -172,8 +175,7 @@ function spawnPiece() {
   state.current.y = -1;
   if (collide(state.board, state.current)) {
     state.gameOver = true;
-    overlayTitle.textContent = "Game Over";
-    overlay.hidden = false;
+    showOverlay("Game Over", "Press R to restart", false);
   }
 }
 
@@ -232,6 +234,7 @@ function resetGame() {
   scoreEl.textContent = "0";
   state.gameOver = false;
   state.paused = false;
+  state.started = true;
   state.dropInterval = DROP_INTERVAL;
   state.softDrop = false;
   state.dropCounter = 0;
@@ -240,10 +243,13 @@ function resetGame() {
 }
 
 function togglePause() {
-  if (state.gameOver) return;
+  if (state.gameOver || !state.started) return;
   state.paused = !state.paused;
-  overlayTitle.textContent = "Paused";
-  overlay.hidden = !state.paused;
+  if (state.paused) {
+    showOverlay("Paused", "Press P to resume", false);
+  } else {
+    overlay.hidden = true;
+  }
 }
 
 function drawCell(ctx, x, y, color) {
@@ -308,7 +314,7 @@ function update(time = 0) {
   const delta = time - state.lastTime;
   state.lastTime = time;
 
-  if (!state.gameOver && !state.paused) {
+  if (state.started && !state.gameOver && !state.paused) {
     state.dropCounter += delta;
     const interval = state.softDrop ? SOFT_DROP_INTERVAL : state.dropInterval;
     if (state.dropCounter > interval) {
@@ -323,6 +329,9 @@ function update(time = 0) {
 }
 
 function handleKeyDown(event) {
+  if (!state.started && event.code !== "KeyR") {
+    return;
+  }
   if (event.code === "ArrowLeft") {
     event.preventDefault();
     move(-1);
@@ -354,5 +363,16 @@ function handleKeyUp(event) {
 window.addEventListener("keydown", handleKeyDown);
 window.addEventListener("keyup", handleKeyUp);
 
-resetGame();
+function showOverlay(title, desc, showStart) {
+  overlayTitle.textContent = title;
+  overlayDesc.textContent = desc;
+  startButton.hidden = !showStart;
+  overlay.hidden = false;
+}
+
+startButton.addEventListener("click", () => {
+  resetGame();
+});
+
+showOverlay("Ready?", "Press Start to play", true);
 update();

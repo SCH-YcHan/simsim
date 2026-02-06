@@ -19,10 +19,11 @@
 
     <section class="stage">
       <canvas id="board" width="320" height="640" aria-label="Tetris board"></canvas>
-      <div class="overlay" id="overlay" hidden>
+      <div class="overlay" id="overlay">
         <div class="overlay-card">
-          <h2 id="overlay-title">Game Over</h2>
-          <p>Press <b>R</b> to restart</p>
+          <h2 id="overlay-title">Ready?</h2>
+          <p id="overlay-desc">Press Start to play</p>
+          <button id="startButton" class="start-btn" type="button">Start Game</button>
         </div>
       </div>
     </section>

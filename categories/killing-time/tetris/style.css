@@ -113,11 +113,28 @@ body {
   padding: 20px 28px;
   border-radius: 12px;
   text-align: center;
+  display: grid;
+  gap: 10px;
 }
 
 .overlay-card h2 {
   margin: 0 0 8px;
   font-size: 24px;
+}
+
+.start-btn {
+  border: none;
+  background: var(--accent);
+  color: #0b0e13;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.start-btn:hover {
+  filter: brightness(1.05);
 }
 
 .panel {
