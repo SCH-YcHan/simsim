@@ -360,8 +360,44 @@ function handleKeyUp(event) {
   }
 }
 
+function handleAction(action) {
+  if (!state.started && action !== "reset") return;
+  if (action === "left") move(-1);
+  if (action === "right") move(1);
+  if (action === "down") state.softDrop = true;
+  if (action === "rotate") rotateCurrent();
+  if (action === "hard") hardDrop();
+  if (action === "pause") togglePause();
+  if (action === "reset") resetGame();
+}
+
+function releaseAction(action) {
+  if (action === "down") state.softDrop = false;
+}
+
+function bindMobileControls() {
+  const controls = document.querySelectorAll(".ctrl-btn");
+  controls.forEach((btn) => {
+    const action = btn.dataset.action;
+    if (!action) return;
+    const start = (event) => {
+      event.preventDefault();
+      handleAction(action);
+    };
+    const end = (event) => {
+      event.preventDefault();
+      releaseAction(action);
+    };
+    btn.addEventListener("pointerdown", start);
+    btn.addEventListener("pointerup", end);
+    btn.addEventListener("pointerleave", end);
+    btn.addEventListener("pointercancel", end);
+  });
+}
+
 window.addEventListener("keydown", handleKeyDown);
 window.addEventListener("keyup", handleKeyUp);
+bindMobileControls();
 
 function showOverlay(title, desc, showStart) {
   overlayTitle.textContent = title;
