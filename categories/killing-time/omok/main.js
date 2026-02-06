@@ -14,7 +14,7 @@ const EMPTY = 0;
 const BLACK = 1;
 const WHITE = 2;
 
-const letters = "ABCDEFGHJKLMNO"; // I 제외
+const letters = "ABCDEFGHJKLMNOP"; // I 제외
 
 const state = {
   board: Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY)),
@@ -33,9 +33,13 @@ const state = {
 
 function resizeCanvas() {
   const wrap = canvas.parentElement;
-  const maxSize = Math.min(wrap.clientWidth, 720);
+  const style = getComputedStyle(wrap);
+  const paddingX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+  const maxSize = Math.min(wrap.clientWidth - paddingX, 720);
   canvas.width = maxSize;
   canvas.height = maxSize;
+  canvas.style.width = `${maxSize}px`;
+  canvas.style.height = `${maxSize}px`;
   state.metrics.size = maxSize;
   state.metrics.padding = Math.round(maxSize * 0.06);
   state.metrics.cell = (maxSize - state.metrics.padding * 2) / (SIZE - 1);
