@@ -5,12 +5,12 @@ const appData = [
     items: [
       {
         name: "동물경주",
-        image: "/categories/will-or-wont/animal-race/animalrun.png",
+        image: "/categories/will-or-wont/animal-race/preview.png",
         link: "/categories/will-or-wont/animal-race/index.html",
       },
       {
         name: "제비뽑기",
-        image: "/categories/will-or-wont/jebi-bbobgi/jebi-bbobgi.png",
+        image: "/categories/will-or-wont/jebi-bbobgi/preview.png",
         link: "/categories/will-or-wont/jebi-bbobgi/index.html",
       },
       {
