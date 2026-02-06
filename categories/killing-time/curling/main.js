@@ -237,7 +237,7 @@ function applyPhysics(dt) {
   handleCollisions();
   handleOut();
 
-  const moving = state.stones.some((s) => Math.hypot(s.vx, s.vy) > 0);
+  const moving = state.stones.some((s) => s.inPlay && Math.hypot(s.vx, s.vy) > 0);
   if (!moving && state.running) {
     state.running = false;
     if (state.shotsTaken >= 8) {
@@ -284,6 +284,8 @@ function handleOut() {
     if (!stone.inPlay) continue;
     if (stone.x < -50 || stone.x > width + 50 || stone.y < -50 || stone.y > height + 50) {
       stone.inPlay = false;
+      stone.vx = 0;
+      stone.vy = 0;
     }
   }
 }
