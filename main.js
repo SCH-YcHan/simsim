@@ -31,7 +31,7 @@ const appData = [
     items: [
       {
         name: "테트리스",
-        image: "/categories/killing-time/tetris/tetris.png",
+        image: "/categories/killing-time/tetris/preview.png",
         link: "/categories/killing-time/tetris/index.html",
       },
     ],
