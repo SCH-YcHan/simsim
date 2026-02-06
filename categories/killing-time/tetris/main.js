@@ -226,6 +226,8 @@ function drop() {
 
 function resetGame() {
   state.board = createMatrix(COLS, ROWS);
+  state.current = null;
+  state.next = null;
   state.score = 0;
   scoreEl.textContent = "0";
   state.gameOver = false;
@@ -322,14 +324,19 @@ function update(time = 0) {
 
 function handleKeyDown(event) {
   if (event.code === "ArrowLeft") {
+    event.preventDefault();
     move(-1);
   } else if (event.code === "ArrowRight") {
+    event.preventDefault();
     move(1);
   } else if (event.code === "ArrowDown") {
+    event.preventDefault();
     state.softDrop = true;
   } else if (event.code === "ArrowUp") {
+    event.preventDefault();
     rotateCurrent();
   } else if (event.code === "Space") {
+    event.preventDefault();
     hardDrop();
   } else if (event.code === "KeyP") {
     togglePause();
