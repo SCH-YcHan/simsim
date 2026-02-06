@@ -284,10 +284,14 @@ function handleCollisions() {
 }
 
 function handleOut() {
-  const { width, height } = state.sheet;
+  const { width, height, padding } = state.sheet;
+  const minX = padding;
+  const maxX = width - padding;
+  const minY = padding;
+  const maxY = height - padding;
   for (const stone of state.stones) {
     if (!stone.inPlay) continue;
-    if (stone.x < -50 || stone.x > width + 50 || stone.y < -50 || stone.y > height + 50) {
+    if (stone.x < minX || stone.x > maxX || stone.y < minY || stone.y > maxY) {
       stone.inPlay = false;
       stone.vx = 0;
       stone.vy = 0;
@@ -533,6 +537,11 @@ window.addEventListener("keydown", (event) => {
     } else {
       state.curlLevel = (state.curlLevel % 5) + 1;
     }
+    updateCurlButton();
+  }
+  if (key === "x") {
+    state.curlDir = 0;
+    state.curlLevel = 0;
     updateCurlButton();
   }
 });
