@@ -203,6 +203,9 @@ function endDrag() {
     state.blueLeft -= 1;
     state.currentTeam = TEAM_RED;
   }
+  state.curlDir = 0;
+  state.curlLevel = 0;
+  updateCurlButton();
 
   addLog(stone.team, power, (angle * 180) / Math.PI);
   updateStatus();
