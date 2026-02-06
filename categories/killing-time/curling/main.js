@@ -55,7 +55,7 @@ function resizeCanvas() {
   state.sheet.houseRadius = width * 0.22;
   state.sheet.buttonRadius = width * 0.015;
   state.sheet.center = { x: width / 2, y: height * 0.22 };
-  state.sheet.hack = { x: width / 2, y: height * 0.88 };
+  state.sheet.hack = { x: width / 2, y: height * 0.78 };
 
   draw();
 }
