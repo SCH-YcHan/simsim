@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오목</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>오목</h1>
+        <p id="turnText" aria-live="polite">현재 턴: 흑</p>
+      </div>
+      <div class="actions">
+        <button id="resetBtn" type="button">새 게임</button>
+        <button id="undoBtn" type="button">한 수 무르기</button>
+        <button id="hintBtn" type="button">좌표 숨기기</button>
+      </div>
+    </header>
+
+    <section class="board-section">
+      <div class="board-wrap">
+        <canvas id="board" aria-label="오목 보드"></canvas>
+      </div>
+      <aside class="moves">
+        <h2>수순 기록</h2>
+        <ol id="moveList"></ol>
+      </aside>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="overlay-card">
+      <h2 id="winnerText">승리!</h2>
+      <button id="overlayReset" type="button">새 게임</button>
+    </div>
+  </div>
+
+  <script src="./main.js"></script>
+</body>
+</html>

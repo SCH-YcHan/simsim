@@ -34,6 +34,11 @@ const appData = [
         image: "/categories/killing-time/tetris/preview.png",
         link: "/categories/killing-time/tetris/index.html",
       },
+      {
+        name: "오목",
+        image: "/categories/killing-time/omok/preview.png",
+        link: "/categories/killing-time/omok/index.html",
+      },
     ],
   },
   {
