@@ -222,7 +222,7 @@ function applyPhysics(dt) {
 
     const speed = Math.hypot(stone.vx, stone.vy);
     if (speed > 0) {
-      const curlStrength = 30 * (state.curlLevel / 3);
+      const curlStrength = 85 * (state.curlLevel / 3);
       const nx = -stone.vy / speed;
       const ny = stone.vx / speed;
       const curlScale = Math.min(speed / 600, 1);
