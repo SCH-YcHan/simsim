@@ -24,7 +24,7 @@ const state = {
   dragging: false,
   dragStart: null,
   dragCurrent: null,
-  curl: -1, // -1 left, 1 right
+  curl: 0, // -1 left, 0 off, 1 right
   lastStoneId: null,
   undoStack: [],
   sheet: {
@@ -85,7 +85,7 @@ function resetGame() {
   state.dragging = false;
   state.dragStart = null;
   state.dragCurrent = null;
-  state.curl = -1;
+  state.curl = 0;
   state.lastStoneId = null;
   state.undoStack = [];
   logList.innerHTML = "";
@@ -464,8 +464,16 @@ scoreBtn.addEventListener("click", () => {
 });
 
 curlBtn.addEventListener("click", () => {
-  state.curl *= -1;
-  curlBtn.textContent = state.curl === -1 ? "Curl: Left" : "Curl: Right";
+  if (state.curl === 0) {
+    state.curl = 1;
+    curlBtn.textContent = "Curl: Right";
+  } else if (state.curl === 1) {
+    state.curl = -1;
+    curlBtn.textContent = "Curl: Left";
+  } else {
+    state.curl = 0;
+    curlBtn.textContent = "Curl: Off";
+  }
 });
 
 overlayReset.addEventListener("click", resetGame);
@@ -475,12 +483,21 @@ window.addEventListener("keydown", (event) => {
   if (key === "r") resetGame();
   if (key === "u") undo();
   if (key === "c") {
-    state.curl *= -1;
-    curlBtn.textContent = state.curl === -1 ? "Curl: Left" : "Curl: Right";
+    if (state.curl === 0) {
+      state.curl = 1;
+      curlBtn.textContent = "Curl: Right";
+    } else if (state.curl === 1) {
+      state.curl = -1;
+      curlBtn.textContent = "Curl: Left";
+    } else {
+      state.curl = 0;
+      curlBtn.textContent = "Curl: Off";
+    }
   }
 });
 
 resizeCanvas();
 resetGame();
+curlBtn.textContent = "Curl: Off";
 requestAnimationFrame(loop);
 window.addEventListener("resize", resizeCanvas);
