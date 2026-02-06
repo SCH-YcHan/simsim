@@ -163,6 +163,9 @@ function updateDrag(point) {
 function endDrag() {
   if (!state.dragging) return;
   state.dragging = false;
+  if (!state.dragCurrent) {
+    state.dragCurrent = state.dragStart;
+  }
 
   const dx = state.dragStart.x - state.dragCurrent.x;
   const dy = state.dragStart.y - state.dragCurrent.y;
@@ -412,7 +415,7 @@ function draw() {
 }
 
 function getMaxPower() {
-  return state.sheet.height * 0.6;
+  return state.sheet.height * 0.9;
 }
 
 let lastTime = 0;
@@ -426,8 +429,9 @@ function loop(time) {
   requestAnimationFrame(loop);
 }
 
-canvas.addEventListener("mousedown", (event) => {
+canvas.addEventListener("pointerdown", (event) => {
   if (state.running || state.shotsTaken >= 8) return;
+  canvas.setPointerCapture(event.pointerId);
   const rect = canvas.getBoundingClientRect();
   const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
   const dx = point.x - state.sheet.hack.x;
@@ -436,49 +440,17 @@ canvas.addEventListener("mousedown", (event) => {
   beginDrag({ x: state.sheet.hack.x, y: state.sheet.hack.y });
 });
 
-canvas.addEventListener("mousemove", (event) => {
+canvas.addEventListener("pointermove", (event) => {
   if (!state.dragging) return;
   const rect = canvas.getBoundingClientRect();
   updateDrag({ x: event.clientX - rect.left, y: event.clientY - rect.top });
 });
 
-window.addEventListener("mousemove", (event) => {
-  if (!state.dragging) return;
-  const rect = canvas.getBoundingClientRect();
-  updateDrag({ x: event.clientX - rect.left, y: event.clientY - rect.top });
-});
-
-window.addEventListener("mouseup", () => {
+canvas.addEventListener("pointerup", () => {
   endDrag();
 });
 
-canvas.addEventListener("touchstart", (event) => {
-  if (state.running || state.shotsTaken >= 8) return;
-  const touch = event.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  const point = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
-  const dx = point.x - state.sheet.hack.x;
-  const dy = point.y - state.sheet.hack.y;
-  if (Math.hypot(dx, dy) > state.sheet.width * 0.12) return;
-  beginDrag({ x: state.sheet.hack.x, y: state.sheet.hack.y });
-});
-
-canvas.addEventListener("touchmove", (event) => {
-  if (!state.dragging) return;
-  const touch = event.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  updateDrag({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
-});
-
-window.addEventListener("touchmove", (event) => {
-  if (!state.dragging) return;
-  const touch = event.touches[0];
-  if (!touch) return;
-  const rect = canvas.getBoundingClientRect();
-  updateDrag({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
-}, { passive: true });
-
-window.addEventListener("touchend", () => {
+canvas.addEventListener("pointercancel", () => {
   endDrag();
 });
 
