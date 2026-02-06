@@ -25,7 +25,7 @@ const state = {
   dragStart: null,
   dragCurrent: null,
   curlDir: 0, // -1 left, 0 off, 1 right
-  curlLevel: 0, // 0-3
+  curlLevel: 0, // 0-5
   lastStoneId: null,
   undoStack: [],
   sheet: {
@@ -222,7 +222,7 @@ function applyPhysics(dt) {
 
     const speed = Math.hypot(stone.vx, stone.vy);
     if (speed > 0) {
-      const curlStrength = 160 * (state.curlLevel / 3);
+      const curlStrength = 320 * (state.curlLevel / 5);
       const nx = -stone.vy / speed;
       const ny = stone.vx / speed;
       const curlScale = Math.min(speed / 600, 1);
@@ -522,7 +522,7 @@ window.addEventListener("keydown", (event) => {
       state.curlDir = -1;
       state.curlLevel = 1;
     } else {
-      state.curlLevel = (state.curlLevel % 3) + 1;
+      state.curlLevel = (state.curlLevel % 5) + 1;
     }
     updateCurlButton();
   }
@@ -531,7 +531,7 @@ window.addEventListener("keydown", (event) => {
       state.curlDir = 1;
       state.curlLevel = 1;
     } else {
-      state.curlLevel = (state.curlLevel % 3) + 1;
+      state.curlLevel = (state.curlLevel % 5) + 1;
     }
     updateCurlButton();
   }
