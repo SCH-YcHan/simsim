@@ -218,11 +218,12 @@ function applyPhysics(dt) {
 
     const speed = Math.hypot(stone.vx, stone.vy);
     if (speed > 0) {
-      const curlStrength = 24;
+      const curlStrength = 12;
       const nx = -stone.vy / speed;
       const ny = stone.vx / speed;
-      stone.vx += nx * curlStrength * state.curl * dt;
-      stone.vy += ny * curlStrength * state.curl * dt;
+      const curlScale = Math.min(speed / 600, 1);
+      stone.vx += nx * curlStrength * curlScale * state.curl * dt;
+      stone.vy += ny * curlStrength * curlScale * state.curl * dt;
     }
 
     stone.x += stone.vx * dt;
