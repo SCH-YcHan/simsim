@@ -72,6 +72,8 @@ function createStone(team, number) {
     vx: 0,
     vy: 0,
     radius,
+    curlDir: 0,
+    curlLevel: 0,
     inPlay: true,
   };
 }
@@ -191,6 +193,8 @@ function endDrag() {
   const angle = Math.atan2(dy, dx);
   stone.vx = Math.cos(angle) * speed;
   stone.vy = Math.sin(angle) * speed;
+  stone.curlDir = state.curlDir;
+  stone.curlLevel = state.curlLevel;
   state.stones.push(stone);
   state.lastStoneId = stone.id;
 
@@ -225,12 +229,12 @@ function applyPhysics(dt) {
 
     const speed = Math.hypot(stone.vx, stone.vy);
     if (speed > 0) {
-      const curlStrength = 320 * (state.curlLevel / 5);
+      const curlStrength = 320 * (stone.curlLevel / 5);
       const nx = -stone.vy / speed;
       const ny = stone.vx / speed;
       const curlScale = Math.min(speed / 600, 1);
-      stone.vx += nx * curlStrength * curlScale * state.curlDir * dt;
-      stone.vy += ny * curlStrength * curlScale * state.curlDir * dt;
+      stone.vx += nx * curlStrength * curlScale * stone.curlDir * dt;
+      stone.vy += ny * curlStrength * curlScale * stone.curlDir * dt;
     }
 
     stone.x += stone.vx * dt;
