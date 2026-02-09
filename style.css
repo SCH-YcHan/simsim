@@ -12,6 +12,7 @@
   --radius-lg: 24px;
   --radius-md: 16px;
   --radius-sm: 12px;
+  --card-gap: 16px;
   --font-title: "Pretendard", sans-serif;
   --font-body: "Pretendard", sans-serif;
 }
@@ -233,7 +234,7 @@ body {
   margin-top: 48px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 22px;
+  gap: var(--card-gap);
 }
 
 .section-title {
@@ -264,7 +265,7 @@ body {
 .quality-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+  gap: var(--card-gap);
 }
 
 .quality-card {
@@ -368,7 +369,7 @@ body {
 .item-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+  gap: var(--card-gap);
   margin-top: 0;
 }
 
@@ -421,33 +422,6 @@ body {
   font-weight: 600;
   font-family: var(--font-body);
   color: var(--ink);
-}
-
-.app-card__meta {
-  display: grid;
-  gap: 8px;
-  padding: 0 4px 6px;
-}
-
-.app-card__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 700;
-  background: rgba(15, 118, 110, 0.15);
-  color: var(--accent-2);
-  width: fit-content;
-}
-
-.app-card__summary {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.4;
 }
 
 .app-card {
@@ -546,7 +520,7 @@ body {
 
 .race-section {
   display: grid;
-  gap: 24px;
+  gap: var(--card-gap);
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
@@ -621,7 +595,7 @@ body {
 .race-animals {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  gap: var(--card-gap);
 }
 
 .animal-card {
@@ -690,7 +664,7 @@ body {
 
 .race-lanes {
   display: grid;
-  gap: 20px;
+  gap: var(--card-gap);
 }
 
 .race-start-line,
@@ -993,7 +967,7 @@ body {
 .jebi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  gap: var(--card-gap);
 }
 
 .jebi-placeholder {
