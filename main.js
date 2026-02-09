@@ -57,6 +57,53 @@ const appData = [
 const catalog = document.querySelector("#catalog");
 const searchInput = document.querySelector("#searchInput");
 const resetButton = document.querySelector("#resetButton");
+const infoToggle = document.querySelector("#infoToggle");
+const infoPanel = document.querySelector("#infoPanel");
+const infoClose = document.querySelector("#infoClose");
+
+function closeInfoPanel() {
+  if (!infoPanel || !infoToggle) return;
+  infoPanel.classList.remove("is-open");
+  infoPanel.setAttribute("aria-hidden", "true");
+  infoToggle.setAttribute("aria-expanded", "false");
+}
+
+function openInfoPanel() {
+  if (!infoPanel || !infoToggle) return;
+  infoPanel.classList.add("is-open");
+  infoPanel.setAttribute("aria-hidden", "false");
+  infoToggle.setAttribute("aria-expanded", "true");
+}
+
+if (infoToggle) {
+  infoToggle.addEventListener("click", () => {
+    if (!infoPanel) return;
+    const isOpen = infoPanel.classList.contains("is-open");
+    if (isOpen) {
+      closeInfoPanel();
+    } else {
+      openInfoPanel();
+    }
+  });
+}
+
+if (infoClose) {
+  infoClose.addEventListener("click", closeInfoPanel);
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  closeInfoPanel();
+});
+
+document.addEventListener("click", (event) => {
+  if (!infoPanel || !infoToggle) return;
+  if (!infoPanel.classList.contains("is-open")) return;
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  if (infoPanel.contains(target) || infoToggle.contains(target)) return;
+  closeInfoPanel();
+});
 
 function createItem(item) {
   const entry = document.createElement("div");
