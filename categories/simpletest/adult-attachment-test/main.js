@@ -35,7 +35,7 @@ const questions = [
     id: "A6",
     axis: "anxiety",
     reverse: true,
-    text: "나는 관계에서 버림받을 걱정을 거의 하지 않는다. (역채점)",
+    text: "나는 관계에서 버림받을 걱정을 거의 하지 않는다.",
   },
   {
     id: "V1",
@@ -65,7 +65,7 @@ const questions = [
     id: "V5",
     axis: "avoidance",
     reverse: true,
-    text: "나는 연애에서 상대에게 기대고 의지하는 게 자연스럽다. (역채점)",
+    text: "나는 연애에서 상대에게 기대고 의지하는 게 자연스럽다.",
   },
   {
     id: "V6",
