@@ -43,7 +43,7 @@ const appData = [
   },
   {
     category: "테스트",
-    description: "나를 이해하는 3분 자가 테스트.",
+    description: "나는 어떤 사람일까?",
     items: [
       {
         name: "성인 애착유형 테스트",
