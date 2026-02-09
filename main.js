@@ -47,7 +47,7 @@ const appData = [
     items: [
       {
         name: "복리 계산기",
-        image: "",
+        image: "/categories/calculator/compound-interest/preview.png",
         link: "/categories/calculator/compound-interest/index.html",
       },
     ],
