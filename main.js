@@ -52,6 +52,17 @@ const appData = [
       },
     ],
   },
+  {
+    category: "테스트",
+    description: "나를 이해하는 짧은 자가 테스트.",
+    items: [
+      {
+        name: "성인 애착유형 테스트",
+        image: "/categories/simpletest/adult-attachment-test/preview.png",
+        link: "/categories/simpletest/adult-attachment-test/index.html",
+      },
+    ],
+  },
 ];
 
 const catalog = document.querySelector("#catalog");
