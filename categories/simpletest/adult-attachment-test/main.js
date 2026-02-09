@@ -258,7 +258,7 @@ function introMarkup() {
   return `
     <section class="intro">
       <div class="intro__badge">3분 자기이해</div>
-      <h2>관계에서 나는 어떤 사람일까?</h2>
+      <h2>나의 애착유형은 어떤 모습일까?</h2>
       <p>짧은 질문 12개로 관계에서의 나를 가볍게 들여다봐요.</p>
       <div class="intro__chips">
         <span class="chip">한 문항씩 편하게</span>
