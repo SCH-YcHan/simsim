@@ -42,17 +42,6 @@ const appData = [
     ],
   },
   {
-    category: "테스트",
-    description: "나는 어떤 사람일까?",
-    items: [
-      {
-        name: "나의 애착유형",
-        image: "/categories/simpletest/adult-attachment-test/preview.png",
-        link: "/categories/simpletest/adult-attachment-test/index.html",
-      },
-    ],
-  },
-  {
     category: "기타",
     description: "필요할 때 꺼내 쓰는 도구 모음",
     items: [
