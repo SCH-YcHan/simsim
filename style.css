@@ -42,7 +42,7 @@ body {
 .content {
   display: grid;
   gap: 32px;
-  margin-top: 32px;
+  margin-top: 20px;
 }
 
 .race-page {
@@ -233,7 +233,7 @@ body {
 }
 
 .catalog {
-  margin-top: 48px;
+  margin-top: 28px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--card-gap);
