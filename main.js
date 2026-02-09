@@ -43,7 +43,7 @@ const appData = [
   },
   {
     category: "기타",
-    description: "필요할 때 꺼내 쓰는 도구 모음.",
+    description: "필요할 때 꺼내 쓰는 도구 모음",
     items: [
       {
         name: "복리 계산기",
