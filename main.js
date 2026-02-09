@@ -42,8 +42,8 @@ const appData = [
     ],
   },
   {
-    category: "계산기",
-    description: "복잡한 계산은 여기서 끝!",
+    category: "기타",
+    description: "필요할 때 꺼내 쓰는 도구 모음.",
     items: [
       {
         name: "복리 계산기",
