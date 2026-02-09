@@ -7,16 +7,15 @@ const appData = [
         name: "동물경주",
         image: "/categories/will-or-wont/animal-race/preview.png",
         link: "/categories/will-or-wont/animal-race/index.html",
+        summary: "버튼 하나로 바로 시작하는 미니 레이스.",
+        keywords: ["레이스", "게임", "내기", "동물"],
       },
       {
         name: "제비뽑기",
         image: "/categories/will-or-wont/jebi-bbobgi/preview.png",
         link: "/categories/will-or-wont/jebi-bbobgi/index.html",
-      },
-      {
-        name: "업앤다운",
-        image: "",
-        link: "#",
+        summary: "벌칙과 면제를 공정하게 결정.",
+        keywords: ["랜덤", "추첨", "제비", "내기"],
       },
     ],
   },
@@ -28,27 +27,22 @@ const appData = [
         name: "테트리스",
         image: "/categories/killing-time/tetris/preview.png",
         link: "/categories/killing-time/tetris/index.html",
+        summary: "짧고 빠른 퍼즐 한 판.",
+        keywords: ["퍼즐", "아케이드", "보드"],
       },
       {
         name: "오목",
         image: "/categories/killing-time/omok/preview.png",
         link: "/categories/killing-time/omok/index.html",
+        summary: "5목을 먼저 만드는 전략 게임.",
+        keywords: ["보드", "전략", "두뇌"],
       },
       {
         name: "컬링",
         image: "/categories/killing-time/curling/preview.png",
         link: "/categories/killing-time/curling/index.html",
-      },
-    ],
-  },
-  {
-    category: "테스트",
-    description: "지금의 나를 한 문장으로!",
-    items: [
-      {
-        name: "반응속도 측정",
-        image: "",
-        link: "#",
+        summary: "조준과 파워를 조절하는 미니 스포츠.",
+        keywords: ["스포츠", "캐주얼", "조준"],
       },
     ],
   },
@@ -72,17 +66,23 @@ const resetButton = document.querySelector("#resetButton");
 function createItem(item) {
   const entry = document.createElement("div");
   entry.className = "item fade-up";
+  const isDisabled = item.disabled || !item.link || item.link === "#";
+  const badgeText = isDisabled ? "준비 중" : "바로 실행";
 
   const media = item.image
     ? `<img class="app-card__image" src="${item.image}" alt="${item.name} 미리보기">`
     : `<div class="app-card__placeholder">미리보기</div>`;
 
   entry.innerHTML = `
-    <div class="app-card" role="button" tabindex="0" data-link="${item.link}">
+    <div class="app-card ${isDisabled ? "is-disabled" : ""}" role="button" tabindex="${isDisabled ? "-1" : "0"}" aria-disabled="${isDisabled}" ${isDisabled ? "" : `data-link="${item.link}"`}>
       <div class="app-card__media">
         ${media}
       </div>
       <div class="app-card__name">${item.name}</div>
+      <div class="app-card__meta">
+        <span class="app-card__badge">${badgeText}</span>
+        <span class="app-card__summary">${item.summary}</span>
+      </div>
     </div>
   `;
 
@@ -132,8 +132,16 @@ function filterCatalog(keyword) {
   const filtered = appData
     .map((group) => {
       const items = group.items.filter((item) => {
+        const matchesSummary = item.summary
+          ? item.summary.toLowerCase().includes(normalized)
+          : false;
+        const matchesKeywords = item.keywords
+          ? item.keywords.join(" ").toLowerCase().includes(normalized)
+          : false;
         return (
-          item.name.toLowerCase().includes(normalized)
+          item.name.toLowerCase().includes(normalized) ||
+          matchesSummary ||
+          matchesKeywords
         );
       });
 
