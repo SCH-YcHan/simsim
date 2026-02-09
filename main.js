@@ -42,6 +42,17 @@ const appData = [
     ],
   },
   {
+    category: "테스트",
+    description: "나를 이해하는 3분 자가 테스트.",
+    items: [
+      {
+        name: "성인 애착유형 테스트",
+        image: "/categories/simpletest/adult-attachment-test/preview.png",
+        link: "/categories/simpletest/adult-attachment-test/index.html",
+      },
+    ],
+  },
+  {
     category: "기타",
     description: "필요할 때 꺼내 쓰는 도구 모음",
     items: [
@@ -49,17 +60,6 @@ const appData = [
         name: "복리 계산기",
         image: "/categories/calculator/compound-interest/preview.png",
         link: "/categories/calculator/compound-interest/index.html",
-      },
-    ],
-  },
-  {
-    category: "테스트",
-    description: "나를 이해하는 짧은 자가 테스트.",
-    items: [
-      {
-        name: "성인 애착유형 테스트",
-        image: "/categories/simpletest/adult-attachment-test/preview.png",
-        link: "/categories/simpletest/adult-attachment-test/index.html",
       },
     ],
   },
