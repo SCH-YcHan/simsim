@@ -68,6 +68,17 @@ body {
   gap: 16px;
 }
 
+.intro__badge {
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.14);
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
 .intro h2 {
   margin: 0;
   font-size: 22px;
@@ -77,6 +88,32 @@ body {
   margin: 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.intro__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed rgba(31, 26, 22, 0.2);
+  font-size: 13px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.intro__cta {
+  display: grid;
+  gap: 10px;
+}
+
+.intro__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .primary {

@@ -257,10 +257,18 @@ function resultMarkup() {
 function introMarkup() {
   return `
     <section class="intro">
-      <h2>테스트 안내</h2>
-      <p>총 12문항이며 한 번에 한 문항씩 진행됩니다. 1~5점으로 응답해 주세요.</p>
-      <p>점수는 불안(Anxiety)과 회피(Avoidance) 평균으로 계산됩니다.</p>
-      <button class="primary" id="start">시작하기</button>
+      <div class="intro__badge">3분 자기이해</div>
+      <h2>관계에서 나는 어떤 사람일까?</h2>
+      <p>짧은 질문 12개로 관계에서의 나를 가볍게 들여다봐요.</p>
+      <div class="intro__chips">
+        <span class="chip">한 문항씩 편하게</span>
+        <span class="chip">솔직하게</span>
+        <span class="chip">지금 바로 시작</span>
+      </div>
+      <div class="intro__cta">
+        <button class="primary" id="start">시작하기</button>
+        <p class="intro__hint">정답은 없어요. 지금 느낌대로 체크하면 돼요.</p>
+      </div>
     </section>
   `;
 }
