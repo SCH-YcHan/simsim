@@ -1,6 +1,6 @@
 const appData = [
   {
-    category: "내기게임",
+    category: "내기 게임",
     description: "친구·동료와 내기 한판?",
     items: [
       {
@@ -24,7 +24,7 @@ const appData = [
     ],
   },
   {
-    category: "1인용게임",
+    category: "1인용 게임",
     description: "혼자서 가볍게 즐기는 미니 게임",
     items: [
       {
@@ -36,7 +36,7 @@ const appData = [
     ],
   },
   {
-    category: "2인용게임",
+    category: "2인용 게임",
     description: "둘이서 번갈아 즐기는 핫시트",
     items: [
       {
