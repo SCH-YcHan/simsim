@@ -33,18 +33,18 @@ const appData = [
         link: "/categories/solo/tetris/index.html",
         keywords: ["퍼즐", "아케이드", "보드"],
       },
-      {
-        name: "컬링",
-        image: "/categories/solo/curling/preview.png",
-        link: "/categories/solo/curling/index.html",
-        keywords: ["스포츠", "캐주얼", "조준"],
-      },
     ],
   },
   {
     category: "2인용",
     description: "둘이서 번갈아 즐기는 핫시트",
     items: [
+      {
+        name: "컬링",
+        image: "/categories/duo/curling/preview.png",
+        link: "/categories/duo/curling/index.html",
+        keywords: ["스포츠", "캐주얼", "조준"],
+      },
       {
         name: "오목",
         image: "/categories/duo/omok/preview.png",
