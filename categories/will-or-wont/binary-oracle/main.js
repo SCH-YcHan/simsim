@@ -476,6 +476,11 @@ function showResults(){
     const card = document.createElement("div");
     card.className = "rowScore";
 
+    const commonHintText = round.commonHints.map(h => `• ${h}`).join("<br>");
+    const privateHintText = round.privatePicked[r.idx]
+      ? round.privatePicked[r.idx]
+      : "선택 없음";
+
     const badge = r.disqualified
       ? `<span class="badge">실격</span>`
       : winSet.has(r.idx)
@@ -488,6 +493,8 @@ function showResults(){
         <div>${badge}</div>
       </div>
       <div class="hint">정확도: <b>${r.correct < 0 ? 0 : r.correct}</b> / ${bits.length} &nbsp;|&nbsp; 연속 최대: <b>${r.streak < 0 ? 0 : r.streak}</b> &nbsp;|&nbsp; 남은 시간: <b>${r.disqualified ? 0 : r.timeBonus}</b>s</div>
+      <div class="hint">공통 힌트:<br>${commonHintText}</div>
+      <div class="hint">개인 힌트: <b>${escapeHtml(privateHintText)}</b></div>
     `;
 
     // 미니 비교 표시(맞으면 ok)
