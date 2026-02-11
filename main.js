@@ -16,10 +16,10 @@ const appData = [
         keywords: ["랜덤", "추첨", "제비", "내기"],
       },
       {
-        name: "이진 추리",
+        name: "0/1 추리",
         image: "/categories/will-or-wont/binary-oracle/preview.png",
         link: "/categories/will-or-wont/binary-oracle/index.html",
-        keywords: ["추리", "비트", "힌트", "멀티", "이진"],
+        keywords: ["추리", "비트", "힌트", "멀티", "이진", "0/1"],
       },
     ],
   },
