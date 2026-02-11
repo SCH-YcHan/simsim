@@ -555,7 +555,6 @@ function applyMove(move, userAction) {
   updateMoveLog();
   render();
   checkGameEnd();
-  maybeShowOverlay();
 }
 
 function formatMoveLog(move, target) {
@@ -609,9 +608,11 @@ btnFlip.addEventListener("click", () => {
 });
 
 toggleOverlay.addEventListener("change", () => {
-  if (!toggleOverlay.checked) {
-    hideOverlay();
+  if (toggleOverlay.checked) {
+    maybeShowOverlay();
+    return;
   }
+  hideOverlay();
 });
 
 btnOverlay.addEventListener("click", hideOverlay);
