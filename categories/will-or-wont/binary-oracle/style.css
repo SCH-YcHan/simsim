@@ -351,6 +351,8 @@ body {
   padding: 24px;
   display: grid;
   gap: 12px;
+  max-height: min(84vh, 860px);
+  overflow: auto;
 }
 
 .sub2 {
@@ -386,6 +388,9 @@ body {
 .scoreboard {
   display: grid;
   gap: 10px;
+  max-height: 48vh;
+  overflow: auto;
+  padding-right: 6px;
 }
 
 .rowScore {
