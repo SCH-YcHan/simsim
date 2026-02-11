@@ -46,9 +46,9 @@ const appData = [
         keywords: ["스포츠", "캐주얼", "조준"],
       },
       {
-        name: "체스 핫시트",
-        image: "/categories/killing-time/chess-hotseat/preview.png",
-        link: "/categories/killing-time/chess-hotseat/index.html",
+        name: "체스",
+        image: "/categories/killing-time/chess/preview.png",
+        link: "/categories/killing-time/chess/index.html",
         keywords: ["체스", "보드", "전략", "핫시트", "대국"],
       },
     ],
