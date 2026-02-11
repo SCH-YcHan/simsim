@@ -24,6 +24,7 @@ const elBtnRevealCommon = $("#btnRevealCommon");
 
 const elPrivateHintChoices = $("#privateHintChoices");
 const elPrivateHintPicked = $("#privateHintPicked");
+const elPrivateHintNote = $("#privateHintNote");
 
 const elBitGrid = $("#bitGrid");
 const elBtnClear = $("#btnClear");
@@ -229,6 +230,7 @@ function enterTurn(){
   // 개인 힌트 선택지 렌더
   elPrivateHintPicked.classList.add("hidden");
   elPrivateHintPicked.textContent = "";
+  elPrivateHintNote.textContent = `아래 ${round.privateChoices}개 중 1개만 선택할 수 있어요. 선택 즉시 고정됩니다.`;
   renderPrivateChoices(idx);
 
   // 입력 그리드 초기화
@@ -279,7 +281,8 @@ function renderPrivateChoices(playerIdx){
 
 function buildGrid(n){
   elBitGrid.innerHTML = "";
-  elBitGrid.style.gridTemplateColumns = `repeat(${Math.min(10,n)}, 1fr)`;
+  const columns = n <= 10 ? n : 6;
+  elBitGrid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
 
   for(let i=0;i<n;i++){
     const cell = document.createElement("div");
