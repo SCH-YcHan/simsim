@@ -12,3 +12,6 @@
 ## Reminder
 - When creating a new app, use the exact file naming above.
 - Keep app assets and code self-contained within the app folder.
+
+## Typography
+- Always use the Pretendard font for all pages and UI.
