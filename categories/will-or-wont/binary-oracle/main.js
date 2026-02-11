@@ -91,6 +91,7 @@ function startTimer(){
 function handleTimeout(){
   round.guesses[round.turn] = null;
   round.disqualified[round.turn] = true;
+  round.timeBonus[round.turn] = 0;
   disableTurnInput();
   round.turn += 1;
   if(round.turn >= players.length){
@@ -248,6 +249,7 @@ function startRound(){
     commonHints,
     guesses: new Array(players.length).fill(null), // array of arrays
     disqualified: new Array(players.length).fill(false),
+    timeBonus: new Array(players.length).fill(0),
     privatePicked: new Array(players.length).fill(null),
     privateChoiceList: new Array(players.length).fill(null),
     turn: 0,
@@ -445,14 +447,25 @@ function showResults(){
       correct,
       streak,
       guess:g,
-      disqualified: round.disqualified[i] || disqualified
+      disqualified: round.disqualified[i] || disqualified,
+      timeBonus: round.timeBonus[i] || 0
     };
   });
 
   // 승자 결정: correct desc, streak desc
-  rows.sort((a,b) => (b.correct - a.correct) || (b.streak - a.streak));
+  rows.sort((a,b) => {
+    if(a.disqualified !== b.disqualified) return a.disqualified ? 1 : -1;
+    return (b.correct - a.correct) || (b.streak - a.streak) || (b.timeBonus - a.timeBonus);
+  });
   const top = rows[0];
-  const winners = rows.filter(r => r.correct === top.correct && r.streak === top.streak).map(r => r.idx);
+  const winners = rows
+    .filter(r =>
+      !r.disqualified &&
+      r.correct === top.correct &&
+      r.streak === top.streak &&
+      r.timeBonus === top.timeBonus
+    )
+    .map(r => r.idx);
   const winSet = new Set(winners);
 
   // 스코어보드 렌더
@@ -472,7 +485,7 @@ function showResults(){
         <div>${escapeHtml(r.name)}</div>
         <div>${badge}</div>
       </div>
-      <div class="hint">정확도: <b>${r.correct < 0 ? 0 : r.correct}</b> / ${bits.length} &nbsp;|&nbsp; 연속 최대: <b>${r.streak < 0 ? 0 : r.streak}</b></div>
+      <div class="hint">정확도: <b>${r.correct < 0 ? 0 : r.correct}</b> / ${bits.length} &nbsp;|&nbsp; 연속 최대: <b>${r.streak < 0 ? 0 : r.streak}</b> &nbsp;|&nbsp; 남은 시간: <b>${r.disqualified ? 0 : r.timeBonus}</b>s</div>
     `;
 
     // 미니 비교 표시(맞으면 ok)
@@ -546,6 +559,7 @@ elBtnSubmit.addEventListener("click", () => {
   // 저장
   round.guesses[round.turn] = g;
   round.disqualified[round.turn] = false;
+  round.timeBonus[round.turn] = timeLeft;
   clearTimer();
 
   // 다음 턴/결과
