@@ -2,7 +2,7 @@
 
 ## App Structure Standard
 - All new apps must follow the same folder structure as:
-  `/home/user/adslab/categories/will-or-wont/animal-race`
+  `/home/user/adslab/categories/bet/animal-race`
 - Required files inside each app folder:
   - `index.html`
   - `main.js`
@@ -18,7 +18,7 @@
 - Always use the Pretendard font for all pages and UI.
 
 ## How To Request Work (Efficiency Rules)
-- Always specify the exact target path (e.g. `/home/user/adslab/categories/calculator/compound-interest`) and whether the task is a new app or an update to an existing app.
+- Always specify the exact target path (e.g. `/home/user/adslab/categories/etc/compound-interest`) and whether the task is a new app or an update to an existing app.
 - If updating, name the exact files to touch (`index.html`, `main.js`, `style.css` or `styles.css`, `preview.png`) and any files to avoid.
 - Provide the desired behavior and any formulas or data rules in precise terms; include example input/output if possible.
 - If matching another page, supply a screenshot or a list of UI/feature requirements.

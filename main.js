@@ -5,20 +5,20 @@ const appData = [
     items: [
       {
         name: "동물경주",
-        image: "/categories/will-or-wont/animal-race/preview.png",
-        link: "/categories/will-or-wont/animal-race/index.html",
+        image: "/categories/bet/animal-race/preview.png",
+        link: "/categories/bet/animal-race/index.html",
         keywords: ["레이스", "게임", "내기", "동물"],
       },
       {
         name: "0/1 추리",
-        image: "/categories/will-or-wont/binary-oracle/preview.png",
-        link: "/categories/will-or-wont/binary-oracle/index.html",
+        image: "/categories/bet/binary-oracle/preview.png",
+        link: "/categories/bet/binary-oracle/index.html",
         keywords: ["추리", "비트", "힌트", "멀티", "이진", "0/1"],
       },
       {
         name: "제비뽑기",
-        image: "/categories/will-or-wont/jebi-bbobgi/preview.png",
-        link: "/categories/will-or-wont/jebi-bbobgi/index.html",
+        image: "/categories/bet/jebi-bbobgi/preview.png",
+        link: "/categories/bet/jebi-bbobgi/index.html",
         keywords: ["랜덤", "추첨", "제비", "내기"],
       },
     ],
@@ -65,8 +65,8 @@ const appData = [
     items: [
       {
         name: "복리 계산기",
-        image: "/categories/calculator/compound-interest/preview.png",
-        link: "/categories/calculator/compound-interest/index.html",
+        image: "/categories/etc/compound-interest/preview.png",
+        link: "/categories/etc/compound-interest/index.html",
         keywords: ["계산", "금융", "이자", "투자"],
       },
     ],
