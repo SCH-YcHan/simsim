@@ -440,13 +440,15 @@ body {
 }
 
 .mini .ok {
-  border-color: rgba(15, 118, 110, 0.35);
-  background: rgba(15, 118, 110, 0.1);
-  color: var(--accent-2);
+  border-color: rgba(15, 118, 110, 0.45);
+  background: rgba(15, 118, 110, 0.16);
+  color: #0b5d58;
 }
 
 .mini .no {
-  opacity: 0.4;
+  border-color: rgba(255, 94, 58, 0.45);
+  background: rgba(255, 94, 58, 0.16);
+  color: #c33a20;
 }
 
 @media (max-width: 720px) {
