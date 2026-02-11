@@ -76,7 +76,7 @@ function disableTurnInput(){
 
 function startTimer(){
   clearTimer();
-  timeLeft = 60;
+  timeLeft = round.timeLimit;
   if(elTurnTimer) elTurnTimer.textContent = formatTime(timeLeft);
   timerId = setInterval(() => {
     timeLeft -= 1;
@@ -236,6 +236,7 @@ function startRound(){
 
   const n = parseInt(elBitLen.value, 10);
   const diff = elDifficulty.value;
+  const timeLimit = n === 5 ? 30 : 60;
 
   const bits = genBits(n);
 
@@ -256,6 +257,7 @@ function startRound(){
     diff,
     n,
     privateChoices,
+    timeLimit,
   };
 
   // 개인 선택지(각 플레이어별로 새로 뽑음)
