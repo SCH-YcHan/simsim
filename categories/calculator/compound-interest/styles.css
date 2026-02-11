@@ -92,7 +92,7 @@ body {
 }
 
 .hero h1 {
-  font-family: "DM Serif Display", serif;
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
   font-size: clamp(36px, 6vw, 64px);
   margin: 0;
 }
