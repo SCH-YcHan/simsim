@@ -15,6 +15,12 @@ const appData = [
         link: "/categories/will-or-wont/jebi-bbobgi/index.html",
         keywords: ["랜덤", "추첨", "제비", "내기"],
       },
+      {
+        name: "바이너리 오라클",
+        image: "/categories/will-or-wont/binary-oracle/preview.png",
+        link: "/categories/will-or-wont/binary-oracle/index.html",
+        keywords: ["추리", "비트", "힌트", "멀티"],
+      },
     ],
   },
   {
