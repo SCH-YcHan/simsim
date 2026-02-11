@@ -1,106 +1,150 @@
 <!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>복리 계산기</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
-  <link rel="stylesheet" href="./styles.css" />
-</head>
-<body>
-  <main class="app">
-    <header class="hero">
-      <a class="back" href="/index.html">메인으로</a>
-      <div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>복리 계산기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <main class="page">
+      <header class="hero">
+        <p class="eyebrow">Compound Planner</p>
         <h1>복리 계산기</h1>
-        <p>복리 주기와 추가 납입을 반영해 최종 금액을 계산합니다.</p>
-      </div>
-    </header>
+        <p class="subtitle">
+          목표 수익률을 기준으로 기간 동안의 복리 성장과 예상 수익을 계산합니다.
+        </p>
+      </header>
 
-    <section class="panel">
-      <form id="calcForm" class="form" autocomplete="off">
-        <label class="field" for="principal">
-          <span>초기원금 P (원)</span>
-          <input id="principal" name="principal" type="number" min="0" step="1000" value="1000000" />
-        </label>
-        <label class="field" for="rate">
-          <span>연이율 r (%)</span>
-          <input id="rate" name="rate" type="number" min="0" step="0.1" value="5" />
-        </label>
-        <label class="field" for="years">
-          <span>기간 t (년)</span>
-          <input id="years" name="years" type="number" min="0" step="0.1" value="10" />
-        </label>
-        <label class="field" for="frequency">
-          <span>복리 주기 n (연 n회)</span>
-          <select id="frequency" name="frequency">
-            <option value="1">연 1회</option>
-            <option value="2">반기</option>
-            <option value="4">분기</option>
-            <option value="12" selected>월복리</option>
-            <option value="365">일복리</option>
-          </select>
-        </label>
-        <label class="field" for="pmt">
-          <span>매회 추가납입 PMT (원)</span>
-          <input id="pmt" name="pmt" type="number" min="0" step="1000" value="0" />
-        </label>
-        <label class="field" for="timing">
-          <span>납입 시점</span>
-          <select id="timing" name="timing">
-            <option value="end" selected>기말</option>
-            <option value="begin">기초</option>
-          </select>
-        </label>
-      </form>
+      <section class="panel">
+        <form id="calc-form" class="form" autocomplete="off">
+          <div class="field">
+            <label for="principal">투자금액</label>
+            <div class="input-wrap">
+              <span class="unit">₩</span>
+              <input
+                id="principal"
+                name="principal"
+                type="number"
+                min="0"
+                step="1000"
+                value="1000000"
+                required
+              />
+            </div>
+          </div>
 
-      <div class="actions">
-        <button class="ghost" id="resetBtn" type="button">초기화</button>
-        <button class="primary" id="copyBtn" type="button">결과 복사</button>
-      </div>
+          <div class="field">
+            <label for="days">기간 (일)</label>
+            <div class="input-wrap">
+              <input
+                id="days"
+                name="days"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              />
+              <span class="unit">day</span>
+            </div>
+          </div>
 
-      <div class="message" id="message" aria-live="polite"></div>
-    </section>
+          <div class="field">
+            <label for="months">기간 (달)</label>
+            <div class="input-wrap">
+              <input
+                id="months"
+                name="months"
+                type="number"
+                min="0"
+                step="1"
+                value="1"
+              />
+              <span class="unit">month</span>
+            </div>
+          </div>
 
-    <section class="panel result">
-      <div class="result-main">
-        <span>최종 금액</span>
-        <strong id="finalAmount">0원</strong>
-      </div>
-      <div class="result-sub">
-        <div>
-          <span>총 납입원금</span>
-          <strong id="totalPrincipal">0원</strong>
+          <div class="field">
+            <label for="dailyRate">목표수익률 (1일)</label>
+            <div class="input-wrap">
+              <input
+                id="dailyRate"
+                name="dailyRate"
+                type="number"
+                min="0"
+                step="0.01"
+                value="1"
+                required
+              />
+              <span class="unit">%</span>
+            </div>
+          </div>
+
+          <button type="submit" class="cta">계산하기</button>
+        </form>
+
+        <div class="results">
+          <div class="result-card">
+            <h2>총 기간</h2>
+            <p class="value" id="total-days">0일</p>
+            <p class="desc">월은 30일 기준으로 환산됩니다.</p>
+          </div>
+
+          <div class="result-card highlight">
+            <h2>최종 자산</h2>
+            <p class="value" id="final-amount">₩0</p>
+            <p class="desc">원금 + 복리 수익</p>
+          </div>
+
+          <div class="result-card">
+            <h2>총 수익</h2>
+            <p class="value" id="total-profit">₩0</p>
+            <p class="desc">최종 자산 - 원금</p>
+          </div>
+
+          <div class="result-card">
+            <h2>누적 수익률</h2>
+            <p class="value" id="total-return">0%</p>
+            <p class="desc">기간 전체 수익률</p>
+          </div>
         </div>
-        <div>
-          <span>총 이자</span>
-          <strong id="totalInterest">0원</strong>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="table-header">
+          <div>
+            <h2>누적 성장 표</h2>
+            <p>초기 15일과 마지막 날을 표시합니다.</p>
+          </div>
+          <div class="formula" id="formula"></div>
         </div>
-      </div>
-    </section>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>일차</th>
+                <th>복리 적용 금액</th>
+                <th>누적 수익</th>
+              </tr>
+            </thead>
+            <tbody id="growth-table"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
 
-    <section class="panel table" id="tablePanel">
-      <div class="table-header">
-        <h2>연도별 요약</h2>
-        <p>매년 말 잔액 기준</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Year</th>
-              <th>End Balance</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-      <div class="table-note" id="tableNote" hidden>기간이 길어 요약 표를 생략합니다.</div>
-    </section>
-  </main>
-
-  <script src="./main.js"></script>
-</body>
+    <script src="main.js"></script>
+  </body>
 </html>
