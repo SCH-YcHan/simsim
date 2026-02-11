@@ -20,7 +20,6 @@ const elBtnResetAll = $("#btnResetAll");
 const elTurnName = $("#turnName");
 const elTurnProgress = $("#turnProgress");
 const elCommonHints = $("#commonHints");
-const elBtnRevealCommon = $("#btnRevealCommon");
 
 const elPrivateHintChoices = $("#privateHintChoices");
 const elPrivateHintPicked = $("#privateHintPicked");
@@ -145,7 +144,7 @@ function makeHintPool(bits){
   return pool;
 }
 
-function pickUniqueHints(bits, k, allowStrong=false){
+function pickUniqueHints(bits, k, allowStrong=false, excludeTexts = new Set()){
   const pool = makeHintPool(bits);
 
   // allowStrong=false면 "특정 위치 값 공개" 힌트(마지막 요소)를 제외하고 뽑기
@@ -153,11 +152,15 @@ function pickUniqueHints(bits, k, allowStrong=false){
 
   const picked = [];
   const used = new Set();
-  while(picked.length < k && used.size < usable.length){
+  let guard = 0;
+  while(picked.length < k && guard < 200){
+    guard += 1;
     const idx = Math.floor(Math.random()*usable.length);
-    if(used.has(idx)) continue;
-    used.add(idx);
-    picked.push(usable[idx]());
+    const text = usable[idx]();
+    if(excludeTexts.has(text)) continue;
+    if(used.has(text)) continue;
+    used.add(text);
+    picked.push(text);
   }
   return picked;
 }
@@ -198,7 +201,8 @@ function startRound(){
 
   // 개인 선택지(각 플레이어별로 새로 뽑음)
   for(let i=0;i<players.length;i++){
-    const opts = pickUniqueHints(bits, privateChoices, true);
+    const exclude = new Set(commonHints);
+    const opts = pickUniqueHints(bits, privateChoices, true, exclude);
     round.privateChoiceList[i] = opts;
   }
 
@@ -258,7 +262,7 @@ function renderPrivateChoices(playerIdx){
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "choice";
-    btn.textContent = text;
+    btn.textContent = `힌트 ${i + 1} 보기`;
     btn.addEventListener("click", () => {
       // 이미 선택했으면 무시
       if(round.privatePicked[playerIdx]) return;
@@ -440,7 +444,6 @@ elBtnResetAll.addEventListener("click", () => {
   renderPlayers();
 });
 
-elBtnRevealCommon.addEventListener("click", renderCommonHints);
 
 elBtnCoverGo.addEventListener("click", () => {
   elCover.classList.add("hidden");
