@@ -497,7 +497,7 @@ function showResults(){
       <div class="hint">개인 힌트: <b>${escapeHtml(privateHintText)}</b></div>
     `;
 
-    // 미니 비교 표시(맞으면 ok)
+    // 미니 비교 표시(틀리면 x)
     const mini = document.createElement("div");
     mini.className = "mini";
     if(!r.disqualified && r.guess){
@@ -505,7 +505,7 @@ function showResults(){
         const s = document.createElement("span");
         const ok = (bits[i] === r.guess[i]);
         s.className = ok ? "ok" : "no";
-        s.textContent = ok ? "✓" : "·";
+        s.textContent = ok ? String(r.guess[i]) : "x";
         mini.appendChild(s);
       }
     }else{
