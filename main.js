@@ -24,31 +24,37 @@ const appData = [
     ],
   },
   {
-    category: "킬링타임",
-    description: "지루할 틈 없이, 가볍게 한 판!",
+    category: "1인용",
+    description: "혼자서 가볍게 즐기는 미니 게임",
     items: [
       {
         name: "테트리스",
-        image: "/categories/killing-time/tetris/preview.png",
-        link: "/categories/killing-time/tetris/index.html",
+        image: "/categories/solo/tetris/preview.png",
+        link: "/categories/solo/tetris/index.html",
         keywords: ["퍼즐", "아케이드", "보드"],
       },
       {
+        name: "컬링",
+        image: "/categories/solo/curling/preview.png",
+        link: "/categories/solo/curling/index.html",
+        keywords: ["스포츠", "캐주얼", "조준"],
+      },
+    ],
+  },
+  {
+    category: "2인용",
+    description: "둘이서 번갈아 즐기는 핫시트",
+    items: [
+      {
         name: "오목",
-        image: "/categories/killing-time/omok/preview.png",
-        link: "/categories/killing-time/omok/index.html",
+        image: "/categories/duo/omok/preview.png",
+        link: "/categories/duo/omok/index.html",
         keywords: ["보드", "전략", "두뇌"],
       },
       {
-        name: "컬링",
-        image: "/categories/killing-time/curling/preview.png",
-        link: "/categories/killing-time/curling/index.html",
-        keywords: ["스포츠", "캐주얼", "조준"],
-      },
-      {
         name: "체스",
-        image: "/categories/killing-time/chess/preview.png",
-        link: "/categories/killing-time/chess/index.html",
+        image: "/categories/duo/chess/preview.png",
+        link: "/categories/duo/chess/index.html",
         keywords: ["체스", "보드", "전략", "핫시트", "대국"],
       },
     ],
