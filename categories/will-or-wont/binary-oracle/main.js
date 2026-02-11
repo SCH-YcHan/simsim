@@ -19,6 +19,7 @@ const elBtnResetAll = $("#btnResetAll");
 
 const elTurnName = $("#turnName");
 const elTurnProgress = $("#turnProgress");
+const elTurnTimer = $("#turnTimer");
 const elCommonHints = $("#commonHints");
 
 const elPrivateHintChoices = $("#privateHintChoices");
@@ -41,8 +42,63 @@ const elScoreboard = $("#scoreboard");
 
 let players = []; // {name}
 let round = null;
+let timerId = null;
+let timeLeft = 60;
 
 function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+function clearTimer(){
+  if(timerId){
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function formatTime(sec){
+  const s = Math.max(0, sec);
+  const m = String(Math.floor(s / 60)).padStart(2, "0");
+  const r = String(s % 60).padStart(2, "0");
+  return `${m}:${r}`;
+}
+
+function disableTurnInput(){
+  elBtnSubmit.disabled = true;
+  elBtnClear.disabled = true;
+  [...elBitGrid.querySelectorAll(".cell")].forEach(cell => {
+    cell.classList.add("disabled");
+    cell.style.pointerEvents = "none";
+  });
+  [...elPrivateHintChoices.querySelectorAll(".choice")].forEach(btn => {
+    btn.classList.add("disabled");
+    btn.disabled = true;
+  });
+}
+
+function startTimer(){
+  clearTimer();
+  timeLeft = 60;
+  if(elTurnTimer) elTurnTimer.textContent = formatTime(timeLeft);
+  timerId = setInterval(() => {
+    timeLeft -= 1;
+    if(elTurnTimer) elTurnTimer.textContent = formatTime(timeLeft);
+    if(timeLeft <= 0){
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function handleTimeout(){
+  round.guesses[round.turn] = null;
+  round.disqualified[round.turn] = true;
+  disableTurnInput();
+  round.turn += 1;
+  if(round.turn >= players.length){
+    showResults();
+  }else{
+    showCoverForTurn();
+  }
+}
 
 function renderPlayers(){
   elPlayerList.innerHTML = "";
@@ -191,6 +247,7 @@ function startRound(){
     bits,
     commonHints,
     guesses: new Array(players.length).fill(null), // array of arrays
+    disqualified: new Array(players.length).fill(false),
     privatePicked: new Array(players.length).fill(null),
     privateChoiceList: new Array(players.length).fill(null),
     turn: 0,
@@ -243,6 +300,13 @@ function enterTurn(){
 
   // 제출 버튼 활성
   elBtnSubmit.disabled = false;
+  elBtnClear.disabled = false;
+  [...elBitGrid.querySelectorAll(".cell")].forEach(cell => {
+    cell.style.pointerEvents = "auto";
+  });
+
+  // 타이머 시작
+  startTimer();
 }
 
 function renderCommonHints(){
@@ -262,7 +326,7 @@ function renderPrivateChoices(playerIdx){
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "choice";
-    btn.textContent = `힌트 ${i + 1} 보기`;
+    btn.textContent = `힌트 ${i + 1}`;
     btn.addEventListener("click", () => {
       // 이미 선택했으면 무시
       if(round.privatePicked[playerIdx]) return;
@@ -350,10 +414,13 @@ function longestCorrectStreak(bits, guess){
 }
 
 function scoreGuess(bits, guess){
+  if(!guess){
+    return {correct: -1, streak: -1, disqualified: true};
+  }
   let correct = 0;
   for(let i=0;i<bits.length;i++) if(bits[i] === guess[i]) correct++;
   const streak = longestCorrectStreak(bits, guess);
-  return {correct, streak};
+  return {correct, streak, disqualified: false};
 }
 
 function showResults(){
@@ -371,8 +438,15 @@ function showResults(){
   // 채점
   const rows = players.map((p, i) => {
     const g = round.guesses[i];
-    const {correct, streak} = scoreGuess(bits, g);
-    return {name:p.name, idx:i, correct, streak, guess:g};
+    const {correct, streak, disqualified} = scoreGuess(bits, g);
+    return {
+      name:p.name,
+      idx:i,
+      correct,
+      streak,
+      guess:g,
+      disqualified: round.disqualified[i] || disqualified
+    };
   });
 
   // 승자 결정: correct desc, streak desc
@@ -387,26 +461,35 @@ function showResults(){
     const card = document.createElement("div");
     card.className = "rowScore";
 
-    const badge = winSet.has(r.idx)
-      ? `<span class="badge win">승자</span>`
-      : `<span class="badge">#${rankIdx+1}</span>`;
+    const badge = r.disqualified
+      ? `<span class="badge">실격</span>`
+      : winSet.has(r.idx)
+        ? `<span class="badge win">승자</span>`
+        : `<span class="badge">#${rankIdx+1}</span>`;
 
     card.innerHTML = `
       <div class="top">
         <div>${escapeHtml(r.name)}</div>
         <div>${badge}</div>
       </div>
-      <div class="hint">정확도: <b>${r.correct}</b> / ${bits.length} &nbsp;|&nbsp; 연속 최대: <b>${r.streak}</b></div>
+      <div class="hint">정확도: <b>${r.correct < 0 ? 0 : r.correct}</b> / ${bits.length} &nbsp;|&nbsp; 연속 최대: <b>${r.streak < 0 ? 0 : r.streak}</b></div>
     `;
 
     // 미니 비교 표시(맞으면 ok)
     const mini = document.createElement("div");
     mini.className = "mini";
-    for(let i=0;i<bits.length;i++){
+    if(!r.disqualified && r.guess){
+      for(let i=0;i<bits.length;i++){
+        const s = document.createElement("span");
+        const ok = (bits[i] === r.guess[i]);
+        s.className = ok ? "ok" : "no";
+        s.textContent = ok ? "✓" : "·";
+        mini.appendChild(s);
+      }
+    }else{
       const s = document.createElement("span");
-      const ok = (bits[i] === r.guess[i]);
-      s.className = ok ? "ok" : "no";
-      s.textContent = ok ? "✓" : "·";
+      s.className = "no";
+      s.textContent = "—";
       mini.appendChild(s);
     }
     card.appendChild(mini);
@@ -442,6 +525,7 @@ elBtnResetAll.addEventListener("click", () => {
   players = [];
   round = null;
   renderPlayers();
+  clearTimer();
 });
 
 
@@ -461,6 +545,8 @@ elBtnSubmit.addEventListener("click", () => {
 
   // 저장
   round.guesses[round.turn] = g;
+  round.disqualified[round.turn] = false;
+  clearTimer();
 
   // 다음 턴/결과
   round.turn++;
@@ -482,6 +568,7 @@ elBtnRestart.addEventListener("click", () => {
   // 새 라운드만(참가자 유지)
   elTurn.classList.add("hidden");
   elSetup.classList.add("hidden");
+  clearTimer();
   // round 재시작
   startRound();
 });
@@ -492,6 +579,7 @@ elBtnReset.addEventListener("click", () => {
   round = null;
   elTurn.classList.add("hidden");
   elSetup.classList.remove("hidden");
+  clearTimer();
 });
 
 /* init */

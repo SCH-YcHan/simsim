@@ -114,6 +114,10 @@ body {
   justify-content: space-between;
 }
 
+.row.timer-row {
+  margin-top: 0;
+}
+
 .label {
   display: grid;
   gap: 8px;
@@ -226,6 +230,12 @@ body {
   background: rgba(29, 26, 23, 0.06);
   font-weight: 600;
   color: var(--muted);
+}
+
+#turnTimer {
+  color: var(--accent);
+  border-color: rgba(255, 94, 58, 0.3);
+  background: rgba(255, 94, 58, 0.12);
 }
 
 .box {
