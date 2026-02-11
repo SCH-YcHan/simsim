@@ -15,7 +15,7 @@
 
 body {
   margin: 0;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
   color: var(--ink);
   background: radial-gradient(circle at top, #ffe8d7, var(--bg));
   min-height: 100vh;
