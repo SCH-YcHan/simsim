@@ -88,7 +88,7 @@ function resetGame() {
   render();
   updateStatus();
   updateMoveLog();
-  maybeShowOverlay();
+  hideOverlay();
 }
 
 function makeSquare(r, c) {
