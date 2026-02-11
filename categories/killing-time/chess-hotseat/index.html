@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chess Hotseat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    as="style"
+    crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">CHESS HOTSEAT</div>
+      <div class="status" id="statusText">백 차례</div>
+    </header>
+
+    <main class="layout">
+      <section class="board-wrap">
+        <div class="board" id="board" aria-label="체스 보드"></div>
+        <div class="legend">
+          <span>파일: a–h</span>
+          <span>랭크: 1–8</span>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="panel">
+          <div class="panel-title">컨트롤</div>
+          <div class="controls">
+            <button id="btnUndo" class="btn" type="button">Undo</button>
+            <button id="btnReset" class="btn ghost" type="button">Reset</button>
+            <button id="btnFlip" class="btn ghost" type="button">Flip</button>
+          </div>
+          <label class="toggle">
+            <input id="toggleOverlay" type="checkbox" checked />
+            <span>Hotseat 오버레이</span>
+          </label>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">수 기록</div>
+          <ol id="moveLog" class="move-log"></ol>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">플레이 도움말</div>
+          <ul class="help">
+            <li>말을 클릭하면 이동 가능한 칸이 표시됩니다.</li>
+            <li>점은 이동 가능, 빨간 점은 캡처 가능 칸입니다.</li>
+            <li>체크 상태에선 체크를 해소하는 수만 가능합니다.</li>
+            <li>캐슬링, 앙파상, 프로모션을 지원합니다.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <div class="overlay" id="hotseatOverlay" aria-hidden="false">
+      <div class="overlay-card">
+        <div class="overlay-title">핫시트 모드</div>
+        <p>다음 차례 플레이어가 준비되면 화면을 클릭하세요.</p>
+        <button class="btn" id="btnOverlay">내 차례 시작</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
