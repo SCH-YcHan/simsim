@@ -313,11 +313,11 @@ body {
 }
 
 .cell.zero {
-  border-color: rgba(15, 118, 110, 0.4);
+  border-color: rgba(29, 26, 23, 0.3);
 }
 
 .cell.one {
-  border-color: rgba(15, 118, 110, 0.4);
+  border-color: rgba(29, 26, 23, 0.3);
 }
 
 .hidden {
