@@ -8,7 +8,7 @@
 
   const CANVAS_W = VIEW_W * TILE;
   const CANVAS_H = VIEW_H * TILE;
-  const CAMERA_SCALE = 1.28;
+  const CAMERA_SCALE = 1.46;
   const CAMERA_VIEW_W = CANVAS_W / CAMERA_SCALE;
   const CAMERA_VIEW_H = CANVAS_H / CAMERA_SCALE;
   const COYOTE_MS = 120;
@@ -770,13 +770,22 @@
   function isHazardTouchingPlayer() {
     const rect = { x: player.x, y: player.y, w: player.w, h: player.h };
 
-    const minTx = Math.floor(rect.x / TILE);
-    const maxTx = Math.floor((rect.x + rect.w - 1) / TILE);
-    const minTy = Math.floor(rect.y / TILE);
-    const maxTy = Math.floor((rect.y + rect.h - 1) / TILE);
+    const minTx = Math.floor((rect.x - 1) / TILE);
+    const maxTx = Math.floor((rect.x + rect.w) / TILE);
+    const minTy = Math.floor((rect.y - 1) / TILE);
+    const maxTy = Math.floor((rect.y + rect.h) / TILE);
     for (let ty = minTy; ty <= maxTy; ty += 1) {
       for (let tx = minTx; tx <= maxTx; tx += 1) {
-        if (getTileInfo(tx, ty).hazard) return true;
+        if (!getTileInfo(tx, ty).hazard) continue;
+        const tileRect = { x: tx * TILE, y: ty * TILE, w: TILE, h: TILE };
+        if (
+          rect.x < tileRect.x + tileRect.w &&
+          rect.x + rect.w > tileRect.x &&
+          rect.y <= tileRect.y + tileRect.h &&
+          rect.y + rect.h >= tileRect.y
+        ) {
+          return true;
+        }
       }
     }
 
@@ -941,28 +950,37 @@
 
   function drawBackdrop() {
     const bg = ctx.createLinearGradient(0, 0, 0, CANVAS_H);
-    bg.addColorStop(0, "#11264d");
-    bg.addColorStop(0.5, "#0a1733");
-    bg.addColorStop(1, "#060d20");
+    bg.addColorStop(0, "#8bd5ff");
+    bg.addColorStop(0.55, "#6abdf8");
+    bg.addColorStop(1, "#4aa5ea");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-    for (let i = 0; i < 16; i += 1) {
-      const sx = ((i * 71) - state.camera.x * 0.08) % (CANVAS_W + 80);
-      const x = sx < -40 ? sx + CANVAS_W + 80 : sx;
-      const y = 30 + (i % 6) * 14;
-      ctx.fillStyle = "rgba(173, 211, 255, 0.42)";
-      ctx.fillRect(x, y, 2, 2);
+    for (let i = 0; i < 7; i += 1) {
+      const sx = ((i * 210) - state.camera.x * (0.14 + (i % 2) * 0.03)) % (CANVAS_W + 280);
+      const x = sx < -140 ? sx + CANVAS_W + 280 : sx;
+      const y = 60 + (i % 4) * 36;
+      const w = 90 + (i % 3) * 26;
+      const h = 30 + (i % 2) * 10;
+
+      ctx.fillStyle = "rgba(255,255,255,0.82)";
+      ctx.beginPath();
+      ctx.ellipse(x + w * 0.3, y + h * 0.55, w * 0.26, h * 0.45, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + w * 0.54, y + h * 0.44, w * 0.28, h * 0.5, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + w * 0.73, y + h * 0.6, w * 0.22, h * 0.4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.fillRect(x + w * 0.26, y + h * 0.65, w * 0.5, h * 0.18);
     }
 
-    const hillY = CANVAS_H - 150;
-    ctx.fillStyle = "rgba(20, 38, 76, 0.58)";
+    const hillY = CANVAS_H - 120;
+    ctx.fillStyle = "rgba(68, 159, 86, 0.56)";
     for (let i = 0; i < 9; i += 1) {
       const x = ((i * 140) - state.camera.x * 0.2) % (CANVAS_W + 180);
       const sx = x < -160 ? x + CANVAS_W + 180 : x;
       ctx.beginPath();
       ctx.moveTo(sx, CANVAS_H);
-      ctx.quadraticCurveTo(sx + 80, hillY - 45, sx + 160, CANVAS_H);
+      ctx.quadraticCurveTo(sx + 80, hillY - 42, sx + 160, CANVAS_H);
       ctx.fill();
     }
   }
@@ -972,45 +990,42 @@
     const y = ty * TILE;
 
     if (tileInfo.solid) {
-      if (tileInfo.hazard || baseCh === "^") {
-        const hazardGrad = ctx.createLinearGradient(x, y, x, y + TILE);
-        hazardGrad.addColorStop(0, "#4d131b");
-        hazardGrad.addColorStop(1, "#280a10");
-        ctx.fillStyle = hazardGrad;
+      const blockGrad = ctx.createLinearGradient(x, y, x, y + TILE);
+      if (baseCh === "=") {
+        blockGrad.addColorStop(0, "#7d5d3f");
+        blockGrad.addColorStop(1, "#5e432e");
       } else {
-        const blockGrad = ctx.createLinearGradient(x, y, x, y + TILE);
-        if (baseCh === "=") {
-          blockGrad.addColorStop(0, "#4668a5");
-          blockGrad.addColorStop(1, "#2a4375");
-        } else {
-          blockGrad.addColorStop(0, "#38527f");
-          blockGrad.addColorStop(1, "#233a61");
-        }
-        ctx.fillStyle = blockGrad;
+        blockGrad.addColorStop(0, "#8e6744");
+        blockGrad.addColorStop(1, "#6d4f35");
       }
+      ctx.fillStyle = blockGrad;
       ctx.fillRect(x, y, TILE, TILE);
-      ctx.fillStyle = "rgba(255,255,255,0.13)";
-      ctx.fillRect(x, y, TILE, 3);
-      ctx.fillStyle = "rgba(4,8,15,0.28)";
+      ctx.fillStyle = "rgba(255,255,255,0.09)";
+      ctx.fillRect(x + 2, y + 2, TILE - 4, 2);
+      ctx.fillStyle = "rgba(35,20,10,0.3)";
       ctx.fillRect(x, y + TILE - 4, TILE, 4);
-      ctx.strokeStyle = "rgba(255,255,255,0.12)";
+      ctx.strokeStyle = "rgba(255,245,220,0.16)";
       ctx.strokeRect(x + 0.5, y + 0.5, TILE - 1, TILE - 1);
+      ctx.fillStyle = "#6aa64e";
+      ctx.fillRect(x, y, TILE, 4);
+      ctx.fillStyle = "#88c765";
+      ctx.fillRect(x + 1, y + 1, TILE - 2, 2);
 
       if (tileInfo.hazard || baseCh === "^") {
-        ctx.fillStyle = "#ff6d79";
+        ctx.fillStyle = "#f27f8b";
         ctx.beginPath();
-        ctx.moveTo(x + 4, y + TILE - 4);
-        ctx.lineTo(x + TILE * 0.5, y + 5);
-        ctx.lineTo(x + TILE - 4, y + TILE - 4);
+        ctx.moveTo(x + 4, y + TILE - 2);
+        ctx.lineTo(x + TILE * 0.5, y + 6);
+        ctx.lineTo(x + TILE - 4, y + TILE - 2);
         ctx.closePath();
         ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.45)";
-        ctx.fillRect(x + TILE * 0.5 - 1, y + 8, 2, 5);
+        ctx.fillStyle = "#ffd3d8";
+        ctx.fillRect(x + TILE * 0.5 - 1, y + 11, 2, 4);
       }
     } else if (baseCh === "~") {
-      ctx.fillStyle = "rgba(120, 182, 255, 0.16)";
+      ctx.fillStyle = "rgba(206, 242, 255, 0.25)";
       ctx.fillRect(x + 4, y + TILE * 0.52, TILE - 8, 6);
-      ctx.strokeStyle = "rgba(150, 205, 255, 0.45)";
+      ctx.strokeStyle = "rgba(255,255,255,0.52)";
       ctx.setLineDash([4, 3]);
       ctx.strokeRect(x + 4.5, y + TILE * 0.52 + 0.5, TILE - 9, 5);
       ctx.setLineDash([]);
