@@ -27,14 +27,13 @@ body {
 
 .app {
   display: grid;
-  grid-template-columns: auto 220px;
+  grid-template-columns: max-content 220px;
   gap: 28px;
   padding: 32px;
   background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 18px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-  width: min(100%, 980px);
 }
 
 #disqus_thread {
