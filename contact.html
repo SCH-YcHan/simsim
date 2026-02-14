@@ -15,7 +15,8 @@
 </head>
 <body>
   <div class="page">
-    <header class="hero">
+    <header class="hero hero--with-action">
+      <a class="hero__top-action" href="#partnership-form">제휴 문의</a>
       <div class="hero__badge">SIMSIM APP LAB</div>
       <h1 class="hero__title">
         <span class="hero__line">문의하기</span>
@@ -45,6 +46,39 @@
             <p>문의 목적, 앱 이름, 발생한 상황을 함께 적어 주세요.</p>
           </article>
         </div>
+      </section>
+      <section class="quality" id="partnership-form">
+        <h2 class="section-title">제휴 문의</h2>
+        <p class="section-lead">아래 폼으로 제휴 내용을 보내주시면 검토 후 연락드립니다.</p>
+        <form class="form-card" action="https://formspree.io/f/xojndvzp" method="POST">
+          <div class="form-grid">
+            <label class="form-field">
+              <span>회사명</span>
+              <input type="text" name="company" placeholder="회사 또는 브랜드 이름" required>
+            </label>
+            <label class="form-field">
+              <span>담당자 이름</span>
+              <input type="text" name="name" placeholder="홍길동" required>
+            </label>
+            <label class="form-field">
+              <span>이메일</span>
+              <input type="email" name="email" placeholder="name@company.com" required>
+            </label>
+            <label class="form-field">
+              <span>연락처</span>
+              <input type="tel" name="phone" placeholder="010-0000-0000">
+            </label>
+          </div>
+          <label class="form-field form-field--full">
+            <span>문의 내용</span>
+            <textarea name="message" placeholder="제휴 목적, 기대 효과, 일정 등을 적어주세요." rows="6" required></textarea>
+          </label>
+          <input type="hidden" name="_subject" value="SIMSIM App Hub 제휴 문의">
+          <div class="form-actions">
+            <button class="primary" type="submit">제휴 문의 보내기</button>
+            <p class="form-note">영업일 기준 1~2일 내 회신을 목표로 합니다.</p>
+          </div>
+        </form>
       </section>
     </main>
   </div>
