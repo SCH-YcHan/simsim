@@ -8,6 +8,9 @@
 
   const CANVAS_W = VIEW_W * TILE;
   const CANVAS_H = VIEW_H * TILE;
+  const CAMERA_SCALE = 1.28;
+  const CAMERA_VIEW_W = CANVAS_W / CAMERA_SCALE;
+  const CAMERA_VIEW_H = CANVAS_H / CAMERA_SCALE;
   const COYOTE_MS = 120;
   const JUMP_BUFFER_MS = 120;
   const RESPAWN_DELAY_MS = 220;
@@ -265,7 +268,6 @@
   const state = {
     level,
     paused: false,
-    debug: false,
     goalEnabled: false,
     cleared: false,
     checkpointReached: false,
@@ -417,6 +419,14 @@
     player.onGround = false;
     player.justLanded = false;
     state.attemptStartMs = state.now;
+  }
+
+  // Spawn override to avoid the blocked intro column and keep first run playable.
+  const START_OVERRIDE = { tx: 22, ty: 14 };
+  if (getBaseTile(START_OVERRIDE.tx, START_OVERRIDE.ty) && !getTileInfo(START_OVERRIDE.tx, START_OVERRIDE.ty).solid) {
+    level.spawn = { ...START_OVERRIDE };
+    state.respawnTile = { ...START_OVERRIDE };
+    setPlayerAtSpawn(level.spawn);
   }
 
   function fullRestart() {
@@ -904,10 +914,10 @@
   }
 
   function updateCamera(dt) {
-    const cx = player.x + player.w * 0.5 - CANVAS_W * 0.5;
-    const cy = player.y + player.h * 0.5 - CANVAS_H * 0.5;
-    const targetX = clamp(cx, 0, level.worldW - CANVAS_W);
-    const targetY = clamp(cy, 0, level.worldH - CANVAS_H);
+    const cx = player.x + player.w * 0.5 - CAMERA_VIEW_W * 0.5;
+    const cy = player.y + player.h * 0.5 - CAMERA_VIEW_H * 0.5;
+    const targetX = clamp(cx, 0, level.worldW - CAMERA_VIEW_W);
+    const targetY = clamp(cy, 0, level.worldH - CAMERA_VIEW_H);
     state.camera.x += (targetX - state.camera.x) * (1 - Math.exp(-8 * dt));
     state.camera.y += (targetY - state.camera.y) * (1 - Math.exp(-8 * dt));
   }
@@ -1060,12 +1070,13 @@
     }
 
     ctx.save();
-    ctx.translate(-state.camera.x + shakeX, -state.camera.y + shakeY);
+    ctx.scale(CAMERA_SCALE, CAMERA_SCALE);
+    ctx.translate(-state.camera.x + shakeX / CAMERA_SCALE, -state.camera.y + shakeY / CAMERA_SCALE);
 
     const minTx = Math.max(0, Math.floor(state.camera.x / TILE) - 2);
-    const maxTx = Math.min(level.width - 1, Math.floor((state.camera.x + CANVAS_W) / TILE) + 2);
+    const maxTx = Math.min(level.width - 1, Math.floor((state.camera.x + CAMERA_VIEW_W) / TILE) + 2);
     const minTy = Math.max(0, Math.floor(state.camera.y / TILE) - 2);
-    const maxTy = Math.min(level.height - 1, Math.floor((state.camera.y + CANVAS_H) / TILE) + 2);
+    const maxTy = Math.min(level.height - 1, Math.floor((state.camera.y + CAMERA_VIEW_H) / TILE) + 2);
 
     for (let ty = minTy; ty <= maxTy; ty += 1) {
       for (let tx = minTx; tx <= maxTx; tx += 1) {
@@ -1123,55 +1134,6 @@
     }
 
     drawPlayer();
-
-    if (state.debug) {
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#65f2ff";
-      ctx.strokeRect(player.x + 0.5, player.y + 0.5, player.w - 1, player.h - 1);
-
-      for (let ty = minTy; ty <= maxTy; ty += 1) {
-        for (let tx = minTx; tx <= maxTx; tx += 1) {
-          const info = getTileInfo(tx, ty);
-          const x = tx * TILE;
-          const y = ty * TILE;
-          if (info.solid) {
-            ctx.strokeStyle = "rgba(120,200,255,0.3)";
-            ctx.strokeRect(x + 1, y + 1, TILE - 2, TILE - 2);
-          }
-          if (info.hazard) {
-            ctx.fillStyle = "rgba(255,70,70,0.22)";
-            ctx.fillRect(x + 1, y + 1, TILE - 2, TILE - 2);
-          }
-          if (info.fake) {
-            ctx.strokeStyle = "rgba(255,255,255,0.35)";
-            ctx.setLineDash([3, 3]);
-            ctx.strokeRect(x + 3, y + 3, TILE - 6, TILE - 6);
-            ctx.setLineDash([]);
-          }
-        }
-      }
-
-      ctx.fillStyle = "#7fffae";
-      ctx.font = "12px Pretendard, sans-serif";
-      for (const [id, pos] of Object.entries(state.markerPos)) {
-        ctx.fillText(id, pos.tx * TILE + 10, pos.ty * TILE + 14);
-      }
-
-      for (const trig of level.triggers) {
-        let r = trig.rect;
-        if (!r && trig.marker) r = getMarkerRect(state.markerPos, trig.marker, trig.markerRect);
-        if (!r) continue;
-        ctx.strokeStyle = "rgba(255, 220, 120, 0.7)";
-        ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1);
-        ctx.fillStyle = "rgba(255, 220, 120, 0.9)";
-        ctx.fillText(trig.id, r.x + 2, r.y + 12);
-      }
-
-      for (const ib of state.invisibleBlocks) {
-        ctx.strokeStyle = "rgba(255, 120, 255, 0.75)";
-        ctx.strokeRect(ib.x + 0.5, ib.y + 0.5, ib.w - 1, ib.h - 1);
-      }
-    }
 
     ctx.restore();
 
@@ -1415,14 +1377,7 @@
 
   window.addEventListener("keydown", (e) => {
     if (SCROLL_BLOCK_KEYS.has(e.code)) e.preventDefault();
-    if (e.repeat && (e.code === "KeyR" || e.code === "Escape" || e.code === "F2")) return;
-
-    if (e.code === "F2") {
-      state.debug = !state.debug;
-      showToast(`Debug ${state.debug ? "ON" : "OFF"}`, 700);
-      e.preventDefault();
-      return;
-    }
+    if (e.repeat && (e.code === "KeyR" || e.code === "Escape")) return;
 
     if (e.code in keyMap) {
       state.input[keyMap[e.code]] = true;
