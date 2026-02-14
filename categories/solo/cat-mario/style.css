@@ -25,6 +25,7 @@ body {
   align-items: center;
   gap: 20px;
   padding: 20px 14px 40px;
+  overscroll-behavior: contain;
 }
 
 .page {
@@ -105,6 +106,7 @@ body {
   max-width: 100%;
   aspect-ratio: 960 / 576;
   image-rendering: pixelated;
+  touch-action: none;
 }
 
 .overlay {
@@ -154,6 +156,7 @@ body {
   gap: 14px;
   z-index: 8;
   pointer-events: none;
+  touch-action: none;
 }
 
 .touch-btn {

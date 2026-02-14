@@ -929,50 +929,104 @@
     else hideOverlay();
   }
 
+  function drawBackdrop() {
+    const bg = ctx.createLinearGradient(0, 0, 0, CANVAS_H);
+    bg.addColorStop(0, "#11264d");
+    bg.addColorStop(0.5, "#0a1733");
+    bg.addColorStop(1, "#060d20");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+    for (let i = 0; i < 16; i += 1) {
+      const sx = ((i * 71) - state.camera.x * 0.08) % (CANVAS_W + 80);
+      const x = sx < -40 ? sx + CANVAS_W + 80 : sx;
+      const y = 30 + (i % 6) * 14;
+      ctx.fillStyle = "rgba(173, 211, 255, 0.42)";
+      ctx.fillRect(x, y, 2, 2);
+    }
+
+    const hillY = CANVAS_H - 150;
+    ctx.fillStyle = "rgba(20, 38, 76, 0.58)";
+    for (let i = 0; i < 9; i += 1) {
+      const x = ((i * 140) - state.camera.x * 0.2) % (CANVAS_W + 180);
+      const sx = x < -160 ? x + CANVAS_W + 180 : x;
+      ctx.beginPath();
+      ctx.moveTo(sx, CANVAS_H);
+      ctx.quadraticCurveTo(sx + 80, hillY - 45, sx + 160, CANVAS_H);
+      ctx.fill();
+    }
+  }
+
   function drawTile(tx, ty, tileInfo, baseCh) {
     const x = tx * TILE;
     const y = ty * TILE;
 
     if (tileInfo.solid) {
       if (tileInfo.hazard || baseCh === "^") {
-        ctx.fillStyle = "#3a0f16";
+        const hazardGrad = ctx.createLinearGradient(x, y, x, y + TILE);
+        hazardGrad.addColorStop(0, "#4d131b");
+        hazardGrad.addColorStop(1, "#280a10");
+        ctx.fillStyle = hazardGrad;
       } else {
-        ctx.fillStyle = baseCh === "=" ? "#2f3f67" : "#1d2946";
+        const blockGrad = ctx.createLinearGradient(x, y, x, y + TILE);
+        if (baseCh === "=") {
+          blockGrad.addColorStop(0, "#4668a5");
+          blockGrad.addColorStop(1, "#2a4375");
+        } else {
+          blockGrad.addColorStop(0, "#38527f");
+          blockGrad.addColorStop(1, "#233a61");
+        }
+        ctx.fillStyle = blockGrad;
       }
       ctx.fillRect(x, y, TILE, TILE);
-      ctx.strokeStyle = "rgba(255,255,255,0.08)";
+      ctx.fillStyle = "rgba(255,255,255,0.13)";
+      ctx.fillRect(x, y, TILE, 3);
+      ctx.fillStyle = "rgba(4,8,15,0.28)";
+      ctx.fillRect(x, y + TILE - 4, TILE, 4);
+      ctx.strokeStyle = "rgba(255,255,255,0.12)";
       ctx.strokeRect(x + 0.5, y + 0.5, TILE - 1, TILE - 1);
 
       if (tileInfo.hazard || baseCh === "^") {
-        ctx.fillStyle = "#ff5e6a";
+        ctx.fillStyle = "#ff6d79";
         ctx.beginPath();
         ctx.moveTo(x + 4, y + TILE - 4);
         ctx.lineTo(x + TILE * 0.5, y + 5);
         ctx.lineTo(x + TILE - 4, y + TILE - 4);
         ctx.closePath();
         ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.45)";
+        ctx.fillRect(x + TILE * 0.5 - 1, y + 8, 2, 5);
       }
     } else if (baseCh === "~") {
-      ctx.fillStyle = "rgba(120, 170, 255, 0.2)";
-      ctx.fillRect(x + 6, y + TILE * 0.5, TILE - 12, 8);
+      ctx.fillStyle = "rgba(120, 182, 255, 0.16)";
+      ctx.fillRect(x + 4, y + TILE * 0.52, TILE - 8, 6);
+      ctx.strokeStyle = "rgba(150, 205, 255, 0.45)";
+      ctx.setLineDash([4, 3]);
+      ctx.strokeRect(x + 4.5, y + TILE * 0.52 + 0.5, TILE - 9, 5);
+      ctx.setLineDash([]);
     }
 
     if (baseCh === "G") {
-      ctx.fillStyle = state.goalEnabled ? "#67ffaf" : "#444f68";
-      ctx.fillRect(x + 6, y + 5, TILE - 12, TILE - 10);
+      ctx.fillStyle = state.goalEnabled ? "#79ffbe" : "#485170";
+      ctx.fillRect(x + 9, y + 7, TILE - 18, TILE - 14);
+      ctx.fillStyle = state.goalEnabled ? "rgba(121,255,190,0.45)" : "rgba(120,130,160,0.4)";
+      ctx.fillRect(x + 12, y + 10, TILE - 24, TILE - 20);
     }
     if (baseCh === "C") {
       ctx.fillStyle = state.checkpointReached ? "#69f0ff" : "#3e8ea0";
-      ctx.fillRect(x + 9, y + 7, TILE - 18, TILE - 14);
+      ctx.fillRect(x + 11, y + 8, TILE - 22, TILE - 16);
     }
   }
 
   function drawPlayer() {
     const x = player.x;
     const y = player.y;
-    ctx.fillStyle = "#ffcf79";
+    const body = ctx.createLinearGradient(x, y, x, y + player.h);
+    body.addColorStop(0, "#ffd787");
+    body.addColorStop(1, "#f4a53f");
+    ctx.fillStyle = body;
     ctx.fillRect(x, y + 6, player.w, player.h - 6);
-    ctx.fillStyle = "#ffbb54";
+    ctx.fillStyle = "#ffd787";
     ctx.beginPath();
     ctx.moveTo(x + 4, y + 8);
     ctx.lineTo(x + 8, y);
@@ -983,16 +1037,18 @@
     ctx.lineTo(x + player.w - 8, y);
     ctx.lineTo(x + player.w - 11, y + 8);
     ctx.fill();
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = "#1b2130";
     ctx.fillRect(x + 5, y + 14, 3, 3);
     ctx.fillRect(x + player.w - 8, y + 14, 3, 3);
+    ctx.fillStyle = "#fff2cf";
+    ctx.fillRect(x + 8, y + 20, player.w - 16, 5);
+    ctx.strokeStyle = "rgba(30,25,15,0.65)";
+    ctx.strokeRect(x + 0.5, y + 6.5, player.w - 1, player.h - 7);
   }
 
   function render() {
     ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-
-    ctx.fillStyle = "#081125";
-    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    drawBackdrop();
 
     let shakeX = 0;
     let shakeY = 0;
@@ -1349,21 +1405,21 @@
     ArrowLeft: "left",
     KeyA: "left",
     ArrowRight: "right",
+    KeyD: "right",
     ArrowUp: "jump",
     KeyW: "jump",
     Space: "jump"
   };
 
-  window.addEventListener("keydown", (e) => {
-    if (e.repeat && (e.code === "KeyR" || e.code === "Escape" || e.code === "KeyD")) return;
+  const SCROLL_BLOCK_KEYS = new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"]);
 
-    if (e.code === "KeyD") {
-      if (e.shiftKey) {
-        state.debug = !state.debug;
-        showToast(`Debug ${state.debug ? "ON" : "OFF"}`, 700);
-      } else {
-        state.input.right = true;
-      }
+  window.addEventListener("keydown", (e) => {
+    if (SCROLL_BLOCK_KEYS.has(e.code)) e.preventDefault();
+    if (e.repeat && (e.code === "KeyR" || e.code === "Escape" || e.code === "F2")) return;
+
+    if (e.code === "F2") {
+      state.debug = !state.debug;
+      showToast(`Debug ${state.debug ? "ON" : "OFF"}`, 700);
       e.preventDefault();
       return;
     }
@@ -1384,11 +1440,7 @@
   });
 
   window.addEventListener("keyup", (e) => {
-    if (e.code === "KeyD") {
-      state.input.right = false;
-      e.preventDefault();
-      return;
-    }
+    if (SCROLL_BLOCK_KEYS.has(e.code)) e.preventDefault();
     if (e.code in keyMap) {
       state.input[keyMap[e.code]] = false;
       e.preventDefault();
