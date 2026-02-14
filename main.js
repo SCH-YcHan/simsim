@@ -33,6 +33,12 @@ const appData = [
         link: "/categories/solo/tetris/index.html",
         keywords: ["퍼즐", "아케이드", "보드"],
       },
+      {
+        name: "Cat Platformer",
+        image: "/categories/solo/cat-mario/preview.png",
+        link: "/categories/solo/cat-mario/index.html",
+        keywords: ["플랫포머", "트롤", "점프", "고양이", "액션"],
+      },
     ],
   },
   {
