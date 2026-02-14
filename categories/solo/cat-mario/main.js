@@ -265,6 +265,17 @@
   const level = loadLevel(LEVELS[0]);
   hudLevel.textContent = level.id;
 
+  // Keep the opening readable/playable:
+  // treat baked '^' tiles as normal solid terrain, and use trap-spawned spikes as hazards.
+  for (let ty = 0; ty < level.height; ty += 1) {
+    for (let tx = 0; tx < level.width; tx += 1) {
+      const t = level.tiles[ty][tx];
+      if (t.ch === "^") {
+        t.hazard = false;
+      }
+    }
+  }
+
   const state = {
     level,
     paused: false,
@@ -1011,7 +1022,7 @@
       ctx.fillStyle = "#88c765";
       ctx.fillRect(x + 1, y + 1, TILE - 2, 2);
 
-      if (tileInfo.hazard || baseCh === "^") {
+      if (tileInfo.hazard) {
         ctx.fillStyle = "#f27f8b";
         ctx.beginPath();
         ctx.moveTo(x + 4, y + TILE - 2);
