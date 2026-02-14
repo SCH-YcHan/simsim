@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cat Platformer - SIMSIM</title>
+  <link rel="stylesheet" href="./style.css" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVPH6H74GP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-VVPH6H74GP');
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="back" href="/index.html">메인으로</a>
+      <h1>Cat Platformer</h1>
+      <div class="controls-inline">
+        <button id="soundBtn" class="ui-btn" type="button">Sound: ON</button>
+        <button id="pauseBtn" class="ui-btn" type="button">Pause</button>
+      </div>
+    </header>
+
+    <section class="hud" aria-live="polite">
+      <div>Level: <strong id="hudLevel">L1</strong></div>
+      <div>Deaths: <strong id="hudDeaths">0</strong></div>
+      <div>Time: <strong id="hudTime">0.00</strong>s</div>
+      <div>Best: <strong id="hudBest">-</strong></div>
+      <div class="hint">Move: ←→ / A D, Jump: ↑ / W / Space, R: Restart, D: Debug, Esc: Pause</div>
+    </section>
+
+    <section class="stage-wrap">
+      <canvas id="game" width="960" height="576" aria-label="cat platformer game"></canvas>
+      <div id="overlay" class="overlay hidden" role="dialog" aria-modal="true">
+        <div class="overlay-card">
+          <h2 id="overlayTitle">Paused</h2>
+          <p id="overlayDesc">Esc 또는 Pause 버튼으로 재개</p>
+          <div class="overlay-actions">
+            <button id="overlayResume" class="ui-btn" type="button">Resume</button>
+            <button id="overlayRestart" class="ui-btn" type="button">Retry (R)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="touch-controls" aria-label="mobile controls">
+    <button data-touch="left" class="touch-btn" type="button">◀</button>
+    <button data-touch="jump" class="touch-btn jump" type="button">▲</button>
+    <button data-touch="right" class="touch-btn" type="button">▶</button>
+  </div>
+
+  <div id="disqus_thread"></div>
+  <script src="./main.js"></script>
+  <script>
+      (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://simsim-3.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>
