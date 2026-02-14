@@ -46,6 +46,14 @@
   ```
 - Formspree integration is mandatory for any new app that includes a contact, feedback, or request form.
 - For Formspree forms, always use `method="POST"` and set `action` to the project Formspree endpoint (`https://formspree.io/f/{FORM_ID}` format).
+- Do not insert duplicate external tags. Before inserting, check whether the same Analytics/Disqus/Formspree code already exists.
+- For updates to existing apps, keep existing external integrations unless removal is explicitly requested.
+- If the Formspree endpoint (`{FORM_ID}`) is not provided in the request, ask for it before finalizing form submission wiring.
+
+## External Tag Placement Checklist
+- `Google Analytics`: exactly once per HTML page, inside `<head>`, right before `</head>`.
+- `Disqus`: exactly once per app page, inside `<body>`, right before `</body>`.
+- `Formspree`: only on pages with a real form, via `<form method="POST" action="https://formspree.io/f/{FORM_ID}">`.
 
 ## How To Request Work (Efficiency Rules)
 - Always specify the exact target path (e.g. `/home/user/adslab/categories/etc/compound-interest`) and whether the task is a new app or an update to an existing app.
